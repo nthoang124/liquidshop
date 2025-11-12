@@ -13,7 +13,7 @@ const registerCustomer = async (req, res) => {
     const salt = await bcryptjs.genSaltSync(10);
     const hashPassword = await bcryptjs.hash(password, salt)
     userData.password = hashPassword
-    console.log(userData)
+
     const newUser = new User(userData)
     const saveUser = await newUser.save()
 
@@ -79,7 +79,8 @@ const loginCustomer = async (req, res) => {
     }
 
     const payload = {
-      userID: user.id
+      id: user.id,
+      role: user.role
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" })
 
@@ -119,7 +120,8 @@ const loginAdmin = async (req, res) => {
     }
 
     const payload = {
-      userID: user.id
+      id: user.id,
+      role: user.role
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" })
 
