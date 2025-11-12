@@ -79,7 +79,8 @@ const loginCustomer = async (req, res) => {
     }
 
     const payload = {
-      userID: user.id
+      id: user.id,
+      role: user.role
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" })
 
@@ -119,7 +120,8 @@ const loginAdmin = async (req, res) => {
     }
 
     const payload = {
-      userID: user.id
+      id: user.id,
+      role: user.role
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" })
 
