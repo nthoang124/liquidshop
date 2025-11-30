@@ -15,9 +15,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Header />
 
       {/* 2. MAIN CONTENT */}
-      {/* flex-grow giúp nội dung chính chiếm hết không gian còn lại */}
       <main className="flex-grow bg-gray-50 pt-16 md:pt-0 max-w-[1200px] mx-auto">
-        {/* Thẻ 'children' là nội dung của trang hiện tại */}
         {children}
       </main>
       {/* 3. FOOTER */}

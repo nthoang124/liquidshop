@@ -1,0 +1,135 @@
+[
+  {
+    "id": 201,
+    "name": "Chuột Logitech G Pro X Superlight 2 Wireless",
+    "image": "https://placehold.co/400x300/png?text=G+Pro+X+2",
+    "price": 3490000,
+    "originalPrice": 3890000,
+    "discountRate": 10,
+    "rating": 5.0,
+    "reviewCount": 150,
+    "hasGift": true,
+    "category": "mouse",
+    "specs": {
+      "dpi": "32.000 DPI",
+      "sensor": "HERO 2",
+      "connection": "Wireless Lightspeed",
+      "weight": "60g",
+      "battery": "95 giờ"
+    }
+  },
+  {
+    "id": 202,
+    "name": "Chuột Gaming Razer DeathAdder V3 Pro",
+    "image": "https://placehold.co/400x300/png?text=Razer+V3",
+    "price": 3190000,
+    "originalPrice": 3690000,
+    "discountRate": 13,
+    "rating": 4.9,
+    "reviewCount": 85,
+    "hasGift": true,
+    "category": "mouse",
+    "specs": {
+      "dpi": "30.000 DPI",
+      "sensor": "Focus Pro 30K",
+      "connection": "Wireless / Wired",
+      "weight": "63g",
+      "battery": "90 giờ"
+    }
+  },
+  {
+    "id": 203,
+    "name": "Chuột Logitech G102 Lightsync RGB Black",
+    "image": "https://placehold.co/400x300/png?text=Logitech+G102",
+    "price": 490000,
+    "originalPrice": 599000,
+    "discountRate": 18,
+    "rating": 4.8,
+    "reviewCount": 540,
+    "hasGift": false,
+    "category": "mouse",
+    "specs": {
+      "dpi": "8.000 DPI",
+      "sensor": "Mercury",
+      "connection": "Wired (Có dây)",
+      "weight": "85g",
+      "battery": "Không"
+    }
+  },
+  {
+    "id": 204,
+    "name": "Chuột Gaming SteelSeries Aerox 3 Wireless Onyx",
+    "image": "https://placehold.co/400x300/png?text=Aerox+3",
+    "price": 2290000,
+    "originalPrice": 2500000,
+    "discountRate": 8,
+    "rating": 4.5,
+    "reviewCount": 32,
+    "hasGift": false,
+    "category": "mouse",
+    "specs": {
+      "dpi": "18.000 DPI",
+      "sensor": "TrueMove Air",
+      "connection": "Wireless 2.4 / BT",
+      "weight": "66g",
+      "battery": "200 giờ"
+    }
+  },
+  {
+    "id": 205,
+    "name": "Chuột Gaming Razer Viper Mini",
+    "image": "https://placehold.co/400x300/png?text=Viper+Mini",
+    "price": 690000,
+    "originalPrice": 990000,
+    "discountRate": 30,
+    "rating": 4.7,
+    "reviewCount": 210,
+    "hasGift": false,
+    "category": "mouse",
+    "specs": {
+      "dpi": "8.500 DPI",
+      "sensor": "Optical",
+      "connection": "Wired",
+      "weight": "61g",
+      "battery": "Không"
+    }
+  },
+  {
+    "id": 206,
+    "name": "Chuột Pulsar X2 Wireless Medium Black",
+    "image": "https://placehold.co/400x300/png?text=Pulsar+X2",
+    "price": 1990000,
+    "originalPrice": 2200000,
+    "discountRate": 9,
+    "rating": 4.8,
+    "reviewCount": 45,
+    "hasGift": true,
+    "category": "mouse",
+    "specs": {
+      "dpi": "26.000 DPI",
+      "sensor": "PAW3395",
+      "connection": "Wireless",
+      "weight": "56g",
+      "battery": "70 giờ"
+    }
+  },
+  {
+    "id": 207,
+    "name": "Chuột công thái học Logitech MX Master 3S",
+    "image": "https://placehold.co/400x300/png?text=MX+Master+3S",
+    "price": 2490000,
+    "originalPrice": 2890000,
+    "discountRate": 13,
+    "rating": 4.9,
+    "reviewCount": 110,
+    "hasGift": false,
+    "category": "mouse",
+    "specs": {
+      "dpi": "8.000 DPI",
+      "sensor": "Darkfield",
+      "connection": "Bluetooth / USB",
+      "weight": "141g",
+      "battery": "70 ngày"
+    }
+  }
+]

@@ -1,0 +1,135 @@
+[
+  {
+    "id": 301,
+    "name": "Bàn phím cơ Akko 3098B Multi-modes Black Gold",
+    "image": "https://placehold.co/400x300/png?text=Akko+3098B",
+    "price": 1890000,
+    "originalPrice": 2100000,
+    "discountRate": 10,
+    "rating": 4.8,
+    "reviewCount": 88,
+    "hasGift": true,
+    "category": "keyboard",
+    "specs": {
+      "switch": "Akko CS Jelly Pink",
+      "layout": "98 phím (Compact)",
+      "connection": "3 Modes (Dây/BT/2.4G)",
+      "keycap": "PBT Double-Shot",
+      "led": "RGB"
+    }
+  },
+  {
+    "id": 302,
+    "name": "Bàn phím cơ Keychron K8 Pro QMK/VIA Aluminum",
+    "image": "https://placehold.co/400x300/png?text=Keychron+K8+Pro",
+    "price": 2590000,
+    "originalPrice": 2990000,
+    "discountRate": 13,
+    "rating": 4.7,
+    "reviewCount": 65,
+    "hasGift": false,
+    "category": "keyboard",
+    "specs": {
+      "switch": "Gateron G Pro Red",
+      "layout": "Tenkeyless (TKL)",
+      "connection": "Bluetooth / Type-C",
+      "keycap": "OSA PBT",
+      "led": "RGB South-facing"
+    }
+  },
+  {
+    "id": 303,
+    "name": "Bàn phím cơ Logitech G913 TKL Wireless Lightspeed",
+    "image": "https://placehold.co/400x300/png?text=Logitech+G913",
+    "price": 4290000,
+    "originalPrice": 4990000,
+    "discountRate": 14,
+    "rating": 4.9,
+    "reviewCount": 42,
+    "hasGift": true,
+    "category": "keyboard",
+    "specs": {
+      "switch": "GL Tactile (Low profile)",
+      "layout": "TKL (87 phím)",
+      "connection": "Wireless Lightspeed",
+      "keycap": "ABS phủ UV",
+      "led": "RGB Lightsync"
+    }
+  },
+  {
+    "id": 304,
+    "name": "Bàn phím cơ DareU EK87 Black",
+    "image": "https://placehold.co/400x300/png?text=DareU+EK87",
+    "price": 499000,
+    "originalPrice": 650000,
+    "discountRate": 23,
+    "rating": 4.5,
+    "reviewCount": 350,
+    "hasGift": false,
+    "category": "keyboard",
+    "specs": {
+      "switch": "D Switch Red",
+      "layout": "TKL (87 phím)",
+      "connection": "Wired (Có dây)",
+      "keycap": "ABS Double-shot",
+      "led": "Multi-LED"
+    }
+  },
+  {
+    "id": 305,
+    "name": "Bàn phím cơ FL-Esports CMK75 SAM Lake Placid Blue",
+    "image": "https://placehold.co/400x300/png?text=CMK75",
+    "price": 2850000,
+    "originalPrice": 3100000,
+    "discountRate": 8,
+    "rating": 4.9,
+    "reviewCount": 20,
+    "hasGift": true,
+    "category": "keyboard",
+    "specs": {
+      "switch": "FSA Kailh Box",
+      "layout": "75%",
+      "connection": "3 Modes",
+      "keycap": "PBT FSA Profile",
+      "led": "RGB Mạch xuôi"
+    }
+  },
+  {
+    "id": 306,
+    "name": "Bàn phím cơ Razer BlackWidow V4 Pro",
+    "image": "https://placehold.co/400x300/png?text=BlackWidow+V4",
+    "price": 5490000,
+    "originalPrice": 6100000,
+    "discountRate": 10,
+    "rating": 4.8,
+    "reviewCount": 15,
+    "hasGift": true,
+    "category": "keyboard",
+    "specs": {
+      "switch": "Razer Green (Clicky)",
+      "layout": "Fullsize + Núm xoay",
+      "connection": "Wired Type-C",
+      "keycap": "Doubleshot ABS",
+      "led": "Chroma RGB Underglow"
+    }
+  },
+  {
+    "id": 307,
+    "name": "Bàn phím cơ MonsGeek M1W Nhôm CNC (Kit)",
+    "image": "https://placehold.co/400x300/png?text=MonsGeek+M1W",
+    "price": 2190000,
+    "originalPrice": 2500000,
+    "discountRate": 12,
+    "rating": 4.8,
+    "reviewCount": 55,
+    "hasGift": false,
+    "category": "keyboard",
+    "specs": {
+      "switch": "Akko V3 Cream Yellow",
+      "layout": "75% (Gasket Mount)",
+      "connection": "3 Modes",
+      "keycap": "PBT Side-printed",
+      "led": "RGB"
+    }
+  }
+]

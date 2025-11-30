@@ -1,0 +1,142 @@
+[
+  {
+    "id": 101,
+    "name": "PC GVN Titan 9 (Core i9-14900K/ RTX 4090/ 64GB RAM)",
+    "image": "https://placehold.co/400x300/png?text=PC+Titan+9",
+    "price": 105990000,
+    "originalPrice": 115000000,
+    "discountRate": 8,
+    "rating": 5.0,
+    "reviewCount": 10,
+    "hasGift": true,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i9 14900K",
+      "ram": "64GB DDR5 6000MHz",
+      "disk": "2TB SSD Gen4",
+      "vga": "RTX 4090 24GB",
+      "mainboard": "Z790 AORUS MASTER",
+      "case": "Cooler Master Cosmos C700M"
+    }
+  },
+  {
+    "id": 102,
+    "name": "PC GVN Homework (Core i3-12100/ 8GB RAM/ 256GB SSD)",
+    "image": "https://placehold.co/400x300/png?text=PC+Office",
+    "price": 6590000,
+    "originalPrice": 7590000,
+    "discountRate": 13,
+    "rating": 4.5,
+    "reviewCount": 45,
+    "hasGift": false,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i3 12100",
+      "ram": "8GB DDR4 3200MHz",
+      "disk": "256GB SSD NVMe",
+      "vga": "Onboard UHD 730",
+      "mainboard": "H610M-K",
+      "case": "Xigmatek XA-22"
+    }
+  },
+  {
+    "id": 103,
+    "name": "PC GVN Gamer PBA (Ryzen 5 7600/ RTX 4060/ 16GB RAM)",
+    "image": "https://placehold.co/400x300/png?text=PC+Gamer",
+    "price": 22490000,
+    "originalPrice": 25000000,
+    "discountRate": 10,
+    "rating": 4.8,
+    "reviewCount": 23,
+    "hasGift": true,
+    "category": "pc",
+    "specs": {
+      "cpu": "AMD Ryzen 5 7600",
+      "ram": "16GB DDR5 5200MHz",
+      "disk": "500GB SSD Gen4",
+      "vga": "RTX 4060 8GB",
+      "mainboard": "B650M Gaming Wifi",
+      "case": "Deepcool CC560"
+    }
+  },
+  {
+    "id": 104,
+    "name": "PC Creator Studio (Core i7-13700K/ RTX 3060/ 32GB RAM)",
+    "image": "https://placehold.co/400x300/png?text=PC+Creator",
+    "price": 35990000,
+    "originalPrice": 38990000,
+    "discountRate": 7,
+    "rating": 4.9,
+    "reviewCount": 15,
+    "hasGift": true,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i7 13700K",
+      "ram": "32GB DDR4 3200MHz",
+      "disk": "1TB SSD NVMe",
+      "vga": "RTX 3060 12GB",
+      "mainboard": "Z790 Pro RS",
+      "case": "NZXT H7 Flow"
+    }
+  },
+  {
+    "id": 105,
+    "name": "PC GVN Minion (Core i5-12400F/ GTX 1650/ 16GB RAM)",
+    "image": "https://placehold.co/400x300/png?text=PC+Budget",
+    "price": 12990000,
+    "originalPrice": 14500000,
+    "discountRate": 10,
+    "rating": 4.7,
+    "reviewCount": 89,
+    "hasGift": false,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i5 12400F",
+      "ram": "16GB DDR4",
+      "disk": "500GB SSD",
+      "vga": "GTX 1650 4GB",
+      "mainboard": "B760M-D",
+      "case": "Xigmatek Infinity 1F"
+    }
+  },
+  {
+    "id": 106,
+    "name": "PC GVN White Angel (Core i5-13600K/ RTX 4070/ White)",
+    "image": "https://placehold.co/400x300/png?text=PC+White",
+    "price": 42990000,
+    "originalPrice": 45000000,
+    "discountRate": 4,
+    "rating": 5.0,
+    "reviewCount": 8,
+    "hasGift": true,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i5 13600K",
+      "ram": "32GB DDR5 RGB White",
+      "disk": "1TB SSD Gen4",
+      "vga": "RTX 4070 White Edition",
+      "mainboard": "B760M Mortar Wifi",
+      "case": "Lian Li O11 Dynamic Mini Snow"
+    }
+  },
+  {
+    "id": 107,
+    "name": "PC AIO HP Pavilion (Core i5-12500T/ 23.8 inch Touch)",
+    "image": "https://placehold.co/400x300/png?text=PC+AIO",
+    "price": 18990000,
+    "originalPrice": 20990000,
+    "discountRate": 9,
+    "rating": 4.6,
+    "reviewCount": 12,
+    "hasGift": false,
+    "category": "pc",
+    "specs": {
+      "cpu": "Intel Core i5 12500T",
+      "ram": "8GB DDR4",
+      "disk": "512GB SSD",
+      "vga": "Intel UHD 770",
+      "mainboard": "HP Custom",
+      "case": "All-in-One 23.8\" FHD"
+    }
+  }
+]
