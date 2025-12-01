@@ -5,10 +5,10 @@ const categorySchema = mongoose.Schema(
     name: { type: String, unique: true, required: true },
     description: { type: String },
     imageUrl: { type: String },
-    parentCategory: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Category', 
-      default: null 
+    parentCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      default: null
     }
   },
   {

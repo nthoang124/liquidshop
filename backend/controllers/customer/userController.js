@@ -46,7 +46,6 @@ const getMyProfile = async (req, res) => {
 const updateMyProfile = async (req, res) => {
   try {
     const userData = req.body
-    userData.updatedAt = Date.now()
     await req.user.updateOne(userData)
     const saveUser = await req.user.save()
 
