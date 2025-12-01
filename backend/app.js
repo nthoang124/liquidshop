@@ -16,7 +16,7 @@ mongoose.connect(DB_URL)
 const router = require('./routes/index');
 app.use("/", router)
 
-
+app.set('query parser', 'extended');
 
 app.listen(PORT, (error) => {
   if (!error) (

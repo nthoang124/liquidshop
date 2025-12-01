@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = ({
+const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   fullName: { type: String, required: true },
@@ -15,13 +15,11 @@ const userSchema = ({
       isDefault: { type: Boolean, default: false }
     }
   ],
-  role: { type: String, enum: ["customer", "admin"], default: "customer" },
+  role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
   isActive: { type: Boolean, default: true },
   passwordResetToken: { type: String },
-  passwordResetExpires: { type: Date },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date }
-})
+  passwordResetExpires: { type: Date }
+}, { timestamps: true });
 
 const User = mongoose.model("User", userSchema)
 
