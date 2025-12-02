@@ -4,6 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import MainLayout from "./components/layouts/MainLayout";
 import HomePage from "./pages/home/HomePage";
 import AdminLayout from "./components/layouts/Adminayout";
+import DashboardPage from "./pages/admin/DashboardPage";
+import UsersPage from "./pages/admin/UsersPage";
 
 const App: React.FC = () => {
   return (
@@ -27,7 +29,12 @@ const App: React.FC = () => {
       <Route
         path="/admin"
         element={<AdminLayout/>}
-      />
+      >
+        <Route index element={<DashboardPage />} />
+        {/* <Route path="products" element={<ProductsPage />} /> */}
+        {/* <Route path="orders" element={<OrdersPage />} /> */}
+        <Route path="customers" element={<UsersPage />} /> 
+      </Route>
 
       {/* CÁC ROUTE KHÔNG SỬ DỤNG HEADER VÀ FOOTER (Login, 404, ...)*/}
       {/* <Route path="/auth/login/" element={<LoginPage />} /> */}

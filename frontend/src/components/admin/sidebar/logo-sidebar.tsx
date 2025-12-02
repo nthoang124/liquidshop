@@ -19,7 +19,7 @@ export function LogoSidebar() {
           tooltip="Trang chủ"
           className="group active:bg-transparent hover:bg-transparent hover:text-inherit flex pl-0" 
         >
-          <Link to="/admin/dashboard">
+          <Link to="/admin">
             <div className="flex items-center gap-3">
               
               {/* LOGO */}
