@@ -1,6 +1,7 @@
 const Product = require("../../models/productModel");
 const Category = require("../../models/categoryModel");
 const Brand = require("../../models/brandModel");
+const mongoose = require("mongoose");
 
 // [Post] - admin - create product
 const createProduct = async (req, res) => {
@@ -104,6 +105,14 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+      });
+    }
+
     const product = await Product.findById(id)
       .populate("category", "name")
       .populate("brand", "name");
