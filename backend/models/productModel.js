@@ -1,7 +1,8 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const productSchema = mongoose.Schema({
+const productSchema = mongoose.Schema(
+  {
     name: {
       type: String,
       required: true,
@@ -59,9 +60,9 @@ const productSchema = mongoose.Schema({
     },
 
     specifications: {
-      type: String
+      type: Object,
+      default: {},
     },
-
     status: {
       type: String,
       enum: ["active", "inactive", "out_of_stock"],
@@ -89,7 +90,6 @@ const productSchema = mongoose.Schema({
       type: Number,
       default: 0,
     },
-
   },
   {
     timestamps: true,
@@ -102,13 +102,15 @@ productSchema.index({ price: 1, status: 1 });
 productSchema.index({ soldCount: -1 });
 productSchema.index({ averageRating: -1 });
 
-productSchema.virtual('discountPercentage').get(function () {
+productSchema.virtual("discountPercentage").get(function () {
   if (this.originalPrice && this.originalPrice > this.price) {
-    return Math.round(((this.originalPrice - this.price) / this.originalPrice) * 100);
+    return Math.round(
+      ((this.originalPrice - this.price) / this.originalPrice) * 100
+    );
   }
   return 0;
 });
 
-const Product = mongoose.model('Product', productSchema)
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
