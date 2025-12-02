@@ -92,26 +92,28 @@ const updateBrand = async (req, res) => {
 const deleteBrand = async (req, res) => {
   try {
     const { id } = req.params;
-    const brand = await Brand.findById(id);
+
+    const brand = await Brand.findByIdAndDelete(id);
+
     if (!brand) {
       return res.status(404).json({
         success: false,
         message: "Brand not found",
       });
     }
-    await brand.remove();
+
     res.status(200).json({
       success: true,
       message: "Successfully deleted brand",
     });
   } catch (error) {
     res.status(500).json({
-      success: false,       
-        message: "Error server",        
-        error: error.message,
+      success: false,
+      message: "Error server",
+      error: error.message,
     });
   }
-} 
+};
 module.exports = {
   createBrand,
   getAllBrands,
