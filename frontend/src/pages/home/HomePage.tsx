@@ -1,4 +1,5 @@
 import Banner from "@/components/common/Banner";
+import BottomCategory from "@/features/BottomCategory";
 
 import ProductListCarousel from "@/components/common/carousel/ProductListCarousel";
 
@@ -41,6 +42,8 @@ const HomePage = () => {
           autoplay={true}
         />
       </section>
+
+      <BottomCategory />
     </div>
   );
 };

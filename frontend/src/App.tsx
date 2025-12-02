@@ -12,6 +12,7 @@ const App: React.FC = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="showroom" element={<ShowroomPage />} />
+        {/* <Route path="/categories/:id" element={<ProductPage />} /> */}
       </Route>
 
       {/* Routes không dùng layout */}
