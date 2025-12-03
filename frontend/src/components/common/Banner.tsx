@@ -1,8 +1,5 @@
-// Import CarouselTemplate của bạn (đảm bảo đúng đường dẫn)
 import CarouselTemplate from "@/components/common/carousel/carousel";
 
-// 1. Tạo dữ liệu giả lập cho các Banner phụ (2 -> 7)
-// Trong thực tế, bạn có thể thay 'bg-gray-300' bằng hình ảnh (image url)
 const subBanners = [
   { id: 2, name: "Banner 2", height: "h-[160px]", className: "bg-blue-100" },
   { id: 3, name: "Banner 3", height: "h-[160px]", className: "bg-green-100" },
@@ -53,7 +50,10 @@ function Banner() {
       <div className="hidden md:flex flex-col gap-2">
         <div className="flex gap-2">
           {subBanners.slice(0, 2).map((banner) => (
-            <div className="flex h-[180px] w-1/2 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm">
+            <div
+              key={banner.id}
+              className="flex h-[180px] w-1/2 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm"
+            >
               {banner.name}
             </div>
           ))}
@@ -61,7 +61,10 @@ function Banner() {
 
         <div className="flex gap-2 mb-3">
           {subBanners.slice(2).map((banner) => (
-            <div className="flex h-[180px] w-1/4 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm">
+            <div
+              key={banner.id}
+              className="flex h-[180px] w-1/4 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm"
+            >
               {banner.name}
             </div>
           ))}
