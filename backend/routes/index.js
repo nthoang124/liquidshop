@@ -6,10 +6,10 @@ const categoryController = require('./api/admin/category')
 const productRoutes = require("./api/product")
 const { protectCustomer, protectAdmin } = require('../middlewares/user')
 const brandRoutes = require('./api/admin/brand')
-const productRoutes = require('./api/admin/product')
+const productRoutesAdmin = require('./api/admin/product')
 
-router.use('/admin/product', protectAdmin, productRoutes)
-router.use('/auth', authRoutes)
+router.use('/admin/product', protectAdmin, productRoutesAdmin);
+router.use('/auth', authRoutes);
 router.use('/users', protectCustomer, userRoutes)
 
 router.use('/admin/category',protectAdmin,categoryController);
