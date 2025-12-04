@@ -19,7 +19,7 @@ const PageLoader = () => (
   </div>
 );
 
-const MainLayout: React.FC<MainLayoutProps> = ({children}) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
       <Header />

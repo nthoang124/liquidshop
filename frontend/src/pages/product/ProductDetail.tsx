@@ -18,19 +18,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import type { Product } from "@/types/product";
-import ProductSpecsTable from "../../components/product/ProductSpecs";
+import ProductSpecsTable from "@/components/product/ProductSpecs"; // Đã sửa đường dẫn import chuẩn
 import ProductListCarousel from "@/components/common/carousel/ProductListCarousel";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 import pcData from "@/data/pcs.json";
 import mouseData from "@/data/mice.json";
 import keyboardData from "@/data/keyboards.json";
 
+// Map dữ liệu
 const DATABASE: Record<string, Product[]> = {
   pc: pcData as Product[],
   mouse: mouseData as Product[],
   keyboard: keyboardData as Product[],
 };
 
+// Helper format tiền
 const formatCurrency = (value: number | undefined) => {
   if (value === undefined) return "Liên hệ";
   return new Intl.NumberFormat("vi-VN", {
@@ -39,9 +42,18 @@ const formatCurrency = (value: number | undefined) => {
   }).format(value);
 };
 
-const getProductArrayByCategory = (category: string | undefined) => {
+// Helper lấy sản phẩm tương tự (Đã loại bỏ sản phẩm hiện tại)
+const getRelatedProducts = (
+  category: string | undefined,
+  currentId: string | number | undefined
+) => {
   if (!category) return [];
-  return DATABASE[category] || [];
+  const list = DATABASE[category] || [];
+  // Lọc bỏ sản phẩm đang xem
+  if (currentId) {
+    return list.filter((p) => String(p.id) !== String(currentId));
+  }
+  return list;
 };
 
 const ProductDetailPage: React.FC = () => {
@@ -55,54 +67,53 @@ const ProductDetailPage: React.FC = () => {
   // --- EFFECT: TÌM SẢN PHẨM KHI URL THAY ĐỔI ---
   useEffect(() => {
     setLoading(true);
+    // Cuộn lên đầu trang mỗi khi đổi sản phẩm
+    window.scrollTo(0, 0);
 
-    // Giả lập độ trễ mạng nhẹ
-    const timer = setTimeout(() => {
-      if (category && id) {
-        const productList = DATABASE[category];
+    if (category && id) {
+      const productList = DATABASE[category];
+      const foundProduct = productList?.find((p) => String(p.id) === id);
 
-        // Tìm sản phẩm: so sánh id (chuyển về string để an toàn)
-        const foundProduct = productList?.find((p) => String(p.id) === id);
-
-        if (foundProduct) {
-          setProduct(foundProduct);
-          setActiveImage(foundProduct.image); // Set ảnh mặc định là ảnh chính
-        } else {
-          setProduct(null); // Không tìm thấy
-        }
+      if (foundProduct) {
+        setProduct(foundProduct);
+        setActiveImage(foundProduct.image);
+      } else {
+        setProduct(null);
       }
-      setLoading(false);
-    }, 300);
+    }
 
-    return () => clearTimeout(timer);
+    setLoading(false);
   }, [category, id]);
 
-  //   Loading
+  // Loading State
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 bg-gray-300 rounded-full mb-4"></div>
-          <div className="h-4 w-48 bg-gray-300 rounded"></div>
+      <>
+        {useDocumentTitle("Đang tải sản phẩm...")}
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="h-12 w-12 bg-gray-300 rounded-full mb-4"></div>
+            <div className="h-4 w-48 bg-gray-300 rounded"></div>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
-  //Not found
+  // Not Found State
   if (!product) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Không tìm thấy sản phẩm!
-        </h2>
-        <p className="text-gray-500">
-          Sản phẩm bạn tìm kiếm có thể đã bị xóa hoặc đường dẫn không đúng.
-        </p>
-        <Button onClick={() => navigate("/")} variant="outline">
-          Quay lại trang chủ
-        </Button>
-      </div>
+      <>
+        {useDocumentTitle("Sản phẩm không tồn tại...")}
+        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Không tìm thấy sản phẩm!
+          </h2>
+          <Button onClick={() => navigate("/")} variant="outline">
+            Quay lại trang chủ
+          </Button>
+        </div>
+      </>
     );
   }
 
@@ -115,19 +126,20 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <>
-      {/* Main Detail */}
-      <div className="bg-slate-50 py-6 shadow-md rounded-md">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="flex items-center text-sm text-muted-foreground mb-4 space-x-2">
+      {useDocumentTitle(product.name)}
+      <div className="bg-slate-50 min-h-screen py-6 font-sans">
+        <div className="container mx-auto max-w-7xl px-4 space-y-6">
+          {/* Breadcrumb */}
+          <div className="flex items-center text-sm text-muted-foreground space-x-2">
             <button
               onClick={() => navigate("/")}
-              className="hover:text-primary transition-colors cursor-pointer"
+              className="hover:text-red-600 transition-colors cursor-pointer"
             >
               Trang chủ
             </button>
             <ChevronRight className="h-4 w-4" />
             <span
-              className="capitalize hover:text-primary cursor-pointer"
+              className="capitalize hover:text-red-600 cursor-pointer"
               onClick={() => navigate(`/category/${category}`)}
             >
               {category === "pc" ? "PC Gaming" : category}
@@ -138,9 +150,11 @@ const ProductDetailPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="bg-background rounded-xl shadow-sm">
+          {/* MAIN */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8">
-              <div className="lg:col-span-5 p-6 ">
+              {/* IMAGE */}
+              <div className="lg:col-span-5 p-6 border-b lg:border-b-0 lg:border-r border-gray-100">
                 <div className="relative aspect-square bg-white rounded-lg overflow-hidden mb-4 flex items-center justify-center group">
                   <img
                     src={activeImage}
@@ -184,16 +198,16 @@ const ProductDetailPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* DETAIL */}
               <div className="lg:col-span-7 p-6 lg:pl-0">
-                {/* Header */}
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight">
                   {product.name}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-4 text-sm mb-6">
                   <div className="flex items-center gap-1">
                     <span className="text-muted-foreground">Mã SP:</span>
-                    <span className="font-semibold text-foreground">
+                    <span className="font-semibold text-gray-900">
                       #{product.id}
                     </span>
                   </div>
@@ -209,7 +223,7 @@ const ProductDetailPage: React.FC = () => {
                         }`}
                       />
                     ))}
-                    <span className="text-muted-foreground ml-1 text-xs">
+                    <span className="text-muted-foreground ml-1 text-xs text-gray-500">
                       ({product.reviewCount} đánh giá)
                     </span>
                   </div>
@@ -220,24 +234,24 @@ const ProductDetailPage: React.FC = () => {
                   <span className="text-3xl md:text-4xl font-bold text-red-600 tracking-tight">
                     {formatCurrency(product.price)}
                   </span>
-                  <div className="flex flex-row gap-3">
+                  <div className="flex flex-row gap-3 items-center mt-1">
                     {product.originalPrice &&
                       product.originalPrice > product.price && (
-                        <span className="text-lg text-muted-foreground text-gray-500 font-normal line-through mt-1 mb-1.5">
+                        <span className="text-lg text-gray-400 font-normal line-through">
                           {formatCurrency(product.originalPrice)}
                         </span>
                       )}
                     {product.discountRate && product.discountRate > 0 && (
-                      <div className="border border-red-600 rounded-md text-md text-red-600 font-semibold px-2 my-1">
+                      <div className="border border-red-600 rounded-md text-sm text-red-600 font-bold px-2 py-0.5">
                         -{product.discountRate}%
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                  <Button className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white flex flex-col items-center justify-center gap-0 shadow-red-200 shadow-lg cursor-pointer">
+                  <Button className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white flex flex-col items-center justify-center gap-0 shadow-lg shadow-red-100 transition-all hover:-translate-y-0.5">
                     <div className="flex items-center gap-2 text-lg font-bold uppercase">
                       MUA NGAY <ShoppingCart className="w-5 h-5" />
                     </div>
@@ -248,7 +262,7 @@ const ProductDetailPage: React.FC = () => {
 
                   <Button
                     variant="outline"
-                    className="flex-1 h-14 border-blue-600 text-blue-700 hover:bg-blue-50 flex flex-col items-center justify-center gap-0 cursor-pointer"
+                    className="flex-1 h-14 border-blue-600 text-blue-700 hover:bg-blue-50 flex flex-col items-center justify-center gap-0 transition-all hover:-translate-y-0.5"
                   >
                     <div className="flex items-center gap-2 text-lg font-bold uppercase">
                       TRẢ GÓP 0% <CreditCard className="w-5 h-5" />
@@ -259,7 +273,7 @@ const ProductDetailPage: React.FC = () => {
                   </Button>
                 </div>
 
-                {/* Promotion Box */}
+                {/* Promotion */}
                 {product.hasGift && (
                   <Card className="border-red-500 shadow-sm mb-6 overflow-hidden">
                     <div className="bg-red-600 text-white px-4 py-2 flex items-center gap-2 font-bold uppercase text-sm">
@@ -289,8 +303,8 @@ const ProductDetailPage: React.FC = () => {
                   </Card>
                 )}
 
-                {/* Policy Footer */}
-                <div className="border-t pt-4 mb-5">
+                {/* Policy */}
+                <div className="border-t pt-4">
                   <h3 className="font-semibold text-sm mb-3">
                     Yên tâm mua hàng
                   </h3>
@@ -326,40 +340,51 @@ const ProductDetailPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* Similar products */}
-      <div className="bg-slate-50 py-6 px-3 mt-4 shadow-md rounded-md">
-        <ProductListCarousel
-          title="Sản phẩm tương tự"
-          products={getProductArrayByCategory(category)}
-        />
-      </div>
-      {/* Specs */}
-      <div className="bg-slate-50 py-6 px-3 mt-4 shadow-md rounded-md">
-        <h2 className="text-lg font-bold">Thông số kỹ thuật</h2>
-        <ProductSpecsTable specs={product.specs} />
-      </div>
 
-      {/* Rating & Reviews */}
-      <div className="bg-slate-50 py-6 px-3 mt-4 shadow-md rounded-md">
-        <h2 className="text-lg font-bold mb-5">Đánh giá và nhận xét</h2>
-        <div className="flex gap-2">
-          <span className="text-4xl font-bold">{product.rating}</span>
-          <div className="flex items-center gap-1 text-yellow-500">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-4 h-4 ${
-                  i < Math.floor(product.rating)
-                    ? "fill-current"
-                    : "text-gray-300"
-                }`}
-              />
-            ))}
-            <span className="text-muted-foreground ml-1 text-md text-gray-500">
-              ({product.reviewCount} đánh giá)
-            </span>
+          {/* SPECS */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-6 uppercase border-l-4 border-red-600 pl-3">
+              Thông số kỹ thuật
+            </h2>
+            <ProductSpecsTable specs={product.specs} />
+          </div>
+
+          {/* RATING & REVIEW */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-6 uppercase border-l-4 border-red-600 pl-3">
+              Đánh giá & Nhận xét
+            </h2>
+            <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              <span className="text-5xl font-bold text-gray-800 mb-2">
+                {product.rating}
+              </span>
+              <div className="flex items-center gap-1 text-yellow-500 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-6 h-6 ${
+                      i < Math.floor(product.rating)
+                        ? "fill-current"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-gray-500">
+                Dựa trên {product.reviewCount} đánh giá từ khách hàng
+              </span>
+              <Button variant="outline" className="mt-4">
+                Viết đánh giá của bạn
+              </Button>
+            </div>
+          </div>
+
+          {/* RELATED PRODUCT */}
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+            <ProductListCarousel
+              title="Sản phẩm tương tự"
+              products={getRelatedProducts(category, product.id)}
+            />
           </div>
         </div>
       </div>
