@@ -42,6 +42,7 @@ const App: React.FC = () => {
       {/* Other route... */}
     </Routes>
   );
+
 };
 
 export default App;

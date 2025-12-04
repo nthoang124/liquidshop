@@ -2,9 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
-// Import các thành phần đã tạo trước đó
 import Carousel from "@/components/common/carousel/carousel";
-import ProductCard from "@/components/common/ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 import type { Product } from "@/types/product";
 
 interface ProductListCarouselProps {
@@ -23,7 +22,7 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
   className,
 }) => {
   return (
-    <div className={`w-full bg-white rounded-md px-2 py-3 ${className || ""}`}>
+    <div className={`w-full bg-white rounded-md px-3 py-3 ${className || ""}`}>
       <div className="flex items-center justify-between mb-4 px-1">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800 uppercase border-l-4 border-red-600 pl-3">
           {title}
@@ -46,7 +45,7 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
         autoplay={autoplay}
         itemClassName="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
         renderItem={(product) => (
-          <div className="h-full p-1">
+          <div className="h-full ">
             <ProductCard product={product} />
           </div>
         )}

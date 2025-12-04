@@ -24,7 +24,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     }).format(price);
 
   return (
-    <Link to={`/product/${product.id}`} className="block h-full">
+    <Link
+      to={`/product/${product.category}/${product.id}`}
+      className="block h-full"
+      onClick={() => window.scrollTo(0, 0)}
+    >
       <Card
         className={cn(
           "group relative h-full bg-white border border-gray-200 rounded-lg hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between overflow-hidden",
@@ -49,13 +53,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         </div>
 
         <h3
-          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] group-hover:text-blue-600 transition-colors"
+          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] hover:text-red-600 transition-colors"
           title={product.name}
         >
           {product.name}
         </h3>
 
-        {/* --- 4. HỘP CẤU HÌNH --- */}
+        {/* --- HỘP CẤU HÌNH --- */}
         {specItems.length > 0 ? (
           <div className="bg-[#f3f4f6] rounded-md p-2 text-[11px] text-gray-600">
             <div className="grid grid-cols-2 gap-y-1.5 gap-x-2">
@@ -75,7 +79,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
             </div>
           </div>
         ) : (
-          // Placeholder để giữ layout không bị nhảy nếu không có specs
           <div className="mb-3 h-[60px]" />
         )}
 

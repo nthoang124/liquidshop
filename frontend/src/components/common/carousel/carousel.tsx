@@ -15,10 +15,8 @@ import {
 interface CarouselTemplateProps<T> {
   data: T[];
 
-  // Hàm render giao diện cho từng item
   renderItem: (item: T, index: number) => React.ReactNode;
 
-  // Cấu hình Responsive
   itemClassName?: string;
 
   className?: string;
@@ -38,23 +36,24 @@ function CarouselTemplate<T>({
   itemClassName = "basis-full", // Mặc định 1 item 1 hàng
   className,
   autoplay = false,
-  autoplayDelay = 3000,
+  autoplayDelay = 7000,
+  showNavigation = true,
 }: // setApi,
 CarouselTemplateProps<T>) {
-  const plugins = React.useMemo(() => {
-    return autoplay
-      ? [Autoplay({ delay: autoplayDelay, stopOnInteraction: true })]
-      : [];
-  }, [autoplay, autoplayDelay]);
+  const plugin = React.useRef(
+    Autoplay({ delay: autoplayDelay, stopOnInteraction: false })
+  );
 
   return (
     <Carousel
       // setApi={setApi}
-      plugins={plugins}
+      plugins={[plugin.current]}
       opts={{
         align: "start",
         loop: true,
       }}
+      onMouseEnter={autoplay ? () => plugin.current.stop() : undefined}
+      onMouseLeave={autoplay ? () => plugin.current.play() : undefined}
       className={cn("w-full relative group", className)}
     >
       <CarouselContent className="-ml-2 md:-ml-4">
@@ -63,14 +62,17 @@ CarouselTemplateProps<T>) {
             key={index}
             className={cn("pl-2 md:pl-4", itemClassName)}
           >
-            {/* RENDER */}
             {renderItem(item, index)}
           </CarouselItem>
         ))}
       </CarouselContent>
 
-      <CarouselPrevious className="hidden bg-gray-200 border-none md:flex absolute left-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[-30%] cursor-pointer" />
-      <CarouselNext className="hidden bg-gray-200 border-none md:flex absolute right-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[30%] cursor-pointer" />
+      {showNavigation && (
+        <>
+          <CarouselPrevious className="hidden bg-gray-200 border-none md:flex absolute left-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[-30%] cursor-pointer" />
+          <CarouselNext className="hidden bg-gray-200 border-none md:flex absolute right-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[30%] cursor-pointer" />{" "}
+        </>
+      )}
     </Carousel>
   );
 }

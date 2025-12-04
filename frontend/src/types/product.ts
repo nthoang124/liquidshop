@@ -11,8 +11,10 @@ export interface MouseSpecs {
   dpi: string;
   sensor: string;
   connection: string;
-  weight: string;
-  battery?: string;
+  weight: number;
+  weightUnit: string;
+  battery?: number;
+  batteryUnit?: string;
   buttons?: string;
 }
 
@@ -38,7 +40,6 @@ export interface Product {
   reviewCount: number;
   hasGift?: boolean;
 
-  // Định danh loại sản phẩm
   category: ProductCategory;
   specs: ProductSpecs;
 }

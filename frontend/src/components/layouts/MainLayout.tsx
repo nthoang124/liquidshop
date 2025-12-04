@@ -1,20 +1,35 @@
 import React from "react";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
+import { Outlet } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
-// --- 1. DEFINE TYPESCRIPT FOR PROPS ---
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
-// --- 2. COMPONENT MAINLAYOUT ---
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const PageLoader = () => (
+  <div className="p-4 space-y-4">
+    <Skeleton className="h-[200px] w-full rounded-xl" />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[200px]" />
+    </div>
+  </div>
+);
+
+const MainLayout: React.FC<MainLayoutProps> = ({children}) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen pb-16 md:pb-0">
       <Header />
 
-      <main className="flex-grow bg-[#ececec] pt-16 md:pt-0 w-full">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">{children}</div>
+      <main className="flex-grow bg-[#ececec] w-full">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+          <Suspense fallback={<PageLoader />}>
+            {children ?? <Outlet />}
+          </Suspense>
+        </div>
       </main>
 
       <Footer />
