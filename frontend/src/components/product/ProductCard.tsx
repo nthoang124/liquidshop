@@ -24,7 +24,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     }).format(price);
 
   return (
-    <Link to={`/product/${product.id}`} className="block h-full">
+    <Link
+      to={`/product/${product.category}/${product.id}`}
+      className="block h-full"
+      onClick={() => window.scrollTo(0, 0)}
+    >
       <Card
         className={cn(
           "group relative h-full bg-white border border-gray-200 rounded-lg hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between overflow-hidden",
