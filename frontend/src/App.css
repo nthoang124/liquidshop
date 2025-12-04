@@ -1,5 +1,3 @@
-/* Shadcn components auto-injected CSS will appear here */
-
 @custom-variant dark (&:is(.dark *));
 
 :root {

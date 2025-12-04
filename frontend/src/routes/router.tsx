@@ -3,10 +3,13 @@ import React from "react";
 
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
-import ProductDetailPage from "@/pages/product/ProductDetail";
 
+const ProductDetailPage = React.lazy(
+  () => import("@/pages/product/ProductDetail")
+);
 const ShowroomPage = React.lazy(() => import("@/pages/showRoom"));
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
+const OrderLookupPage = React.lazy(() => import("@/pages/orderLookupPage"));
 
 const router = createBrowserRouter([
   {
@@ -16,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
+      { path: "order/lookup", element: <OrderLookupPage /> },
       { path: "showroom", element: <ShowroomPage /> },
     ],
   },

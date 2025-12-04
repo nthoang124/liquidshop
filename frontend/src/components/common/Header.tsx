@@ -30,13 +30,10 @@ const Header: React.FC = () => {
         <img src={logo} alt="logo" className="w-full h-full object-contain" />
       </div>
       <div className="hidden md:flex flex-col leading-tight">
-        <span className="text-md font-semibold text-gray-500">Team</span>
-        <span
-          className="text-base font-bold tracking-wider bg-gradient-to-r from-red-500 via-gray-400 to-red-500 bg-clip-text text-transparent"
-          style={{ fontFamily: "'Quantico', sans-serif" }}
-        >
+        <span className="text-base font-bold tracking-wider bg-gradient-to-r from-red-500 via-gray-400 to-red-500 bg-clip-text text-transparent font-logo">
           LIQUID
         </span>
+        <span className="font-semibold text-slate-300 font-logo">SHOP</span>
       </div>
     </div>
   );
@@ -149,15 +146,15 @@ const Header: React.FC = () => {
                   </span>
                 </Link>
 
-                <a
-                  href="#"
+                <Link
+                  to="/order/lookup"
                   className="flex items-center group transition-colors duration-200 text-white"
                 >
                   <FileText className="h-5 w-5 mb-1 mr-2 group-hover:text-red-500 transition-colors" />
                   <span className="group-hover:text-red-500 transition-colors text-xs font-semibold leading-tight">
                     Tra cứu <br /> đơn hàng
                   </span>
-                </a>
+                </Link>
               </nav>
 
               <CartBadge count={2}>

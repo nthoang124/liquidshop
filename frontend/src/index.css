@@ -1,9 +1,19 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
 
+@font-face {
+  font-family: "GameOfSquids";
+  src: url("./assets//fonts/GameOfSquids.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 body {
   font-family: "Nunito", sans-serif;
   margin: 0;
   background: #ececec;
-} 
+}
+
+.font-logo {
+  font-family: "GameOfSquids", sans-serif;
+}
