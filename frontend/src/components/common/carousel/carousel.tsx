@@ -15,10 +15,8 @@ import {
 interface CarouselTemplateProps<T> {
   data: T[];
 
-  // Hàm render giao diện cho từng item
   renderItem: (item: T, index: number) => React.ReactNode;
 
-  // Cấu hình Responsive
   itemClassName?: string;
 
   className?: string;
@@ -64,7 +62,6 @@ CarouselTemplateProps<T>) {
             key={index}
             className={cn("pl-2 md:pl-4", itemClassName)}
           >
-            {/* RENDER */}
             {renderItem(item, index)}
           </CarouselItem>
         ))}

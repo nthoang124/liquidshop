@@ -31,7 +31,6 @@ function Banner() {
           data={subBanners}
           autoplay={true}
           autoplayDelay={3000}
-          showNavigation={false}
           itemClassName="basis-full"
           renderItem={(item) => (
             <div className="p-1">

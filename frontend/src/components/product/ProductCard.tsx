@@ -49,13 +49,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         </div>
 
         <h3
-          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] group-hover:text-blue-600 transition-colors"
+          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] hover:text-red-600 transition-colors"
           title={product.name}
         >
           {product.name}
         </h3>
 
-        {/* --- 4. HỘP CẤU HÌNH --- */}
+        {/* --- HỘP CẤU HÌNH --- */}
         {specItems.length > 0 ? (
           <div className="bg-[#f3f4f6] rounded-md p-2 text-[11px] text-gray-600">
             <div className="grid grid-cols-2 gap-y-1.5 gap-x-2">
@@ -75,7 +75,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
             </div>
           </div>
         ) : (
-          // Placeholder để giữ layout không bị nhảy nếu không có specs
           <div className="mb-3 h-[60px]" />
         )}
 

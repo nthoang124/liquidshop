@@ -1,15 +1,13 @@
 import { Link, useRouteError } from "react-router-dom";
 import { Home, ArrowLeft, Bug } from "lucide-react";
-import { Button } from "@/components/ui/button"; // Shadcn Button
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card"; // Shadcn Card
+} from "@/components/ui/card";
 
-// Định nghĩa kiểu dữ liệu cho lỗi trả về từ useRouteError
-// React Router DOM thường trả về lỗi có statusText hoặc message
 interface RouteError {
   statusText?: string;
   message?: string;
@@ -17,7 +15,6 @@ interface RouteError {
 }
 
 export default function NotFoundPage() {
-  // Ép kiểu cho error để TS không báo lỗi khi truy cập .statusText
   const error = useRouteError() as RouteError;
 
   console.error(error);
@@ -26,12 +23,11 @@ export default function NotFoundPage() {
     <div className="min-h-screen bg-[#151517] flex items-center justify-center p-4 font-sans">
       <Card className="max-w-md w-full bg-slate-50 border border-slate-100 shadow-xl rounded-2xl overflow-hidden">
         <CardHeader className="text-center pb-2 pt-10">
-          {/* Icon & Số 404 */}
           <div className="space-y-2 relative flex flex-col items-center">
             <h1 className="text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-neutral-900 drop-shadow-sm select-none relative z-10">
               404
             </h1>
-            <div className="absolute top-0 right-10 animate-bounce">
+            <div className="absolute top-0 right-5 md:right-10 z-10 animate-bounce z-10">
               <Bug className="text-slate-300 w-12 h-12 rotate-12" />
             </div>
           </div>
@@ -44,9 +40,8 @@ export default function NotFoundPage() {
           <p className="text-slate-500 text-sm leading-relaxed">
             Có vẻ như đường dẫn bạn truy cập bị hỏng hoặc trang đã bị xóa.
             <br />
-            {/* Hiển thị chi tiết lỗi nếu có */}
             {error && (
-              <span className="block mt-4 font-mono text-lg bg-slate-100 p-2 rounded text-red-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-full border border-slate-200">
+              <span className="block mt-4 font-mono text-lg bg-slate-200 p-2 rounded text-red-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-full border border-slate-200">
                 {error.statusText || error.message}
               </span>
             )}

@@ -5,7 +5,6 @@ import { Phone, Facebook, Youtube, Instagram, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-// Sử dụng React.FC để định nghĩa loại (type) cho Functional Component
 const Footer: React.FC = () => {
   const generalPolicies = [
     { name: "Chính sách bảo hành", href: "/policy/warranty" },

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 import Carousel from "@/components/common/carousel/carousel";
-import ProductCard from "@/components/common/ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 import type { Product } from "@/types/product";
 
 interface ProductListCarouselProps {
