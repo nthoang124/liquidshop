@@ -1,5 +1,5 @@
 import ProductCard from "@/components/product/ProductCard";
-import { Product } from "@/types/product";
+import type { Product } from "@/types/product";
 
 export default function ProductsDisplay({ products }: { products: Product[] }) {
   return (

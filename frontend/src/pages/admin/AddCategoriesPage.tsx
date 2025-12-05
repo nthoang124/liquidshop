@@ -2,7 +2,7 @@
 export default function AddCategoriesPage() {
   return (
     <div>
-      add category page
+      add ctg
     </div>
   )
 }
