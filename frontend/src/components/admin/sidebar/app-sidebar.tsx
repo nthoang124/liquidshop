@@ -11,6 +11,7 @@ import {
   FileText,
   Image,
   Settings,
+  Layers,
 } from "lucide-react"
 
 import { NavMain } from "@/components/admin/sidebar/nav-main"
@@ -50,6 +51,21 @@ const data = {
         {
           title: "Thêm sản phẩm",
           url: "/admin/products/add-new"
+        },
+      ]
+    },
+    {
+      title: "Loại Sản phẩm",
+      icon: Layers,
+      url: "/admin/categories",
+      items: [
+        {
+          title: "Các loại sản phẩm",
+          url: "/admin/categories/list"
+        },
+        {
+          title: "Thêm loại sản phẩm",
+          url: "/admin/categoriess/add-new"
         },
       ]
     },

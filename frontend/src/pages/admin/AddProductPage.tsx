@@ -14,6 +14,7 @@ export default function ProductsPage() {
         limit: 5,
         search: "",
         category: "6932acee38bedaef2b18a817",
+        brand: "6932acee38bedaef2b18a81d",
       });
 
       setProducts(res.data);

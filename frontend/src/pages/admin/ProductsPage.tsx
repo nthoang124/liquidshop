@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/select"
 
 import { Button } from "@/components/ui/button"
-import { LayoutGridIcon } from "lucide-react"
 import { useState } from "react"
 import ProductsDisplay from "@/components/admin/products/products-view"
 

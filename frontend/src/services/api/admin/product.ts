@@ -20,7 +20,7 @@ export interface IProduct {
   images: string[];
   category: ICategory;
   brand: IBrand | null;
-  specifications: Record<string, any>;
+  specifications: Record<string, string>;
   status: "active" | "inactive" | "out_of_stock";
   tags: string[];
   averageRating: number;
