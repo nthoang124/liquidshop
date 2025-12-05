@@ -40,9 +40,13 @@ const data = {
     },
     {
       title: "Sản phẩm",
-      url: "/admin/products",
       icon: Package,
+      url: "/admin/products",
       items: [
+        {
+          title: "danh sách sản phẩm",
+          url: "/admin/products/list"
+        },
         {
           title: "Thêm sản phẩm",
           url: "/admin/products/add-new"

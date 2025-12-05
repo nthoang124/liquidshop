@@ -39,13 +39,15 @@ export function NavMain({
       <SidebarMenu className="gap-1">
         {items.map((item) => {
           const isActive = pathname === item.url
+          // const isParentActive = pathname.startsWith(item.url)
+          const isParentActive = pathname === item.url || pathname.startsWith(item.url + "/");
 
           if(item.items){
             return (
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={isActive}
+                defaultOpen={isParentActive}
                 className="group/collapsible"
               >
                 <SidebarMenuItem >
@@ -53,36 +55,42 @@ export function NavMain({
                     <SidebarMenuButton
                       asChild
                       tooltip={item.title}
-                      isActive={isActive}
-                      className="group data-[active=true]:bg-blue-100
-                                data-[active=true]:border-l-4
-                                data-[active=true]:border-blue-600
-                                data-[active=true]:text-blue-500
-                                data-[active=true]:font-bold"
+                      isActive={isParentActive}
                     >
-                      <Link to={item.url} className="flex items-center justify-between gap-2">
+                      <div className="flex items-center justify-between gap-2">
                           {item.icon && <item.icon className="!h-6 !w-6"/>}
                           <span className="text-lg data-[active=true]:text-blue-400">{item.title}</span>
                           <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </Link>
+                      </div>
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <Link to={subItem.url} className="text-md md:text-base text-black">
-                              {subItem.title}
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
+                      {item.items?.map((subItem) => {
+                        const isSubActive = pathname === subItem.url;
+                        return (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton 
+                              asChild
+                              isActive={isSubActive}
+                              className="group data-[active=true]:bg-blue-100
+                                  data-[active=true]:border-l-4
+                                  data-[active=true]:border-blue-600
+                                  data-[active=true]:text-blue-500
+                                  data-[active=true]:font-bold"
+                              >
+                              <Link to={subItem.url} className="text-md md:text-lg text-black">
+                                {subItem.title}
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        )}
+                      )}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
-              )
+            )
           }
 
           return (
