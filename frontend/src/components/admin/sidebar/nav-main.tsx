@@ -74,12 +74,10 @@ export function NavMain({
                               asChild
                               isActive={isSubActive}
                               className="group data-[active=true]:bg-blue-100
-                                  data-[active=true]:border-l-4
-                                  data-[active=true]:border-blue-600
                                   data-[active=true]:text-blue-500
                                   data-[active=true]:font-bold"
                               >
-                              <Link to={subItem.url} className="text-md md:text-lg text-black">
+                              <Link to={subItem.url} className="text-md md:text-lg text-black ml-2">
                                 {subItem.title}
                               </Link>
                             </SidebarMenuSubButton>
