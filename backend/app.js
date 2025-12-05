@@ -1,7 +1,11 @@
 require('dotenv').config()
+const cors = require('cors');
 
 const express = require('express');
 const app = express();
+
+app.use(cors());
+
 app.use(express.json())
 const PORT = 3000;
 const DB_URL = "mongodb://localhost:27017/TeamLiquid-DB"
