@@ -30,7 +30,7 @@ export type ProductSpecs = PCSpecs | MouseSpecs | KeyboardSpecs;
 export type ProductCategory = "pc" | "mouse" | "keyboard";
 
 export interface Product {
-  id: number | string;
+  id: number | string;  
   name: string;
   image: string;
   price: number;

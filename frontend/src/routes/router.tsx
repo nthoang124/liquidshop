@@ -16,6 +16,7 @@ const OrderLookupPage = React.lazy(() => import("@/pages/orderLookupPage"));
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
+const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: "customers", element: <UsersPage /> },
       { path: "products/list", element: <ProductsPage /> },
+      {path: "products/add-new", element: <AddProductPage/> }
     ],
   },
 ]);
