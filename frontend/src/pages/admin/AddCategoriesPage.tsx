@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button"
 import categoryApi from "@/services/api/admin/categoryApi"
 import { useNavigate } from "react-router-dom"
 import type { ICategory } from "@/types/category"
+import { CategoryCombobox } from "@/components/admin/category/category-combobox"
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
   const [imageUrl, setImageUrl] = useState("")
   const [description, setDescription] = useState("")
   const [categories, setCategories] = useState<ICategory[]>([])
+  const [comboboxOpen, setComboboxOpen] = useState(false);
+  const [parentCategory, setParentCategory] = useState<ICategory | null>(null);
 
   const navigate = useNavigate()
 
@@ -69,6 +72,17 @@ export default function AddCategoryPage() {
               <Label className="text-md md:text-lg">Mô tả</Label>
               <Input value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
+
+            <div className="space-y-1">
+              <Label className="text-md md:text-lg">Loại sản phẩm cha</Label>
+              <CategoryCombobox
+                open={comboboxOpen}
+                categories={categories}
+                setOpen={setComboboxOpen}
+                setParentCategory={setParentCategory}
+              />
+            </div>
+            
           </CardContent>
 
           <CardFooter className="justify-end gap-2">
