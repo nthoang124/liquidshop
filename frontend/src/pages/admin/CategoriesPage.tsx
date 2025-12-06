@@ -78,8 +78,9 @@ export default function CategoriesPage() {
         )}
 
         {!isLoading && categories.length > 0 && (
-            <div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+            <div className="flex flex-col gap-3">
+                <p className="text-2xl lg:text-3xl font-bold">Danh sách các loại sản phẩm</p>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:px-4 xl:px-10 gap-5 mt-4"  >
                     {categories.map((c) =>(
                         <CategoryCard 
                             key={c._id} 

@@ -20,7 +20,7 @@ export default function CategoryCard({ category, handleEdit, onAskDelete}: Categ
       />
 
       <div className="p-4 flex justify-between items-center">
-        <h3 className="font-semibold text-lg">{category.name}</h3>
+        <h3 className="font-semibold text-lg lg:text-xl">{category.name}</h3>
 
         <div className="flex gap-2">
           <button 

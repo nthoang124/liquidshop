@@ -19,19 +19,19 @@ interface DeleteCategoryAlertProps {
 export function DeleteCategoryAlert({ open, setOpen, categoryName, onConfirm }: DeleteCategoryAlertProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className="w-[90%] p-6 max-w-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có chắc muốn xóa {categoryName}?</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle className="text-lg md:text-xl">Bạn có chắc muốn xóa {categoryName}?</AlertDialogTitle>
+          <AlertDialogDescription className="text-md md:text-lg">
             Hành động này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Hủy</AlertDialogCancel>
+          <AlertDialogCancel className="text-md md:text-xl">Hủy</AlertDialogCancel>
 
           <AlertDialogAction
-            className="bg-red-500 hover:bg-red-600"
+            className="bg-red-500 hover:bg-red-600 text-md md:text-xl"
             onClick={onConfirm}
           >
             Xóa
