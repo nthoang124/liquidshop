@@ -45,6 +45,18 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
         <Command>
           <CommandList>
             <CommandGroup>
+                <CommandItem
+                    value="none"
+                    onSelect={() => {
+                        setValue("")
+                        setParentCategory(null)
+                        setOpen(false)
+                    }}
+                    className="text-md text-gray-500 italic"
+                    >
+                        Không có
+                    <Check className={cn("ml-auto", value === "" ? "opacity-100" : "opacity-0")} />
+                </CommandItem>
               {categories.map((c) => (
                 <CommandItem
                   key={c._id}

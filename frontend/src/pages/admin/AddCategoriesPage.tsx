@@ -29,8 +29,12 @@ export default function AddCategoryPage() {
 
   const handleSubmit = async () => {
     try {
-
-      const newCategory = { name, imageUrl, description, parentCategory}
+      const newCategory = {
+        name,
+        imageUrl,
+        description,
+        ...(parentCategory && { parentCategory: parentCategory._id }),
+      };
       const res = await categoryApi.create(newCategory);
       console.log(newCategory);
 

@@ -12,6 +12,7 @@ import {
   Image,
   Settings,
   Layers,
+  BadgeCheck,
 } from "lucide-react"
 
 import { NavMain } from "@/components/admin/sidebar/nav-main"
@@ -68,6 +69,11 @@ const data = {
           url: "/admin/categories/add-new"
         },
       ]
+    },
+    {
+      title: "Thương hiệu",
+      url: "/admin/brands",
+      icon: BadgeCheck,
     },
     {
       title: "Đơn hàng",

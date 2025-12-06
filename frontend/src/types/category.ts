@@ -1,4 +1,3 @@
-import { ICategory } from './category';
 export interface IParentCayegory {
     id: string;
     name: string;
