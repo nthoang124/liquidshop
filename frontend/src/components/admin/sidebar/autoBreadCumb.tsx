@@ -29,15 +29,14 @@ export default function AutoBreadcrumb() {
       <BreadcrumbList>
         {segments.map((seg, idx) => {
           const isLast = idx === segments.length - 1;
-          const link = "/admin/" + segments.slice(0, idx + 1).join("/");
 
           return (
             <BreadcrumbItem key={idx}>
               {!isLast ? (
                 <>
-                  <BreadcrumbLink asChild >
-                    <Link to={link} >{format(seg)}</Link>
-                  </BreadcrumbLink>
+                  <BreadcrumbPage className="text-md sm:text-lg">
+                    {format(seg)}
+                  </BreadcrumbPage>
 
                   <BreadcrumbSeparator />
                 </>
