@@ -1,12 +1,13 @@
-import { Edit, Trash } from "lucide-react";
+import { Edit, Trash, } from "lucide-react";
 import type { ICategory } from "@/types/category";
 
 interface CategoryCardProps {
   category: ICategory;
-  handleEdit: (category : ICategory) => void
+  handleEdit: (category : ICategory) => void;
+  onAskDelete: (category: ICategory) => void;
 }
 
-export default function CategoryCard({ category, handleEdit }: CategoryCardProps) {
+export default function CategoryCard({ category, handleEdit, onAskDelete}: CategoryCardProps) {
 
   return (
     <div
@@ -25,12 +26,15 @@ export default function CategoryCard({ category, handleEdit }: CategoryCardProps
           <button 
             className="p-2 rounded-full hover:bg-gray-100"
             onClick={() => handleEdit(category)}
-            >
-            <Edit size={19} />
+          >
+            <Edit size={20} />
           </button>
 
-          <button className="p-2 rounded-full hover:bg-red-100 text-red-500">
-            <Trash size={19} />
+          <button 
+            className="p-2 rounded-full hover:bg-red-100 text-red-500"
+            onClick={() => onAskDelete(category)}
+          >
+            <Trash size={20}/>
           </button>
 
         </div>

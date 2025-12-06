@@ -3,6 +3,7 @@ import type { ICategory } from "@/types/category"
 import categoryApi from "@/services/api/admin/categoryApi"
 import CategoryCard from "@/components/admin/category/category-card"
 import { EditCategoryDialog } from "@/components/admin/category/edit-category-dialog"
+import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<ICategory[]>([])
@@ -12,19 +13,22 @@ export default function CategoriesPage() {
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
 
+    const [deleteTarget, setDeleteTarget] = useState<ICategory | null>(null);
+    const [openDelete, setOpenDelete] = useState(false);
+
     const handleEdit = (category : ICategory) => {
         setSelectedCategory(category)
         setOpenEdit(true);
     }
-
-    const handleOnSave = () => {
-
-    }
     
-    const loadCategoris = async () => {
+    const handleOnSave = (updated : ICategory) => {
+        const updatedCategory = updated;
+        updateCategory(updatedCategory._id, updatedCategory)
+    }
+
+    const loadCategories = async () => {
         try {
             const res = await categoryApi.getAll();
-            console.log("check imgurl: ", res.data[0].imageUrl);
             setCategories(res.data);
         }
         catch(err){
@@ -35,9 +39,31 @@ export default function CategoriesPage() {
         }
     };
 
+    const updateCategory = async (id : string, category : ICategory) => {
+        try {
+            const res = await categoryApi.update(id, category)
+            console.log("check update api: ", res.message, res.data);
+            loadCategories();
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    const confirmDelete = async () => {
+        try {
+            if(!deleteTarget) return;
+
+            const res = await categoryApi.delete(deleteTarget._id);
+            console.log("check delete api: ", res.message);
+            loadCategories();
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
-            await loadCategoris();
+            await loadCategories();
         }
         fetchData();
     },[]);
@@ -59,6 +85,10 @@ export default function CategoriesPage() {
                             key={c._id} 
                             category={c} 
                             handleEdit={handleEdit}
+                            onAskDelete={(category) => {
+                                setDeleteTarget(category);
+                                setOpenDelete(true);
+                            }}
                         />
                     ))}
                 </div>
@@ -68,7 +98,13 @@ export default function CategoriesPage() {
                     category={selectedCategory}
                     onSave={handleOnSave}
                 />
-            </div>
+                <DeleteCategoryAlert
+                    open={openDelete}
+                    setOpen={setOpenDelete}
+                    categoryName={deleteTarget?.name}
+                    onConfirm={confirmDelete}
+                />
+            </div>  
         )}
         
     </div>

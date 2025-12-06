@@ -33,7 +33,7 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
             name,
             description,
             imageUrl,
-            })
+        })
         setOpen(false)
     }
 
@@ -88,7 +88,7 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
                 <Button variant="outline" onClick={() => setOpen(false)}>
                     Hủy
                 </Button>
-                <Button onClick={handleSave} className="">Lưu thay đổi</Button>
+                <Button onClick={() => handleSave()} className="">Lưu thay đổi</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
