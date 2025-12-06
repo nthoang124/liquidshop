@@ -9,6 +9,14 @@ import { CategoryCombobox } from "@/components/admin/category/category-combobox"
 import { CircleCheckBig, CircleX } from "lucide-react"
 import { AxiosError } from "axios"
 
+//maping message from backend server
+const ERROR_MESSAGES: Record<string, string> = {
+  "Category name is required": "Tên loại sản phẩm không được để trống",
+  "Parent category does not exist": "sản phẩm cha không tồn tại",
+  "Category name already exists": "Tên loại sản phẩm đã tồn tại",
+  "Error server": "lỗi hệ thống",
+};
+
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
   const [imageUrl, setImageUrl] = useState("")
@@ -21,17 +29,26 @@ export default function AddCategoryPage() {
 
   const handleSubmit = async () => {
     try {
-      const newCategory = { name, imageUrl, description, }
+
+      const newCategory = { name, imageUrl, description, parentCategory}
       const res = await categoryApi.create(newCategory);
+      console.log(newCategory);
 
       console.log("Created: ", res.data)
-      if(res.success === true) setFormSuccess(res.message);
+      if(res.success === true) {
+        setFormSuccess(res.message);
+        setFormError("");
+      }
 
     } catch (err: unknown) {
 
       const error = err as AxiosError<{ message: string }>;
-      const msg = error.message || "Có lỗi xảy ra!";
-      setFormError(msg);
+      const backendMsg = error.message ?? "";
+      const vietnameseMsg =
+        ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
+
+      setFormError(vietnameseMsg);
+      setFormSuccess("");
     }
   }
 
@@ -99,7 +116,7 @@ export default function AddCategoryPage() {
               {formSuccess && (
                 <div className="flex flex-row gap-2">
                   <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
-                  <span className="text-lg text-green-500">{formSuccess}</span>
+                  <span className="text-lg text-green-500">Thêm loại sản phẩm mới thành công</span>
                 </div>
               )}
               {formError && (

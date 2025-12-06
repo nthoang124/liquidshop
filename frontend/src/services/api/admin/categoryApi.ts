@@ -1,5 +1,5 @@
 import axiosClient from "../anxiosCient";
-import type { ICategory, ICategoryListRespose } from "@/types/category";
+import type { ICategory, ICategoryCreate, ICategoryListRespose } from "@/types/category";
 
 const categoryApi = {
     getAll(): Promise<ICategoryListRespose> {
@@ -15,7 +15,7 @@ const categoryApi = {
         return axiosClient.delete(`/admin/category/${id}`);
     }, 
 
-    create(data: Partial<ICategory>) : Promise<{success: boolean; message: string; data: ICategory}> {
+    create(data: Partial<ICategoryCreate>) : Promise<{success: boolean; message: string; data: ICategory}> {
         return axiosClient.post("/admin/category/createCategory", data);
     }
 
