@@ -59,7 +59,7 @@ export const columns: ColumnDef<IUser>[] = [
     ),
     cell: ({ row, table }) => (
       <button
-        className="text-blue-600 hover:underline"
+        className="text-black hover:underline"
         onClick={() => table.options.meta?.onUserClick?.(row.original._id)}
       >
         {row.getValue("fullName")}

@@ -24,13 +24,9 @@ export default function UsersPage() {
                 search,
             }
             const res = await userApi.getAll(query);
-            console.log("SEARCH RECEIVED:", query.search);
-            console.log("check get all: ", res.data.data);
             setUsers(res.data.data);
             setTotalPages(res.data.totalPages);
             setPage(res.data.page);
-            console.log("check total pages: ", res.data.totalPages)
-            console.log("check count: ", res.data.count);
         }
         catch(error){
             console.log(error)

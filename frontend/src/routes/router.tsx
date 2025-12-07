@@ -6,6 +6,7 @@ import HomePage from "@/pages/home/HomePage";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
+import UserDetailPage from "@/pages/admin/UserDetailPage"
 
 // Lazy loaded pages
 const ProductDetailPage = React.lazy(
@@ -20,6 +21,7 @@ const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
 const AddCategoriesPage = React.lazy(() => import("@/pages/admin/AddCategoriesPage"));
+
 
 const router = createBrowserRouter([
   {
@@ -45,6 +47,8 @@ const router = createBrowserRouter([
       {path: "categories/list", element: <CategoriesPage/>},
       {path: "categories/add-new", element: <AddCategoriesPage/>},
       {path: "brands", element: <BrandsPage/>},
+      {path: "users/:id", element: <UserDetailPage/>}
+
     ],
   },
 ]);

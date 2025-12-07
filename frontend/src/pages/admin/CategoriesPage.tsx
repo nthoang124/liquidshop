@@ -41,7 +41,7 @@ export default function CategoriesPage() {
 
     const updateCategory = async (id : string, category : ICategory) => {
         try {
-            const res = await categoryApi.update(id, category)
+            await categoryApi.update(id, category)
             loadCategories();
         }catch(err){
             console.log(err);
@@ -52,7 +52,7 @@ export default function CategoriesPage() {
         try {
             if(!deleteTarget) return;
 
-            const res = await categoryApi.delete(deleteTarget._id);
+            await categoryApi.delete(deleteTarget._id);
             loadCategories();
         }catch(err){
             console.log(err);

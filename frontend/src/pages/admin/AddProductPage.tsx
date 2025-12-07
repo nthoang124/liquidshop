@@ -17,9 +17,8 @@ export default function ProductsPage() {
         brand: "6932acee38bedaef2b18a81d",
       });
 
-      setProducts(res.data);
-      setTotalPages(res.totalPages);
-      console.log("check speci: ", res.data[0].specifications)
+      setProducts(res.data.data);
+      setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error(err);
     }
