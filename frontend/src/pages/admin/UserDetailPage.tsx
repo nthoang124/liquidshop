@@ -1,14 +1,21 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import userApi from "@/services/api/admin/userApi";
 import type { IUser } from "@/types/user";
+import { ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function UserDetailPage() {
   const { id } = useParams();
   const [user, setUser] = useState<IUser | null>(null);
+  const navigate = useNavigate();
+
+  const handleComeBack = () => {
+    navigate("/admin/users");
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -25,6 +32,17 @@ export default function UserDetailPage() {
 
   return (
     <div className="p-10 space-y-8">
+        {/* <div className="bg-white shadow-md"> */}
+            <Button 
+                className="bg-white border border-gray-300 hover:bg-white hover:shadow-md text-black"
+                onClick={() => handleComeBack()}
+            >
+                <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
+                quay về
+            </Button>
+            {/* <span className="text-lg">{user.fullName}({user.email})</span> */}
+        {/* </div> */}
+        
 
       {/* Header Section */}
       <div className="flex items-center gap-6">
@@ -49,7 +67,7 @@ export default function UserDetailPage() {
 
       {/* Tabs Section */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList>
+        <TabsList className="bg-gray-200">
           <TabsTrigger value="overview">Tổng quan</TabsTrigger>
           <TabsTrigger value="addresses">Địa chỉ</TabsTrigger>
           <TabsTrigger value="orders">Đơn hàng</TabsTrigger>
@@ -60,7 +78,7 @@ export default function UserDetailPage() {
         <TabsContent value="overview">
           <Card className="mt-5">
             <CardHeader>
-              <CardTitle>Thông tin chi tiết</CardTitle>
+              <CardTitle className="text-md md:text-lg">Thông tin chi tiết</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-md">
               <p><strong>Email:</strong> {user.email}</p>
@@ -77,21 +95,21 @@ export default function UserDetailPage() {
               <CardTitle>Địa chỉ giao hàng</CardTitle>
             </CardHeader>
             <CardContent>
-              {user.addresses.length === 0 ? (
+              {user.addresses?.length === 0 ? (
                 <p className="text-gray-600">Không có địa chỉ.</p>
               ) : (
                 <div className="space-y-4">
-                  {user.addresses.map((addr, index) => (
+                  {user.addresses?.map((addr, index) => (
                     <div
                       key={index}
                       className="p-4 border rounded-lg flex justify-between items-center"
                     >
                       <div>
                         <p>{addr.street}</p>
-                        <p>{addr.ward}, {addr.district}, {addr.city}</p>
+                        <p>{addr.ward} {addr.city}</p>
                       </div>
                       {addr.isDefault && (
-                        <Badge className="bg-blue-600">Mặc định</Badge>
+                        <Badge className="bg-blue-600 text-sm">Mặc định</Badge>
                       )}
                     </div>
                   ))}
@@ -101,7 +119,7 @@ export default function UserDetailPage() {
           </Card>
         </TabsContent>
 
-        {/* ORDERS TAB (DUMMY — YOU CAN CONNECT LATER) */}
+        {/* ORDERS TAB */}
         <TabsContent value="orders">
           <Card className="mt-5">
             <CardHeader>

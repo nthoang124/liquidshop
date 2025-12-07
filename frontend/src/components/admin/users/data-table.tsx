@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/table"
 import type { IUser } from "@/types/user"
 import { columns } from "./columns"  
+import { useNavigate } from "react-router-dom"
+
 
 
 interface DataTableProps {
@@ -39,7 +41,6 @@ interface DataTableProps {
   page: number; 
   search: string;
   setSearch: (search: string) => void;
-  onSelectUser: (id: string) => void
 }
 
 export function DataTable({users, setPage, totalPages, page, search, setSearch, onSelectUser} : DataTableProps) {
@@ -51,11 +52,13 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
+  const navigate = useNavigate();
+
   const table = useReactTable({
     data: users,
     columns,
     meta: {
-      onUserClick: onSelectUser
+      onUserClick: (id: string) => navigate(`/admin/users/${id}`)
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

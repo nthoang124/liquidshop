@@ -82,7 +82,7 @@ const data = {
     },
     {
       title: "Khách hàng",
-      url: "/admin/customers",
+      url: "/admin/users",
       icon: Users,
     },
     {
