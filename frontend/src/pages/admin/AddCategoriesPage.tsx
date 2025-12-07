@@ -39,8 +39,8 @@ export default function AddCategoryPage() {
       console.log(newCategory);
 
       console.log("Created: ", res.data)
-      if(res.success === true) {
-        setFormSuccess(res.message);
+      if(res.data.success === true) {
+        setFormSuccess(res.data.message);
         setFormError("");
       }
 
@@ -59,7 +59,7 @@ export default function AddCategoryPage() {
   const loadCategories = async () => {
     try {
         const res = await categoryApi.getAll();
-        setCategories(res.data);
+        setCategories(res.data.data);
     }
     catch(err){
       console.log(err);

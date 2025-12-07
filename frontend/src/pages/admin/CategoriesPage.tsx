@@ -29,7 +29,7 @@ export default function CategoriesPage() {
     const loadCategories = async () => {
         try {
             const res = await categoryApi.getAll();
-            setCategories(res.data);
+            setCategories(res.data.data);
         }
         catch(err){
             console.log(err);
@@ -42,7 +42,6 @@ export default function CategoriesPage() {
     const updateCategory = async (id : string, category : ICategory) => {
         try {
             const res = await categoryApi.update(id, category)
-            console.log("check update api: ", res.message, res.data);
             loadCategories();
         }catch(err){
             console.log(err);
@@ -54,7 +53,6 @@ export default function CategoriesPage() {
             if(!deleteTarget) return;
 
             const res = await categoryApi.delete(deleteTarget._id);
-            console.log("check delete api: ", res.message);
             loadCategories();
         }catch(err){
             console.log(err);

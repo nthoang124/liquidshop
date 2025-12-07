@@ -1,11 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
+import type {AxiosResponse } from "axios";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },
-});
+}); 
 
 // Request Interceptor (Attach token)
 // axiosClient.interceptors.request.use((config: AxiosRequestConfig) => {
@@ -20,10 +21,10 @@ const axiosClient = axios.create({
 
 // ⭐ Response Interceptor (Handle response & errors)
 axiosClient.interceptors.response.use(
-  (response: AxiosResponse) => response.data,
+  (response: AxiosResponse) => response,   // ⭐ trả AxiosResponse đầy đủ
   (error) => {
     console.error("API Error:", error.response?.data || error.message);
-    throw error.response?.data || error;
+    return Promise.reject(error.response?.data || error);
   }
 );
 

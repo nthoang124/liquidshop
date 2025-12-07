@@ -32,7 +32,7 @@ export default function BrandsPage() {
     const loadbrands = async () => {
         try {
             const res = await brandApi.getAll();
-            setBrands(res.data);
+            setBrands(res.data.data);
         }
         catch(error){
             console.log(error);

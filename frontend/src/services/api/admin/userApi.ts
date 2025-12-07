@@ -1,19 +1,22 @@
-import axiosClient from '../anxiosCient';
-import type { IUserListResponse } from '@/types/user';
-import type { UserQuery } from "./query"
-import type { IUser } from '@/types/user';
+import axiosClient from "../anxiosCient";
+import type { IUserListResponse, IUser } from "@/types/user";
+import type { UserQuery } from "./query";
 
 const userApi = {
-    getAllUsers(params?: UserQuery): Promise<IUserListResponse> {
-        return axiosClient.get("admin/user/getAllUsers", {params})
-    },
-    getById(id: string): Promise<{success: boolean, data: IUser}> {
-        return axiosClient.get(`admin/user/${id}`)
-    },
+  getAll(params?: UserQuery) {
+    return axiosClient.get<IUserListResponse>("admin/user/getAllUsers", { params });
+  },
 
-    updateRole(id: string, role: string): Promise<{success: boolean; message: string; data:IUser}> {
-        return axiosClient.put(`admin/user/${id}`, role)
-    }
-}
+  getById(id: string) {
+    return axiosClient.get<{ success: boolean; data: IUser }>(`admin/user/${id}`);
+  },
 
-export default userApi
+  updateRole(id: string, role: string) {
+    return axiosClient.put<{ success: boolean; message: string; data: IUser }>(
+      `admin/user/${id}`,
+      role
+    );
+  },
+};
+
+export default userApi;
