@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, PenLineIcon, Trash2Icon } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, ArrowDownUp } from "lucide-react"
 
 export const columns: ColumnDef<IUser>[] = [
   {
@@ -47,18 +47,24 @@ export const columns: ColumnDef<IUser>[] = [
   },
   {
     accessorKey: "fullName",
-    header: ({column}) => {
-        return (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                className="text-md sm:tex-lg font-bold hover:bg-blue-200"
-            >
-                Name
-                <ArrowUpDown />
-            </Button>
-        )
-    }
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="text-md sm:text-lg font-bold hover:bg-blue-200"
+      >
+        Họ tên
+        <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row, table }) => (
+      <button
+        className="text-blue-600 hover:underline"
+        onClick={() => table.options.meta?.onUserClick(row.original._id)}
+      >
+        {row.getValue("fullName")}
+      </button>
+    ),
   },
   {
     accessorKey: "email",
@@ -78,7 +84,7 @@ export const columns: ColumnDef<IUser>[] = [
   },
   {
     accessorKey: "phoneNumber",
-    header: ("Phone"),
+    header: ("Điện thoại"),
     cell: ({ row }) => ( <div>{row.getValue("phoneNumber")}</div> )
   },
   {
@@ -94,13 +100,7 @@ export const columns: ColumnDef<IUser>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem > <PenLineIcon />Edit</DropdownMenuItem>
-            <DropdownMenuItem 
-                className="bg-red-500 text-white focus:bg-red-600 focus:text-white"
-            >
-                <Trash2Icon color="white"/>
-                Delete
-            </DropdownMenuItem>
+            <DropdownMenuItem > <ArrowDownUp size={28} strokeWidth={2.25} />Update to Admin</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

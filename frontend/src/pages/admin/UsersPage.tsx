@@ -3,6 +3,7 @@ import userApi from "@/services/api/admin/userApi";
 import type { IUser } from "@/types/user";
 import type { UserQuery } from "@/services/api/admin/query";
 import { useCallback, useEffect, useState } from "react";
+import { UserDetailDialog } from "@/components/admin/users/user-detail";
 
 export default function UsersPage() {
     const [users, setUsers] = useState<IUser[]>([])
@@ -11,6 +12,9 @@ export default function UsersPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [perPage, setPerPage] = useState(5);  
     const [search, setSearch] = useState("");
+    const [openUserDetial, setOpenUserDetail] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
+    
 
     const loadUsers = useCallback (async () => {
         try {
@@ -40,6 +44,12 @@ export default function UsersPage() {
         loadUsers();
     }, [loadUsers]);
 
+    const handleSelectUser = async (id: string) => {
+        const res = await userApi.getById(id);
+        setSelectedUser(res.data.data);
+        setOpenUserDetail(true);
+    };
+
     return (
         <div className="px-4">
             {isLoading && (
@@ -54,6 +64,12 @@ export default function UsersPage() {
                     page={page}
                     search={search}
                     setSearch={setSearch}
+                    onSelectUser={handleSelectUser}
+                />
+                <UserDetailDialog
+                    onOpenChange={setOpenUserDetail}
+                    open={openUserDetial}
+                    user={selectedUser}
                 />
             </div>
         </div>

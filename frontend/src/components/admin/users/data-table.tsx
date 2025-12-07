@@ -36,12 +36,13 @@ interface DataTableProps {
   users: IUser[];
   setPage: (page: number) => void;
   totalPages: number;
-  page: number;
+  page: number; 
   search: string;
   setSearch: (search: string) => void;
+  onSelectUser: (id: string) => void
 }
 
-export function DataTable({users, setPage, totalPages, page, search, setSearch} : DataTableProps) {
+export function DataTable({users, setPage, totalPages, page, search, setSearch, onSelectUser} : DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -53,6 +54,9 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
   const table = useReactTable({
     data: users,
     columns,
+    meta: {
+      onUserClick: onSelectUser
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -74,18 +78,16 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
     setPage(page + 1);
   }
 
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
+        <Input 
           placeholder="Tìm theo email và tên"
           value={search }
           onChange={(event) =>
-            // table.getColumn("email")?.setFilterValue(event.target.value)
             setSearch(event.target.value)
           }
-          className="max-w-sm bg-white"
+          className="max-w-sm bg-white text-md"
         />  
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -150,6 +152,7 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
                 </TableRow>
               ))
             ) : (
+              // render if no user found
               <TableRow>
                   <TableCell colSpan={columns.length}>
                     <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
@@ -167,6 +170,8 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
           </TableBody>
         </Table>
       </div>
+
+      {/* {PAGINATION} */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm sm:text-lg">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
