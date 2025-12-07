@@ -12,7 +12,7 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, ChevronsRight, ChevronsLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -72,9 +72,11 @@ interface DataTableProps {
   setPage: (page: number) => void;
   totalPages: number;
   page: number;
+  search: string;
+  setSearch: (search: string) => void;
 }
 
-export function DataTable({users, setPage, totalPages, page} : DataTableProps) {
+export function DataTable({users, setPage, totalPages, page, search, setSearch} : DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -102,14 +104,26 @@ export function DataTable({users, setPage, totalPages, page} : DataTableProps) {
     },
   })
 
+  const handlePreButton = () => {
+    if(page <= 1) return;
+    setPage(page - 1);
+  }
+
+  const handleNextButton = () => {
+    if(page >= totalPages) return;
+    setPage(page + 1);
+  }
+
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Tìm theo email và tên"
+          value={search }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            // table.getColumn("email")?.setFilterValue(event.target.value)
+            setSearch(event.target.value)
           }
           className="max-w-sm bg-white"
         />  
@@ -200,12 +214,11 @@ export function DataTable({users, setPage, totalPages, page} : DataTableProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => handlePreButton()}
           >
-            Previous
+            <ChevronsLeft size={28} strokeWidth={2.25} />
           </Button>
-          <div className="flex gap-2 mt-0">
+          <div className="flex gap-0.5 mt-0">
             {Array.from({ length: totalPages }, (_, i) => {
               const pageNum = i + 1;
               const isActive = pageNum === page;
@@ -227,10 +240,9 @@ export function DataTable({users, setPage, totalPages, page} : DataTableProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => handleNextButton()}
           >
-            Next
+            <ChevronsRight size={28} strokeWidth={2.25} />
           </Button>
         </div>
       </div>

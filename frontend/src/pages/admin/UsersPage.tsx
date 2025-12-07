@@ -55,6 +55,8 @@ export default function UsersPage() {
                         setPage={setPage}
                         totalPages={totalPages}
                         page={page}
+                        search={search}
+                        setSearch={setSearch}
                     />
                 </div>
             )}
