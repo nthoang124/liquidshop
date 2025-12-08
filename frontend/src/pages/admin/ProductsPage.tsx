@@ -7,116 +7,226 @@ import {
 } from "@/components/ui/select"
 
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ProductsDisplay from "@/components/admin/products/products-view"
 
-import mouses from "@/data/mice.json"
-import keyboards from "@/data/keyboards.json"
-import pcs from "@/data/pcs.json"
+import type { IProduct } from "@/services/api/admin/product"
+import productApi from "@/services/api/admin/productApi"
+import type { ProductQuery } from "@/services/api/admin/query"
+import brandApi from "@/services/api/admin/brandApi"
+import type { IBrand } from "@/types/brand"
+import type { ICategory } from "@/types/category"
+import categoryApi from "@/services/api/admin/categoryApi"
+import { Input } from "@/components/ui/input"
+import { Plus, SearchX, X } from "lucide-react"
 
-import type { Product } from "@/types/product"
-import type { ProductCategory } from "@/types/product"
 
 export default function ProductsPage() {
   // Gộp tất cả sản phẩm thành 1 list
-  const allProducts: Product[] = [
-  ...mouses.map((p) => ({ ...p, category: p.category as ProductCategory })),
-  ...keyboards.map((p) => ({ ...p, category: p.category as ProductCategory })),
-  ...pcs.map((p) => ({ ...p, category: p.category as ProductCategory })),
-];
 
-  // ===== STATES =====
-  const [selectedType, setSelectedType] = useState("all")
-  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [brands, setBrands] = useState<IBrand[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [search, setSearch] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  // ===== FILTER =====
-  const filteredProducts: Product[] =
-    selectedType === "all"
-      ? allProducts
-      : allProducts.filter((item) => item.category === selectedType)
+  const isFiltered =
+  selectedBrand !== "all" ||
+  selectedCategory !== "all" ||
+  selectedStatus !== "all";
 
-  // ===== PAGINATION =====
-  const itemsPerPage = 6
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
 
-  const paginatedProducts = filteredProducts.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  )
+  const loadProducts = async () => {
+    try {
+      const params: ProductQuery = {
+        page,
+        limit,
+        search,
+      }
+      if (selectedBrand !== "all") params.brand = selectedBrand;
+      if (selectedCategory !== "all") params.category = selectedCategory;
+      if (selectedStatus !== "all") params.status = selectedStatus;
+
+      const res = await productApi.getAll(params);
+      setProducts(res.data.data);
+      setTotalPages(res.data.totalPages);
+    }
+    catch(error){
+      console.log(error);
+    }
+    finally{
+      setIsLoading(false);
+    }
+  }
+
+  const loadBrands = async () => {
+    try {
+      const res = await brandApi.getAll();
+      setBrands(res.data.data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const loadCategories = async () => {
+    try {
+      const res = await categoryApi.getAll();
+      setCategories(res.data.data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const onEdit = (id: string) => {
+    
+  }
+
+  const onDelete = (id: string) => {
+
+  }
+
+  useEffect(() => {
+    try{
+      const fetchData = async () => {
+        await loadProducts();
+        await loadBrands()
+        await loadCategories()
+      }
+      fetchData();
+    }
+    catch(error){
+      console.log(error)
+    }
+  }, [selectedBrand, selectedCategory, selectedStatus, page, search])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-5">
+      {isLoading && (
+        <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
+      )}
 
-      {/* Header: Count + Sort + View toggle */}
-      <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between px-2">
-        <Button>add Product</Button>
+      <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
+        <p className="text-2xl lg:text-3xl font-bold">Quản lí sản phẩm</p>
+        <p className="text-md md:text-lg text-gray-600">Quản lí thông tin sản phẩm, kho hàng và danh mục</p>
+      </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-start gap-3">
+      <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2">
+        <div className="flex flex-row gap-2">
+          <Button className="text-md text-white bg-blue-600 hover:bg-blue-700">
+            <Plus size={34} strokeWidth={3}/>
+            Thêm sản phẩm
+          </Button>
+          <Input 
+            placeholder="Tìm kiếm theo tên sản phẩm"
+            value={search}
+            onChange={(event) =>
+              setSearch(event.target.value)
+            }
+            className="max-w-lg w-full bg-white text-md border-2 border-gray-400"
+          />  
+        </div>
+        
+        <div className="flex flex-col sm:flex-row items-center justify-start gap-1 sm:gap-2">
 
-          {/* Category Filter */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm sm:text-md">Category</span>
-            <Select
-              onValueChange={(v) => {
-                setSelectedType(v)
-                setCurrentPage(1) // Reset pagination khi đổi category
+          {isFiltered && (
+            <Button variant="outline" onClick={() => {
+                setSearch("");
+                setSelectedBrand("all");
+                setSelectedCategory("all");
+                setSelectedStatus("all");
               }}
+              className="hidden sm:flex w-26"
             >
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
+              <X/>
+              Xoá bộ lọc
+            </Button>
+          )}
 
-              <SelectContent>
-                <SelectItem value="all">All Products</SelectItem>
-                <SelectItem value="mouse">Mouse</SelectItem>
-                <SelectItem value="keyboard">Keyboard</SelectItem>
-                <SelectItem value="pc">PC</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* lọc theo thương hiệu */}
+          <Select value={selectedBrand} onValueChange={(selectedBrand) => setSelectedBrand(selectedBrand)}>
+            <SelectTrigger><SelectValue placeholder="Thương hiệu" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Thương hiệu</SelectItem>
+              {brands.map(b => (
+                <SelectItem key={b._id} value={b._id}>{b.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <div className="flex flex-row gap-2">
+              <Select value={selectedCategory} onValueChange={(selectedCategory) => setSelectedCategory(selectedCategory)}>
+                <SelectTrigger><SelectValue placeholder="Loại"/></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Loại</SelectItem>
+                  {categories.map(c => (
+                    <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* {Lọc theo trạng thái} */}
+              <Select value={selectedStatus} onValueChange={(selectedStatus) => setSelectedStatus(selectedStatus)}>
+                <SelectTrigger><SelectValue placeholder="Trạng thái" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Trạng thái</SelectItem>
+                  <SelectItem value="active">Đang bán</SelectItem>
+                  <SelectItem value="inactive">Ngừng bán</SelectItem>
+                  <SelectItem value="out_of_stock">Hết hàng</SelectItem>
+                </SelectContent>
+              </Select>
           </div>
-
-          {/* Sort */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Sort by:</span>
-            <Select>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Price" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="price-asc">Price (Low → High)</SelectItem>
-                <SelectItem value="price-desc">Price (High → Low)</SelectItem>
-                <SelectItem value="newest">Newest</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Toggle Grid/List */}
-          {/* <Button variant="outline" size="icon">
-            <LayoutGridIcon className="size-4" />
-          </Button> */}
-
+          {/* {lọc theo loại sản phẩm} */}
+          
         </div>
       </div>
 
       {/* Product Grid */}
-      <ProductsDisplay products={paginatedProducts} />
+      {!isLoading && products.length === 0 &&(
+        <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
+          <SearchX className="w-12 h-12 mb-3 opacity-70" />
+          <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>
+          <span className="text-sm mb-3">Thử dùng từ khóa khác hoặc reset tìm kiếm.</span>
+
+          <Button variant="outline" onClick={() => {
+            setSearch("");
+            setSelectedBrand("all");
+            setSelectedCategory("all");
+            setSelectedStatus("all");
+          }}>
+            Xoá bộ lọc
+          </Button>
+        </div>
+      )}
+
+      {!isLoading && products.length > 0 && (
+        <ProductsDisplay 
+          products={products} 
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      )}
 
       {/* Pagination */}
       <div className="flex justify-center gap-2 mt-8">
         <Button
           variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((p) => p - 1)}
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
         >
           Prev
         </Button>
 
-        {[...Array(totalPages)].map((_, idx) => (
+        {Array.from({length: totalPages}, (_, idx) => (
           <Button
             key={idx}
-            variant={currentPage === idx + 1 ? "default" : "outline"}
-            onClick={() => setCurrentPage(idx + 1)}
+            variant={page === idx + 1 ? "default" : "outline"}
+            onClick={() => setPage(idx + 1)}
           >
             {idx + 1}
           </Button>
@@ -124,8 +234,8 @@ export default function ProductsPage() {
 
         <Button
           variant="outline"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((p) => p + 1)}
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
         >
           Next
         </Button>

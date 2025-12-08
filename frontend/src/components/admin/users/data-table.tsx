@@ -43,7 +43,7 @@ interface DataTableProps {
   setSearch: (search: string) => void;
 }
 
-export function DataTable({users, setPage, totalPages, page, search, setSearch, onSelectUser} : DataTableProps) {
+export function DataTable({users, setPage, totalPages, page, search, setSearch} : DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -158,6 +158,7 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
                 </TableRow>
               ))
             ) : (
+              
               // render if no user found
               <TableRow>
                   <TableCell colSpan={columns.length}>
@@ -179,10 +180,6 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
 
       {/* {PAGINATION} */}
       <div className="flex items-center justify-end space-x-2 py-4">
-        {/* <div className="text-muted-foreground flex-1 text-sm sm:text-lg">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div> */}
         <div className="space-x-2 flex flex-row">
           <Button
             variant="outline"
