@@ -85,7 +85,7 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input 
-          placeholder="Tìm theo email và tên"
+          placeholder="Tìm kiếm theo email và tên khách hàng"
           value={search }
           onChange={(event) =>
             setSearch(event.target.value)
@@ -141,11 +141,14 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
           </TableHeader>
          <TableBody>
             {users.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="text-md sm:text-base"
+                  className={
+                    `text-md sm:text-base ` +
+                    (index % 2 === 0 ? "bg-white" : "bg-slate-100")
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -176,10 +179,10 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch, 
 
       {/* {PAGINATION} */}
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm sm:text-lg">
+        {/* <div className="text-muted-foreground flex-1 text-sm sm:text-lg">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        </div> */}
         <div className="space-x-2 flex flex-row">
           <Button
             variant="outline"

@@ -80,7 +80,7 @@ export default function CategoriesPage() {
     },[]);
     
   return (
-    <div className="p-5 px-6">
+    <div className="p-5">
         {isLoading && (
             <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
@@ -90,7 +90,7 @@ export default function CategoriesPage() {
         )}
 
         {!isLoading && categories.length > 0 && (
-            <div className="flex flex-col gap-3 p-4 bg-white ">
+            <div className="flex flex-col gap-3 p-4 shadow-sm bg-white ">
                 <div className="flex flex-col mt-4 px-8 gap-3 border-b border-gray-300 pb-3">
                     <p className="text-2xl lg:text-3xl font-bold">Quản lí danh mục</p>
                     <p className="text-md md:text-lg text-gray-600">Tổ chức và phân loại sản phẩm theo danh mục</p>

@@ -31,18 +31,19 @@ export default function UserDetailPage() {
   if (!user) return <div className="p-10 text-lg">Đang tải...</div>;
 
   return (
-    <div className="p-10 space-y-8">
-        {/* <div className="bg-white shadow-md"> */}
-            <Button 
-                className="bg-white border border-gray-300 hover:bg-white hover:shadow-md text-black"
-                onClick={() => handleComeBack()}
-            >
-                <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
-                quay về
-            </Button>
-            {/* <span className="text-lg">{user.fullName}({user.email})</span> */}
-        {/* </div> */}
-        
+    <div className="p-5 space-y-8">
+       <div className="flex flex-col bg-white mt-4 p-5 gap-3 border-b border-gray-300">
+        <Button 
+          className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
+          onClick={() => handleComeBack()}
+        >
+          <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
+          quay về
+        </Button>
+
+        <p className="text-2xl lg:text-3xl font-bold">Thông tin khách hàng</p>
+        <p className="text-md md:text-lg text-gray-600">Thông tin chi tiết khách hàng</p>
+      </div>
 
       {/* Header Section */}
       <div className="flex items-center gap-6">

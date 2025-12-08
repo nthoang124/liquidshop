@@ -85,7 +85,7 @@ export default function BrandsPage() {
             )}
     
             {!isLoading && brands.length > 0 && (
-                <div className="flex flex-col gap-3 p-2 bg-white">
+                <div className="flex flex-col gap-3 p-4 shadow-sm bg-white">
                     <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
                         <p className="text-2xl lg:text-3xl font-bold">Quản lí thương hiệu</p>
                         <p className="text-md md:text-lg text-gray-600">Quản lí thương hiệu và nhà cung cấp sản phẩm</p>

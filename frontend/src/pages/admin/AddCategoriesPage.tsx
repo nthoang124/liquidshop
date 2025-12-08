@@ -74,7 +74,7 @@ export default function AddCategoryPage() {
   },[]);
 
   return (
-    <div className="flex flex-col gap-5 p-5">
+    <div className="flex flex-col gap-5 shadow-sm p-5">
       <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
         <p className="text-2xl lg:text-3xl font-bold">Thêm danh mục</p>
         <p className="text-md md:text-lg text-gray-600">Tạo mới danh mục</p>
