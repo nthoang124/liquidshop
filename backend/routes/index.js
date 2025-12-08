@@ -8,6 +8,7 @@ const { protectCustomer, protectAdmin } = require('../middlewares/user')
 const brandRoutesAdmin = require('./api/admin/brand')
 const productRoutesAdmin = require('./api/admin/product')
 const adminRoutes = require('./api/admin/admin')
+const orderRoutesAdmin = require('./api/admin/order')
 
 router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/auth', authRoutes);
@@ -17,5 +18,6 @@ router.use('/admin/category',protectAdmin,categoryRoutesAdmin);
 router.use('/admin/brand',protectAdmin,brandRoutesAdmin);
 router.use('/products', productRoutes)
 router.use('/admin/user', protectAdmin, adminRoutes);
+router.use('/admin/order', protectAdmin, orderRoutesAdmin);
 
 module.exports = router
