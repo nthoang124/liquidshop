@@ -4,6 +4,7 @@ import categoryApi from "@/services/api/admin/categoryApi"
 import CategoryCard from "@/components/admin/category/category-card"
 import { EditCategoryDialog } from "@/components/admin/category/edit-category-dialog"
 import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
+import { LayoutGrid, Package, PackageSearch, Grid2X2 } from "lucide-react"
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<ICategory[]>([])
@@ -67,7 +68,7 @@ export default function CategoriesPage() {
     },[]);
     
   return (
-    <div className="p-4">
+    <div className="p-5 px-6">
         {isLoading && (
             <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
@@ -77,34 +78,68 @@ export default function CategoriesPage() {
         )}
 
         {!isLoading && categories.length > 0 && (
-            <div className="flex flex-col gap-3">
-                <p className="text-xl lg:text-2xl font-bold text-gray-600">Danh sách các loại sản phẩm</p>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:px-4 xl:px-10 gap-5 mt-4"  >
-                    {categories.map((c) =>(
-                        <CategoryCard 
-                            key={c._id} 
-                            category={c} 
-                            handleEdit={handleEdit}
-                            onAskDelete={(category) => {
-                                setDeleteTarget(category);
-                                setOpenDelete(true);
-                            }}
-                        />
-                    ))}
+            <div className="flex flex-col gap-3 bg-white ">
+                <div className="flex flex-col mt-4 px-8 gap-3 border-b border-gray-300 pb-3">
+                    <p className="text-2xl lg:text-3xl font-bold">Quản lí danh mục</p>
+                    <p className="text-md md:text-lg text-gray-600">Tổ chức và phân loại sản phẩm theo danh mục</p>
                 </div>
-                <EditCategoryDialog
-                    open={openEdit}
-                    setOpen={setOpenEdit}
-                    category={selectedCategory}
-                    onSave={handleOnSave}
-                />
-                <DeleteCategoryAlert
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                    categoryName={deleteTarget?.name}
-                    onConfirm={confirmDelete}
-                />
-            </div>  
+                <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                        <p className="text-lg font-semibold">Tổng danh mục</p>
+                        <div className="flex flex-row items-center gap-2">
+                            <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
+                            <LayoutGrid size={32} color="#146bdb" />
+                        </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                        <p className="text-lg font-semibold">Danh mục cha</p>
+                        <div className="flex flex-row items-center gap-2">
+                            <p className="text-xl lg:text-2xl font-bold">0</p>
+                            <PackageSearch size={32} color="#e1c614" />
+                        </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                        <p className="text-lg font-semibold">Tổng sản phẩm</p>
+                         <div className="flex flex-row items-center gap-2">
+                            <p className="text-xl lg:text-2xl font-bold">0</p>
+                            <Package size={32} color="#10b238" />
+                        </div>
+                    </div>
+                </div>
+                <div className="borderborder-gray-200 flex flex-col gap-4 shadow-lg px-4 lg:px-4 xl:px-10 py-4">
+                    <div className="flex flex-row gap-2">
+                        <Grid2X2 size={22} color="#146bdb" />
+                        <p className="text-lg font-bold">Danh sách danh mục</p>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"  >
+                        {categories.map((c) =>(
+                            <CategoryCard 
+                                key={c._id} 
+                                category={c} 
+                                handleEdit={handleEdit}
+                                onAskDelete={(category) => {
+                                    setDeleteTarget(category);
+                                    setOpenDelete(true);
+                                }}
+                            />
+                        ))}
+                    </div>
+                    <EditCategoryDialog
+                        open={openEdit}
+                        setOpen={setOpenEdit}
+                        category={selectedCategory}
+                        onSave={handleOnSave}
+                    />
+                    <DeleteCategoryAlert
+                        open={openDelete}
+                        setOpen={setOpenDelete}
+                        categoryName={deleteTarget?.name}
+                        onConfirm={confirmDelete}
+                    />
+                </div>  
+            </div>
         )}
         
     </div>

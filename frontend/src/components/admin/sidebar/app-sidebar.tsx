@@ -56,16 +56,16 @@ const data = {
       ]
     },
     {
-      title: "Loại Sản phẩm",
+      title: "Danh mục",
       icon: Layers,
       url: "/admin/categories",
       items: [
         {
-          title: "Các loại sản phẩm",
+          title: "Danh sách",
           url: "/admin/categories/list"
         },
         {
-          title: "Thêm loại sản phẩm",
+          title: "Thêm danh mục",
           url: "/admin/categories/add-new"
         },
       ]
