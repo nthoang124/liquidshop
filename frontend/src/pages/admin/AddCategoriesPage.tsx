@@ -11,9 +11,9 @@ import { AxiosError } from "axios"
 
 //maping message from backend server
 const ERROR_MESSAGES: Record<string, string> = {
-  "Category name is required": "Tên loại sản phẩm không được để trống",
-  "Parent category does not exist": "sản phẩm cha không tồn tại",
-  "Category name already exists": "Tên loại sản phẩm đã tồn tại",
+  "Category name is required": "Tên danh mục không được để trống",
+  "Parent category does not exist": "Danh mục cha không tồn tại",
+  "Category name already exists": "Tên danh mục đã tồn tại",
   "Error server": "lỗi hệ thống",
 };
 
@@ -75,67 +75,72 @@ export default function AddCategoryPage() {
 
   return (
     <div className="flex flex-col gap-5 p-5">
-      <span className="text-lg md:text-2xl text-gray-600 font-bold">Thêm loại sản phẩm</span>
-      <div className="flex justify-center">
-        <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-md px-3">
-          <CardHeader>
-            <CardTitle className="text-xl md:text-2xl">Loại sản phẩm</CardTitle>
-          </CardHeader>
+      <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
+        <p className="text-2xl lg:text-3xl font-bold">Thêm danh mục</p>
+        <p className="text-md md:text-lg text-gray-600">Tạo mới danh mục</p>
+      </div>
+      <div className="bg-white border-gray-200 shadow-md p-4 min-h-screen">
+        <div className="flex justify-center">
+          <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mt-4 rounded-md px-3">
+            <CardHeader>
+              <CardTitle className="text-xl md:text-2xl">Danh mục</CardTitle>
+            </CardHeader>
 
-          <CardContent className="space-y-4">
-            <div>
-              <Label className="text-md md:text-lg">Tên loại sản phẩm</Label>
-              <Input className="h-12 focus-visible:ring-2 
-                              focus-visible:ring-blue-500 
-                                focus-visible:ring-offset-0" 
-                value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-md md:text-lg">Tên Danh mục</Label>
+                <Input className="h-12 focus-visible:ring-2 
+                                focus-visible:ring-blue-500 
+                                  focus-visible:ring-offset-0" 
+                  value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
 
-            <div>
-              <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
-              <Input className="h-12 focus-visible:ring-2 
-                              focus-visible:ring-blue-500 
-                                focus-visible:ring-offset-0"  
-                value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-            </div>
+              <div>
+                <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
+                <Input className="h-12 focus-visible:ring-2 
+                                focus-visible:ring-blue-500 
+                                  focus-visible:ring-offset-0"  
+                  value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+              </div>
 
-            <div>
-              <Label className="text-md md:text-lg">Mô tả</Label>
-              <Input className="h-12 focus-visible:ring-2 
-                              focus-visible:ring-blue-500 
-                                focus-visible:ring-offset-0" 
-                value={description} onChange={(e) => setDescription(e.target.value)} />
-            </div>
+              <div>
+                <Label className="text-md md:text-lg">Mô tả</Label>
+                <Input className="h-12 focus-visible:ring-2 
+                                focus-visible:ring-blue-500 
+                                  focus-visible:ring-offset-0" 
+                  value={description} onChange={(e) => setDescription(e.target.value)} />
+              </div>
 
-            <div className="space-y-1">
-              <Label className="text-md md:text-lg">Loại sản phẩm cha</Label>
-              <CategoryCombobox
-                open={comboboxOpen}
-                categories={categories}
-                setOpen={setComboboxOpen}
-                setParentCategory={setParentCategory}
-              />
-            </div>
+              <div className="space-y-1">
+                <Label className="text-md md:text-lg">Danh mục cha</Label>
+                <CategoryCombobox
+                  open={comboboxOpen}
+                  categories={categories}
+                  setOpen={setComboboxOpen}
+                  setParentCategory={setParentCategory}
+                />
+              </div>
 
-              {formSuccess && (
-                <div className="flex flex-row gap-2">
-                  <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
-                  <span className="text-lg text-green-500">Thêm loại sản phẩm mới thành công</span>
-                </div>
-              )}
-              {formError && (
-                <div className="flex flex-row gap-2">
-                  <CircleX color="#f00a0a" strokeWidth={2.5} />
-                  <span className="text-lg text-red-500">{formError}</span>
-                </div>
-              )}
-            
-          </CardContent>
+                {formSuccess && (
+                  <div className="flex flex-row gap-2">
+                    <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
+                    <span className="text-lg text-green-500">Thêm danh mục mới thành công</span>
+                  </div>
+                )}
+                {formError && (
+                  <div className="flex flex-row gap-2">
+                    <CircleX color="#f00a0a" strokeWidth={2.5} />
+                    <span className="text-lg text-red-500">{formError}</span>
+                  </div>
+                )}
+              
+            </CardContent>
 
-          <CardFooter className="justify-end gap-2">
-            <Button className="text-lg font-bold bg-blue-500 hover:bg-blue-600" onClick={handleSubmit}>Thêm mới</Button>
-          </CardFooter>
-        </Card>
+            <CardFooter className="justify-end gap-2">
+              <Button className="text-lg font-bold bg-blue-500 hover:bg-blue-600" onClick={handleSubmit}>Thêm mới</Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </div>
   )
