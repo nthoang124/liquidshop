@@ -9,6 +9,7 @@ const brandRoutesAdmin = require('./api/admin/brand')
 const productRoutesAdmin = require('./api/admin/product')
 const adminRoutes = require('./api/admin/admin')
 const orderRoutesAdmin = require('./api/admin/order')
+const promotionRoutesAdmin = require('./api/admin/promotion')
 
 router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/auth', authRoutes);
@@ -19,5 +20,6 @@ router.use('/admin/brand',protectAdmin,brandRoutesAdmin);
 router.use('/products', productRoutes)
 router.use('/admin/user', protectAdmin, adminRoutes);
 router.use('/admin/order', protectAdmin, orderRoutesAdmin);
+router.use('/admin/promotion', protectAdmin, promotionRoutesAdmin);
 
 module.exports = router
