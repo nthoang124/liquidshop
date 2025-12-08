@@ -12,6 +12,7 @@ const orderRoutesAdmin = require('./api/admin/order')
 const promotionRoutesAdmin = require('./api/admin/promotion')
 const feedbackRoutesAdmin = require('./api/admin/feedback')
 const reviewRoutesAdmin = require('./api/admin/review')
+const paymentRoutesAdmin = require('./api/admin/payment')
 
 router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/auth', authRoutes);
@@ -25,6 +26,7 @@ router.use('/admin/order', protectAdmin, orderRoutesAdmin);
 router.use('/admin/promotion', protectAdmin, promotionRoutesAdmin);
 router.use('/admin/feedback', protectAdmin, feedbackRoutesAdmin);
 router.use('/admin/review', protectAdmin, reviewRoutesAdmin);
+router.use('/admin/payment', protectAdmin, paymentRoutesAdmin);
 
 
 
