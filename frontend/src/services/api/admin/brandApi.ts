@@ -17,6 +17,12 @@ const brandApi = {
         return axiosClient.delete<{ success: boolean; message: string }>(
             `/admin/brand/${id}`
         );
+    },
+
+    create(data: IBrand) {
+        return axiosClient.post<{success: boolean; message: string}>(
+            "/admin/brand/createBrand", data
+        );
     }
 };
 

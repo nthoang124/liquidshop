@@ -200,7 +200,7 @@ export default function EditProductPage() {
             <SelectContent>
                 <SelectItem value=" ">Không</SelectItem>
               {brands.map((b) => (
-                <SelectItem key={b._id} value={b._id}>
+                <SelectItem key={b._id} value={b._id ?? ""}>
                   {b.name}
                 </SelectItem>
               ))}

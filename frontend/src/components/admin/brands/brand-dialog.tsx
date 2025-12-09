@@ -11,16 +11,19 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import type { IBrand } from "@/types/brand"
+import { CircleCheckBig, CircleX } from "lucide-react"
 
 interface EditbrandDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   brand: IBrand | null;
   onSave: (updated: IBrand) => void;
+  formError: string | undefined;
+  formSuccess: string | undefined;
 }
 
 
-export function EditBrandDialog({ open, setOpen, brand, onSave }: EditbrandDialogProps) {
+export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formSuccess }: EditbrandDialogProps) {
   const [name, setName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -29,21 +32,24 @@ export function EditBrandDialog({ open, setOpen, brand, onSave }: EditbrandDialo
 
   const handleSave = () => {
     const updated: IBrand = {
+      _id: brand?._id || "", 
       name,
       logoUrl,
       description,
     };
 
     onSave(updated);
-    setOpen(false);
+    // setOpen(false);
   };
 
   useEffect(() => {
     if (brand && open) {
+      // EDIT MODE
       setName(brand.name);
       setLogoUrl(brand.logoUrl || "");
       setDescription(brand.description || "");
     } else if (open) {
+      // ADD MODE – reset form
       setName("");
       setLogoUrl("");
       setDescription("");
@@ -78,6 +84,20 @@ export function EditBrandDialog({ open, setOpen, brand, onSave }: EditbrandDialo
             <Input value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
         </div>
+
+        {/* {response message} */}
+        {formSuccess && (
+          <div className="flex flex-row gap-2">
+          <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
+          <span className="text-lg text-green-500">Thêm danh mục mới thành công</span>
+          </div>
+        )}
+        {formError && (
+          <div className="flex flex-row gap-2">
+          <CircleX color="#f00a0a" strokeWidth={2.5} />
+          <span className="text-lg text-red-500">{formError}</span>
+          </div>
+        )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>

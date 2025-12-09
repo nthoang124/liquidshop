@@ -10,6 +10,7 @@ import BrandsPage from "@/pages/admin/BrandsPage";
 import UserDetailPage from "@/pages/admin/UserDetailPage"
 import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
+import OrdersPage from "@/pages/admin/OrdersPage";
 
 // Lazy loaded pages
 const ProductDetailPage = React.lazy(
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       {path: "brands", element: <BrandsPage/>},
       {path: "users/:id", element: <UserDetailPage/>},
       {path: "product/edit/:id", element: <EditProductPage/>},
+      {path: "orders", element:<OrdersPage/>}
     ],
   },
   {

@@ -12,4 +12,9 @@ const PRODUCT_ERROR_MESSAGES: Record<string, string> = {
   "SKU already exists": "SKU đã được sử dụng",
 };
 
-export {CATEGORY_ERROR_MESSAGES, PRODUCT_ERROR_MESSAGES}
+const BRAND_ERROR_MESSAGES: Record<string, string> = {
+    "Brand name is required": "Tên thương hiệu không được để trống",
+    "Brand name already exists": "Thương hiệu đã tồn tại",
+}
+
+export {CATEGORY_ERROR_MESSAGES, PRODUCT_ERROR_MESSAGES, BRAND_ERROR_MESSAGES}

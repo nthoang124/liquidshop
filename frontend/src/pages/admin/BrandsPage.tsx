@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import brandApi from "@/services/api/admin/brandApi";
 import { Button } from "@/components/ui/button";
 import { Crown, Globe, Grid2X2, Plus } from "lucide-react";
-import { EditBrandDialog } from "@/components/admin/brands/edit-brand-dialog";
+import { EditBrandDialog } from "@/components/admin/brands/brand-dialog";
 import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
+import type { AxiosError } from "axios";
+import { BRAND_ERROR_MESSAGES } from "@/utils/admin/errorMessages";
 
 export default function BrandsPage() {
     const [brands, setBrands] = useState<IBrand[]>([]);
@@ -17,7 +19,11 @@ export default function BrandsPage() {
     const [openDelete, setOpenDelete] = useState(false);
     const [openAdd, setOpenAdd] = useState(false);
 
-     const handleEdit = (brand: IBrand) => {
+    //response message from backend
+    const [formError, setFormError] = useState("");
+    const [formSuccess, setFormSuccess] = useState("");
+
+    const handleEdit = (brand: IBrand) => {
         console.log("Edit brand:", brand)
         // mở dialog edit, set selectedBrand,...
         setSelectedBrand(brand)
@@ -26,12 +32,13 @@ export default function BrandsPage() {
 
     const handleOnSave = (update: IBrand) => {
         const updatedBrand = update;
-        updateBrand(updatedBrand._id, updatedBrand);
+        updateBrand(updatedBrand._id ?? "", updatedBrand);
+        setOpenEdit(false);
     }
 
     const handleAdd = (update: IBrand) => {
         const newBrand = update;
-        console.log("check new brand: ", update);
+        createBrand(newBrand);
         // setOpenAdd(false)
     }
 
@@ -57,12 +64,24 @@ export default function BrandsPage() {
         }
     }
 
+    const createBrand = async (data: IBrand) => {
+        try {
+            const res = await brandApi.create(data);
+            setFormError("");
+            setFormSuccess(res.data.message);
+            setOpenAdd(false);
+        }catch(err: unknown){
+            const error = err as AxiosError<{sucess: boolean; message: string}>
+            const backendMsg = error.message;
+            setFormError(BRAND_ERROR_MESSAGES[backendMsg]);
+            setFormSuccess("");
+        }
+    }
+
     const confirmDelete = async () => {
         try {
             if(!deleteTarget) return;
-            console.log(deleteTarget._id)
-            // const res = await brandApi.delete(deleteTarget._id);
-            // console.log("check delete api: ", res.message);
+            await brandApi.delete(deleteTarget._id ?? "");
             loadbrands();
         }catch(err){
             console.log(err);
@@ -147,12 +166,16 @@ export default function BrandsPage() {
                             setOpen={setOpenEdit}
                             brand={selectedBrand}   
                             onSave={handleOnSave}
+                            formError=""
+                            formSuccess=""
                         />
                         <EditBrandDialog
                             open={openAdd}
                             setOpen={setOpenAdd}
                             brand={null}   
                             onSave={handleAdd}
+                            formError={formError}
+                            formSuccess={formSuccess}
                         />
                         <DeleteBrandAlert
                             open={openDelete}

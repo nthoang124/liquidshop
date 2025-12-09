@@ -1,5 +1,5 @@
 export interface IBrand {
-    _id?: string;
+    _id: string;
     name: string;
     logoUrl: string;
     description: string;
