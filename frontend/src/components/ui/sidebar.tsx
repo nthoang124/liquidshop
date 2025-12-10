@@ -22,10 +22,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useIsLargeScreen } from "@/components/admin/sidebar/use-is-large"
+
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "18rem"
+const SIDEBAR_WIDTH = "17rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3.5rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
@@ -124,8 +126,20 @@ function SidebarProvider({
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
 
+  const isLarge = useIsLargeScreen();
+
+  React.useEffect(() => {
+    if (!isLarge && open) {
+      setOpen(false);
+    }
+    if (isLarge && !open) {
+      setOpen(true);
+    }
+  }, [isLarge]);
+
+
   return (
-    <SidebarContext.Provider value={contextValue}>
+    <SidebarContext.Provider value={contextValue}>  
       <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"

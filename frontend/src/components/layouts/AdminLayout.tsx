@@ -8,7 +8,7 @@ import Header from "../admin/sidebar/header"
 
 export default function AdminLayout() {
   return (
-    <SidebarProvider>
+    <SidebarProvider >
       <AppSidebar />
       <SidebarInset className="bg-[#F7F9FC]">
         <Header/>
