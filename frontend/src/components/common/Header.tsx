@@ -33,7 +33,6 @@ const Header: React.FC = () => {
         <span className="text-base font-bold tracking-wider bg-gradient-to-r from-red-500 via-gray-400 to-red-500 bg-clip-text text-transparent font-logo">
           LIQUID
         </span>
-        <span className="font-semibold text-slate-300 font-logo">SHOP</span>
       </div>
     </div>
   );
