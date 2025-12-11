@@ -11,6 +11,8 @@ import {
   FileText,
   Image,
   Settings,
+  Layers,
+  BadgeCheck,
 } from "lucide-react"
 
 import { NavMain } from "@/components/admin/sidebar/nav-main"
@@ -36,12 +38,42 @@ const data = {
       title: "Dashboard",
       url: "/admin",
       icon: Home,
-      isActive: true,
+      // isActive: true,
     },
     {
       title: "Sản phẩm",
-      url: "/admin/products",
       icon: Package,
+      url: "/admin/products",
+      items: [
+        {
+          title: "danh sách",
+          url: "/admin/products/list"
+        },
+        {
+          title: "Thêm sản phẩm",
+          url: "/admin/products/add-new"
+        },
+      ]
+    },
+    {
+      title: "Danh mục",
+      icon: Layers,
+      url: "/admin/categories",
+      items: [
+        {
+          title: "Danh sách",
+          url: "/admin/categories/list"
+        },
+        {
+          title: "Thêm danh mục",
+          url: "/admin/categories/add-new"
+        },
+      ]
+    },
+    {
+      title: "Thương hiệu",
+      url: "/admin/brands",
+      icon: BadgeCheck,
     },
     {
       title: "Đơn hàng",
@@ -50,7 +82,7 @@ const data = {
     },
     {
       title: "Khách hàng",
-      url: "/admin/customers",
+      url: "/admin/users",
       icon: Users,
     },
     {
@@ -83,7 +115,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} >
       <SidebarHeader>
         <LogoSidebar/>
       </SidebarHeader>

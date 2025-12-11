@@ -22,12 +22,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useIsLargeScreen } from "@/components/admin/sidebar/use-is-large"
+
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "16rem"
+const SIDEBAR_WIDTH = "17rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
-const SIDEBAR_WIDTH_ICON = "3rem"
+const SIDEBAR_WIDTH_ICON = "3.5rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 type SidebarContextProps = {
@@ -124,8 +126,20 @@ function SidebarProvider({
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
 
+  const isLarge = useIsLargeScreen();
+
+  React.useEffect(() => {
+    if (!isLarge && open) {
+      setOpen(false);
+    }
+    if (isLarge && !open) {
+      setOpen(true);
+    }
+  }, [isLarge]);
+
+
   return (
-    <SidebarContext.Provider value={contextValue}>
+    <SidebarContext.Provider value={contextValue}>  
       <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"
@@ -271,7 +285,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon size={30}/>
+      <PanelLeftIcon className="size-7"/>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
@@ -289,7 +303,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       onClick={toggleSidebar}
       title="Toggle Sidebar"
       className={cn(
-        "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex",
+        "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-0.5 sm:flex",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
         "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
         "hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
@@ -335,7 +349,7 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="sidebar-header"
       data-sidebar="header"
-      className={cn("flex flex-col gap-2 p-2 bg-gradient-to-t from-black via-[#150000] to-[#4a0000]", className)}
+      className={cn("flex flex-col gap-2 p-2 bg-linear-to-t from-black via-[#150000] to-[#4a0000]", className)}
       {...props}
     />
   )
@@ -481,9 +495,9 @@ const sidebarMenuButtonVariants = cva(
           "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
       },
       size: {
-        default: "h-11 text-md",
+        default: "h-11 text-lg",
         sm: "h-7 text-xs",
-        lg: "h-12 text-md group-data-[collapsible=icon]:p-0!",
+        lg: "h-12 text-lg group-data-[collapsible=icon]:p-0!",
       },
     },
     defaultVariants: {

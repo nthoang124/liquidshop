@@ -24,7 +24,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
       <Header />
 
-      <main className="flex-grow bg-[#ececec] w-full">
+      <main className="grow bg-[#ececec] w-full">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <Suspense fallback={<PageLoader />}>
             {children ?? <Outlet />}
