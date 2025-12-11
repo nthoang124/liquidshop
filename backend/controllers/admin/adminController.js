@@ -6,7 +6,7 @@ const getAllUsers = async (req, res) => {
     const query = {};
     if (search) {
       query.$or = [
-        { fullname: { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
       ];
     }
