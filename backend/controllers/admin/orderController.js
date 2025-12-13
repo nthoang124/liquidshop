@@ -1,4 +1,4 @@
-const Order = require("../../models/OrderModel");
+const Order = require("../../models/orderModel");
 const mongoose = require("mongoose");
 
 // Get all orders

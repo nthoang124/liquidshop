@@ -7,8 +7,8 @@ const app = express();
 app.use(cors());
 
 app.use(express.json())
-const PORT = 3000;
-const DB_URL = "mongodb://localhost:27017/TeamLiquid-DB"
+const PORT = process.env.PORT
+const DB_URL = process.env.MONGODB_URI
 
 
 const mongoose = require('mongoose')
