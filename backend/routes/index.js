@@ -10,6 +10,9 @@ const cartRoutes = require('./api/customer/cart')
 const orderRoutes = require('./api/customer/order')
 const paymentRoutes = require('./api/payment')
 const promotionRoutes = require('./api/customer/promotion')
+const reviewRoutes = require('./api/review')
+const reviewRoutesCustomer = require('./api/customer/review')
+const wishlistRoutes = require('./api/customer/wishlist')
 const { protectCustomer, protectAdmin } = require('../middlewares/user')
 const brandRoutesAdmin = require('./api/admin/brand')
 const productRoutesAdmin = require('./api/admin/product')
@@ -29,6 +32,10 @@ router.use('/cart', protectCustomer, cartRoutes)
 router.use('/order', protectCustomer, orderRoutes)
 router.use('/payment', paymentRoutes)
 router.use('/promotion', protectCustomer, promotionRoutes)
+router.use('/review', reviewRoutes)
+router.use('/review', protectCustomer, reviewRoutesCustomer)
+router.use('/wishlist', protectCustomer, wishlistRoutes)
+
 
 router.use('/admin/category', protectAdmin, categoryRoutesAdmin);
 router.use('/admin/brand', protectAdmin, brandRoutesAdmin);
