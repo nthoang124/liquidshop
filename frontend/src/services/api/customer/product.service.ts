@@ -1,5 +1,5 @@
 import axiosClient from "@/services/api/customer/axiosClient";
-import { type IProductListResponse } from "@/types/product";
+import type { IProductListResponse, IProduct } from "@/types/product";
 
 interface IProductFilterParams {
   category?: string;
@@ -21,7 +21,13 @@ export const productService = {
     });
   },
 
-  getProductById: async (id: string) => {
-    return axiosClient.get(`/products/${id}`);
+  getProductDetail: async (id: string): Promise<IProduct | null> => {
+    const response = await axiosClient.get<any, IProductListResponse>(
+      "/products",
+      {
+        params: { _id: id },
+      }
+    );
+    return response.data.products[0] || null;
   },
 };
