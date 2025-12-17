@@ -66,14 +66,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
 
         {/* Tên sản phẩm */}
         <h3
-          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] hover:text-red-600 transition-colors mb-2"
+          className="text-sm font-bold text-gray-800 line-clamp-2 min-h-[40px] hover:text-red-600 transition-colors"
           title={product.name}
         >
           {product.name}
         </h3>
 
         {/* --- HỘP CẤU HÌNH --- */}
-        <div className="bg-[#f3f4f6] rounded-md p-2 text-[11px] text-gray-600 mb-3">
+        <div className="bg-[#f3f4f6] rounded-md p-2 text-[11px] text-gray-600">
           <div className="grid grid-cols-2 gap-y-1.5 gap-x-2">
             {specItems.map((item, index) => {
               const IconComponent = item.icon;
@@ -92,7 +92,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         </div>
 
         {/* --- GIÁ & ĐÁNH GIÁ --- */}
-        <div className="mt-auto pt-2 border-t border-gray-50">
+        <div className="border-t border-gray-50">
           <div className="flex items-end gap-2 mb-1 h-5">
             {/* GIÁ GỐC / ORIGINAL PRICE */}
             {product.originalPrice && product.originalPrice > product.price && (
