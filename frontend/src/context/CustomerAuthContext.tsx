@@ -7,11 +7,10 @@ import {
   useEffect,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-import { type IUser } from "@/types/user"; // Import interface IUser gốc (có addresses)
+import { type IUser } from "@/types/user";
 import { authService } from "@/services/api/customer/auth.service";
 
-// Mở rộng IUser để thêm username (nếu logic frontend cần)
-export type AuthUser = IUser & { username?: string };
+export type AuthUser = IUser;
 
 interface TokenPayload {
   id: string;
@@ -24,10 +23,16 @@ interface AuthResult {
   message?: string;
 }
 
+interface LoginData {
+  email: string;
+  password: string;
+  remember?: boolean;
+}
+
 interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (data: { email: string; password: string }) => Promise<AuthResult>;
+  login: (data: LoginData) => Promise<AuthResult>;
   registerAuth: (data: any) => Promise<AuthResult>;
   logout: () => void;
   updateUser: (data: Partial<IUser>) => Promise<AuthResult>;
@@ -43,29 +48,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // --- INIT: Check Login khi load trang ---
+  // --- Khởi tạo: Kiểm tra token ở cả 2 nơi khi load trang ---
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-      const storedUser = localStorage.getItem("user");
+      const token =
+        localStorage.getItem("accessToken") ||
+        sessionStorage.getItem("accessToken");
+      const storedUser =
+        localStorage.getItem("user") || sessionStorage.getItem("user");
 
       if (token && storedUser) {
-        // Load user từ localStorage để hiển thị ngay lập tức
-        setUser(JSON.parse(storedUser));
-
-        // Gọi API lấy thông tin mới nhất (để sync data nếu server có thay đổi)
         try {
+          setUser(JSON.parse(storedUser));
           const latestUser = await authService.getMe();
-          // Map dữ liệu để đảm bảo nhất quán
-          const fullUserData: AuthUser = {
-            ...latestUser,
-            username: latestUser.fullName || latestUser.email,
-          };
-          setUser(fullUserData);
-          localStorage.setItem("user", JSON.stringify(fullUserData));
+          setUser(latestUser);
+
+          if (localStorage.getItem("accessToken")) {
+            localStorage.setItem("user", JSON.stringify(latestUser));
+          } else {
+            sessionStorage.setItem("user", JSON.stringify(latestUser));
+          }
         } catch (error) {
-          // Nếu token hết hạn hoặc lỗi, có thể cân nhắc logout hoặc giữ nguyên data cũ
-          console.error("Token expired or invalid", error);
+          console.error("Auth initialization failed:", error);
+          window.location.href = "/auth/login/customer";
         }
       }
       setIsLoading(false);
@@ -73,48 +78,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
   }, []);
 
-  // --- LOGIN ---
-  const login = async (input: {
-    email: string;
-    password: string;
-  }): Promise<AuthResult> => {
+  // --- ĐĂNG NHẬP ---
+  const login = async (input: LoginData): Promise<AuthResult> => {
     try {
-      const response: any = await authService.login(input);
+      const response: any = await authService.login({
+        email: input.email,
+        password: input.password,
+      });
 
       if (response.token) {
-        localStorage.setItem("accessToken", response.token);
+        const storage = input.remember ? localStorage : sessionStorage;
+        storage.setItem("accessToken", response.token);
 
-        // Lấy thông tin user chi tiết
         try {
           const userDetail = await authService.getMe();
-          const fullUserData: AuthUser = {
-            ...userDetail,
-            username: userDetail.fullName || userDetail.email,
-          };
-
-          setUser(fullUserData);
-          localStorage.setItem("user", JSON.stringify(fullUserData));
+          setUser(userDetail);
+          storage.setItem("user", JSON.stringify(userDetail));
 
           return { success: true, message: "Đăng nhập thành công" };
         } catch (infoError) {
-          // Fallback nếu không lấy được info chi tiết nhưng có token
           const decoded = jwtDecode<TokenPayload>(response.token);
           const fallbackUser: AuthUser = {
             _id: decoded.id,
             email: input.email,
-            role: decoded.role as "admin" | "customer",
-            fullName: "User",
+            role: decoded.role as any,
+            fullName: "Người dùng",
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            addresses: [], // Mảng rỗng fallback
+            addresses: [],
           };
           setUser(fallbackUser);
-          localStorage.setItem("user", JSON.stringify(fallbackUser));
-          return {
-            success: true,
-            message: "Đăng nhập thành công (Dữ liệu hạn chế)",
-          };
+          storage.setItem("user", JSON.stringify(fallbackUser));
+          return { success: true, message: "Đăng nhập thành công" };
         }
       }
 
@@ -123,83 +119,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         message: response.message || "Đăng nhập thất bại",
       };
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Lỗi kết nối server";
-      return { success: false, message: msg };
+      return {
+        success: false,
+        message: error.response?.data?.message || "Lỗi kết nối máy chủ",
+      };
     }
   };
 
-  // --- REGISTER ---
-  const registerAuth = async (input: {
-    fullName: string;
-    email: string;
-    password: string;
-  }): Promise<AuthResult> => {
+  // --- ĐĂNG KÝ ---
+  const registerAuth = async (data: any): Promise<AuthResult> => {
     try {
-      const payload = {
-        fullName: input.fullName,
-        email: input.email,
-        password: input.password,
-      };
-      const response: any = await authService.register(payload);
+      const response: any = await authService.register(data);
       if (response.user || response.message) {
-        return {
-          success: true,
-          message: "Đăng ký thành công! Vui lòng đăng nhập.",
-        };
+        return { success: true, message: "Đăng ký thành công!" };
       }
       return { success: false, message: "Đăng ký thất bại" };
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.message || "Lỗi server khi đăng ký",
+        message: error.response?.data?.message || "Lỗi đăng ký",
       };
     }
   };
 
-  // --- LOGOUT ---
+  // --- ĐĂNG XUẤT ---
   const logout = () => {
     setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
-    // Chuyển hướng hoặc reload trang nếu cần
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("user");
     window.location.href = "/auth/login/customer";
   };
 
-  // --- UPDATE PROFILE (Logic quan trọng mới update) ---
+  // --- CẬP NHẬT THÔNG TIN ---
   const updateUser = async (data: Partial<IUser>): Promise<AuthResult> => {
     try {
-      // 1. Gọi API gửi payload (bao gồm cả addresses mới nếu có)
       const res: any = await authService.updateProfile(data);
+      const updatedUser = res.user || res;
 
-      // 2. Xử lý phản hồi từ Server
-      // Dựa vào userController của bạn: trả về { message: "...", user: saveUser }
-      if (res.user) {
-        const updatedUserFromServer = res.user;
+      setUser(updatedUser);
 
-        // Map thêm các trường phụ trợ Frontend cần (username)
-        const newUserData: AuthUser = {
-          ...updatedUserFromServer,
-          username:
-            updatedUserFromServer.fullName || updatedUserFromServer.email,
-        };
-
-        // 3. Cập nhật State và LocalStorage ngay lập tức
-        setUser(newUserData);
-        localStorage.setItem("user", JSON.stringify(newUserData));
-
-        return { success: true, message: "Cập nhật thành công" };
+      // Cập nhật vào đúng bộ nhớ đang dùng
+      if (localStorage.getItem("accessToken")) {
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      } else {
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
       }
 
-      // Trường hợp Server trả về success nhưng không có object user (phòng hờ)
-      // Ta sẽ merge thủ công data cũ + data mới để update UI
-      if (user) {
-        const mergedUser = { ...user, ...data };
-        setUser(mergedUser);
-        localStorage.setItem("user", JSON.stringify(mergedUser));
-        return { success: true, message: "Cập nhật thành công" };
-      }
-
-      return { success: false, message: "Không thể cập nhật thông tin" };
+      return { success: true, message: "Cập nhật thành công" };
     } catch (error: any) {
       return {
         success: false,
@@ -208,7 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // --- CHANGE PASSWORD ---
+  // --- ĐỔI MẬT KHẨU ---
   const changePassword = async (
     oldPassword: string,
     newPassword: string
