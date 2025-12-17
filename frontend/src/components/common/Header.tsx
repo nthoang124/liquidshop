@@ -13,6 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,16 +27,13 @@ import {
 import logo from "../../assets/icons/TL-Logo.png";
 
 import { useAuth } from "@/context/CustomerAuthContext";
-
-// --- TYPES ---
-interface CartBadgeProps {
-  count: number;
-  children: React.ReactNode;
-}
+import { useCart } from "@/context/CartContext";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
-  const naviagate = useNavigate();
+  const { cartCount } = useCart();
+
+  const navigate = useNavigate();
 
   const getFirstLetter = (name?: string) => {
     return name ? name.charAt(0).toUpperCase() : "@";
@@ -43,7 +41,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    naviagate("/");
+    navigate("/");
   };
 
   const UserDropdown = () => {
@@ -110,18 +108,6 @@ const Header: React.FC = () => {
     </div>
   );
 
-  // Component hiển thị số lượng giỏ hàng (Custom Badge)
-  const CartBadge: React.FC<CartBadgeProps> = ({ count, children }) => (
-    <div className="relative inline-block">
-      {children}
-      {count > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#151517]">
-          {count}
-        </span>
-      )}
-    </div>
-  );
-
   return (
     <>
       <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white">
@@ -141,11 +127,18 @@ const Header: React.FC = () => {
               <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-gray-400" />
             </div>
 
-            <CartBadge count={3}>
-              <Link to="/cart">
-                <ShoppingCart className="h-6 w-6 text-white hover:text-red-500 transition-all" />
-              </Link>
-            </CartBadge>
+            <Link to="/cart" className="relative group">
+              <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
+
+              {cartCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
+                >
+                  {cartCount}
+                </Badge>
+              )}
+            </Link>
           </div>
         </div>
 
@@ -226,11 +219,18 @@ const Header: React.FC = () => {
                 </Link>
               </nav>
 
-              <CartBadge count={2}>
-                <Link to="/cart">
-                  <ShoppingCart className="h-7 w-7 text-white hover:text-red-500 transition-all" />
-                </Link>
-              </CartBadge>
+              <Link to="/cart" className="relative group">
+                <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
+
+                {cartCount >= 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 px-1.5 pt-1.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </Link>
 
               {/* PHẦN LOGIN */}
               {user ? (

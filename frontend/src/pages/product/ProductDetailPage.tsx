@@ -18,8 +18,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
 import { cartService } from "@/services/api/customer/cart.service";
-import type { IProduct } from "@/types/product";
+import { useCart } from "@/context/CartContext";
 
+import type { IProduct } from "@/types/product";
 import ProductSpecsTable from "@/components/product/ProductSpecTable";
 import ProductListCarousel from "@/components/common/carousel/ProductListCarousel";
 import ProductReviews from "@/components/customer/ProductReview";
@@ -31,6 +32,8 @@ import { formatVND } from "@/utils/admin/formatMoney";
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  const { updateCartCount } = useCart();
 
   const [product, setProduct] = useState<IProduct | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([]);
@@ -103,10 +106,10 @@ const ProductDetailPage: React.FC = () => {
 
     try {
       await cartService.addToCart(product._id, 1);
-
+      await updateCartCount();
       toast.success("Đã thêm sản phẩm vào giỏ hàng!", {
         action: {
-          label: "Xem giở hàng",
+          label: "Xem giỏ hàng",
           onClick: () => navigate("/cart"),
         },
       });

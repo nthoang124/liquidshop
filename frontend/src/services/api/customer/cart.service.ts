@@ -15,6 +15,6 @@ export const cartService = {
   },
 
   removeCartItem: async (productId: string) => {
-    return axiosClient.post("/cart", { productId });
+    return axiosClient.delete("/cart", { data: { productId } });
   },
 };
