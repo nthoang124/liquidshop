@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 
 import { productService } from "@/services/api/customer/product.service";
 import { reviewService } from "@/services/api/customer/review.service";
@@ -34,6 +35,9 @@ const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [comment, setComment] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [userRating, setUserRating] = useState<number>(5);
 
   const [activeImage, setActiveImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -49,7 +53,6 @@ const ProductDetailPage: React.FC = () => {
         const data = await productService.getProductDetail(id);
 
         if (data) {
-          console.log(data);
           setProduct(data);
           setActiveImage(data.images?.[0] || "");
 
@@ -98,6 +101,46 @@ const ProductDetailPage: React.FC = () => {
     } catch (error) {
       console.log("Failed to fetch reviews", error);
       setReviews([]);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để đánh giá sản phẩm");
+      navigate("/auth/login/customer");
+      return;
+    }
+
+    if (!product) return;
+
+    if (!comment.trim()) {
+      toast.error("Vui lòng nhập nội dung đánh giá");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        productId: product._id,
+        rating: userRating,
+        comment: comment,
+      };
+
+      await reviewService.createReview(payload);
+
+      toast.success("Đánh giá đã được gửi và đang chờ duyệt!");
+
+      // Reset form
+      setComment("");
+      setUserRating(5);
+    } catch (error: any) {
+      console.error("Submit review error", error);
+      toast.error(error.response?.data?.message || "Gửi đánh giá thất bại");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -282,34 +325,124 @@ const ProductDetailPage: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="uppercase border-l-4 border-red-600 pl-3">
-              Đánh giá ({reviews.length})
+              Đánh giá & Nhận xét
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* --- FORM VIẾT ĐÁNH GIÁ MỚI --- */}
+            <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="font-bold text-gray-800 mb-3">
+                Gửi đánh giá của bạn
+              </h3>
+
+              {/* Chọn sao */}
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-sm font-medium">Chọn mức đánh giá:</span>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setUserRating(star)}
+                      className="p-1 transition-transform hover:scale-110 focus:outline-none"
+                    >
+                      <Star
+                        className={`w-6 h-6 ${
+                          star <= userRating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+                <span className="text-sm font-bold text-yellow-600 ml-2">
+                  {userRating === 1
+                    ? "Tệ"
+                    : userRating === 2
+                    ? "Khá tệ"
+                    : userRating === 3
+                    ? "Tạm Ổn"
+                    : userRating === 4
+                    ? "Tốt"
+                    : userRating === 5
+                    ? "Tuyệt vời"
+                    : ""}
+                </span>
+              </div>
+
+              {/* Nhập nội dung */}
+              <div className="space-y-3">
+                <Textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm này..."
+                  className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+
+                <div className="flex justify-end">
+                  <Button
+                    onClick={handleSubmitReview}
+                    disabled={isSubmitting}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    {isSubmitting ? "Đang gửi..." : "Gửi đánh giá"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Separator className="my-6" />
+
+            {/* --- DANH SÁCH ĐÁNH GIÁ CŨ --- */}
+            <h3 className="font-bold text-gray-800 mb-4">
+              Khách hàng nhận xét ({reviews.length})
+            </h3>
+
             {reviews.length === 0 ? (
-              <Badge variant="secondary" className="italic">
-                Chưa có đánh giá nào
-              </Badge>
+              <div className="text-center py-8 text-gray-500">
+                Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm
+                này!
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {reviews.map((rv) => (
-                  <div key={rv._id} className="border-b pb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold">
-                        {rv.userId?.fullName || "Ẩn danh"}
-                      </span>
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${
-                              i < rv.rating ? "fill-current" : "text-gray-300"
-                            }`}
-                          />
-                        ))}
+                  <div
+                    key={rv._id}
+                    className="border-b border-gray-100 last:border-0 pb-6"
+                  >
+                    <div className="flex items-start gap-3">
+                      {/* Avatar giả lập */}
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
+                        {rv.userId?.fullName?.charAt(0) || "U"}
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-gray-900">
+                            {rv.userId?.fullName || "Ẩn danh"}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {new Date(rv.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <div className="flex text-yellow-400 mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3 h-3 ${
+                                i < rv.rating ? "fill-current" : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {rv.comment}
+                        </p>
                       </div>
                     </div>
-                    <p className="text-gray-600 mt-1">{rv.comment}</p>
                   </div>
                 ))}
               </div>
