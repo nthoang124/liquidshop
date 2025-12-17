@@ -11,7 +11,7 @@ import CustomerRegisterPage from "@/pages/customer/RegisterPage";
 import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
 import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
 import CustomerProfilePage from "@/pages/customer/Profile/Profile";
-import CategoryDetailPage from "@/pages/customer/CategoryDetailPage";
+import CategoryDetailPage from "@/pages/product/CategoryDetailPage";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";

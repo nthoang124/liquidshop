@@ -1,16 +1,12 @@
-// src/pages/customer/CategoryDetailPage.tsx
-
 import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Loader2, Zap, ArrowLeftRight } from "lucide-react";
+import { Zap, ArrowLeftRight } from "lucide-react";
 
-// Services & Types
 import { categoryService } from "@/services/api/customer/category.service";
 import { productService } from "@/services/api/customer/product.service";
 import { type ICategory } from "@/types/category";
 import { type IProductListResponse, type IProduct } from "@/types/product";
 
-// Components
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
@@ -20,8 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// ---> IMPORT PRODUCT CARD <---
-import ProductCard from "@/components/product/ProductCard"; // Hãy đảm bảo đường dẫn đúng
+import ProductCard from "@/components/product/ProductCard";
 
 const DEFAULT_LIMIT = 20;
 
@@ -40,7 +35,6 @@ const CategoryDetailPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
 
-  // --- 1. Lấy thông tin Category & Sản phẩm ---
   useEffect(() => {
     const initData = async () => {
       let currentCategoryName = categoryNameParam || "";
@@ -77,7 +71,6 @@ const CategoryDetailPage: React.FC = () => {
     initData();
   }, [id, categoryNameParam]);
 
-  // --- Hàm gọi API Product ---
   const fetchProducts = async (catName: string, page: number) => {
     setLoadingProducts(true);
     try {
@@ -104,7 +97,6 @@ const CategoryDetailPage: React.FC = () => {
     }
   };
 
-  // ---> HÀM MAPPER QUAN TRỌNG <---
   // Chuyển đổi dữ liệu từ Backend (IProduct) sang định dạng ProductCard mong muốn
   const mapBackendToFrontendProduct = (backendProduct: IProduct): any => {
     return {
@@ -117,12 +109,10 @@ const CategoryDetailPage: React.FC = () => {
           : backendProduct.category,
       // ProductCard dùng discountRate, Backend trả discountPercentage
       discountRate: backendProduct.discountPercentage,
-      // Mapping ảnh
       image:
         backendProduct.images && backendProduct.images.length > 0
           ? backendProduct.images[0]
           : "",
-      // Giả lập rating nếu backend chưa có (hoặc dùng backendProduct.averageRating)
       rating: backendProduct.averageRating || 5,
       hasGift: false, // Backend chưa có trường này, tạm để false
     };
@@ -153,7 +143,7 @@ const CategoryDetailPage: React.FC = () => {
             />
           )}
           <CardHeader className="relative z-10">
-            <CardTitle className="text-3xl font-extrabold text-gray-800 flex items-center gap-3 border-l-4 border-red-600 pl-4">
+            <CardTitle className="text-3xl font-bold text-gray-800 flex items-center gap-3 border-l-4 border-red-600 pl-4">
               <Zap className="w-8 h-8 text-red-600 fill-red-600" />
               {categoryDetail.name.toUpperCase()}
             </CardTitle>

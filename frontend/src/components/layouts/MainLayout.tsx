@@ -6,10 +6,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 
-interface MainLayoutProps {
-  children?: React.ReactNode;
-}
-
 const PageLoader = () => (
   <div className="p-4 space-y-4">
     <Skeleton className="h-[200px] w-full rounded-xl" />
@@ -20,7 +16,7 @@ const PageLoader = () => (
   </div>
 );
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
       <Header />
@@ -28,7 +24,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <main className="grow bg-[#ececec] w-full">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <Suspense fallback={<PageLoader />}>
-            {children ?? <Outlet />}
+            <Outlet />
           </Suspense>
         </div>
       </main>
