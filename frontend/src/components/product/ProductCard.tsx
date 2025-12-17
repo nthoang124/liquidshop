@@ -38,11 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
       : "https://placehold.co/300x300?text=No+Image";
 
   return (
-    <Link
-      to={productLink}
-      className="block h-full"
-      onClick={() => window.scrollTo(0, 0)}
-    >
+    <Link to={productLink} className="block h-full">
       <Card
         className={cn(
           "group relative h-full bg-white border border-gray-200 rounded-lg hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between overflow-hidden",
@@ -50,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         )}
       >
         {/* Hình ảnh sản phẩm */}
-        <div className="relative w-full aspect-[4/3] flex items-center justify-center overflow-hidden rounded-md bg-white mb-3">
+        <div className="relative w-full aspect-[4/3] flex items-center justify-center overflow-hidden rounded-md bg-white">
           <img
             src={displayImage}
             alt={product.name}
@@ -97,14 +93,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
             {/* GIÁ GỐC / ORIGINAL PRICE */}
             {product.originalPrice && product.originalPrice > product.price && (
               <>
-                <span className="text-xs text-gray-400 line-through">
+                <span className="text-sm text-gray-400 line-through">
                   {formatPrice(product.originalPrice)}
                 </span>
 
                 {/* % Giảm giá */}
                 {product.discountPercentage &&
                   product.discountPercentage > 0 && (
-                    <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-1 rounded">
+                    <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-1 rounded">
                       -{product.discountPercentage}%
                     </span>
                   )}
@@ -122,7 +118,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
             {product.averageRating > 0 && (
               <div className="flex items-center gap-0.5 text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">
                 <span className="font-bold text-orange-500">
-                  {Math.floor(product.averageRating)}
+                  {Number(product.averageRating).toFixed(1)}
                 </span>
                 <Star className="w-3 h-3 fill-orange-500 text-orange-500" />
               </div>

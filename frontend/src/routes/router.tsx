@@ -70,16 +70,11 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
       {
-        path: "order/lookup",
-        element: (
-          <ProtectedRouteCustomer>
-            <OrderLookupPage />
-          </ProtectedRouteCustomer>
-        ),
-      },
-      {
-        path: "/users/me",
-        element: <CustomerProfilePage />,
+        element: <ProtectedRouteCustomer />,
+        children: [
+          { path: "users/me", element: <CustomerProfilePage /> },
+          { path: "order/lookup", element: <OrderLookupPage /> },
+        ],
       },
       {
         path: "/category/:id",

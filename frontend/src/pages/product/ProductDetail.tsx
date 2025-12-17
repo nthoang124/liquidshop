@@ -67,8 +67,6 @@ const ProductDetailPage: React.FC = () => {
   // --- EFFECT: TÌM SẢN PHẨM KHI URL THAY ĐỔI ---
   useEffect(() => {
     setLoading(true);
-    // Cuộn lên đầu trang mỗi khi đổi sản phẩm
-    window.scrollTo(0, 0);
 
     if (category && id) {
       const productList = DATABASE[category];
