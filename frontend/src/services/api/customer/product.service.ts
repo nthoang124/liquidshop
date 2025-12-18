@@ -8,6 +8,9 @@ interface IProductFilterParams {
   sort?: string;
   page?: number;
   limit?: number;
+  fields?: string;
+  tags?: string;
+  [key: string]: any;
 }
 
 export const productService = {

@@ -57,7 +57,13 @@ const ProductDetailPage: React.FC = () => {
           setProduct(data);
           setActiveImage(data.images?.[0] || "");
 
-          fetchRelatedProducts(data.category?._id || "", data._id);
+          console.log("dataaaaa", data);
+
+          const categoryName =
+            typeof data.category === "object" ? data.category?.name : "";
+          if (categoryName) {
+            fetchRelatedProducts(categoryName, data._id);
+          }
         } else {
           setProduct(null);
         }
@@ -72,21 +78,30 @@ const ProductDetailPage: React.FC = () => {
     fetchProductData();
   }, [id]);
 
-  // --- 2. LẤY SẢN PHẨM TƯƠNG TỰ ---
   const fetchRelatedProducts = async (
-    categoryId: string,
+    categoryName: string,
     currentId: string
   ) => {
-    if (!categoryId) return;
+    if (!categoryName) return;
+
     try {
       const res = await productService.getProducts({
-        category: categoryId,
-        limit: 10,
+        category: categoryName,
+        limit: 11,
+        fields: "name,price,images,originalPrice,averageRating, specifications",
       });
-      const related = res.data.products.filter((p) => p._id !== currentId);
+
+      const products = res.data?.products || [];
+
+      console.log("producttttttcategory", products);
+
+      const related = products
+        .filter((p: any) => p._id !== currentId)
+        .slice(0, 10);
+
       setRelatedProducts(related);
     } catch (error) {
-      console.log("Failed to fetch related", error);
+      console.error("Failed to fetch related products:", error);
     }
   };
 
