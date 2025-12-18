@@ -4,11 +4,11 @@ import { ChevronRight } from "lucide-react";
 
 import Carousel from "@/components/product/carousel/carousel";
 import ProductCard from "@/components/product/ProductCard";
-import type { Product } from "@/types/product";
+import type { IProduct } from "@/types/product";
 
 interface ProductListCarouselProps {
   title: string;
-  products: Product[];
+  products: IProduct[];
   viewAllLink?: string;
   autoplay?: boolean;
   className?: string;
@@ -40,7 +40,7 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
       </div>
 
       {/* --- CAROUSEL BODY --- */}
-      <Carousel<Product>
+      <Carousel<IProduct>
         data={products}
         autoplay={autoplay}
         itemClassName="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"

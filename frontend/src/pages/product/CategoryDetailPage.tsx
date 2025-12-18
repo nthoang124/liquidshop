@@ -21,8 +21,8 @@ import { productService } from "@/services/api/customer/product.service";
 import { type ICategory } from "@/types/category";
 import { type IProductListResponse } from "@/types/product";
 
-import { ProductFilterBar } from "@/components/product/ProductFilter";
-import { ProductSort } from "@/components/product/ProductSort";
+import { ProductFilterBar } from "@/components/product/filter/ProductFilter";
+import { ProductSort } from "@/components/product/filter/ProductSort";
 import ProductCard from "@/components/product/ProductCard";
 
 const DEFAULT_LIMIT = 20;
@@ -146,10 +146,6 @@ const CategoryDetailPage: React.FC = () => {
           className="flex items-center hover:text-red-600 transition-colors"
         >
           <Home className="w-4 h-4 mr-1" /> Trang chủ
-        </Link>
-        <ChevronRight className="w-4 h-4 text-gray-300" />
-        <Link to="/categories" className="hover:text-red-600 transition-colors">
-          Danh mục
         </Link>
         {categoryDetail && (
           <>

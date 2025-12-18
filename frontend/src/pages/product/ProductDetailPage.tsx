@@ -57,8 +57,6 @@ const ProductDetailPage: React.FC = () => {
           setProduct(data);
           setActiveImage(data.images?.[0] || "");
 
-          console.log("dataaaaa", data);
-
           const categoryName =
             typeof data.category === "object" ? data.category?.name : "";
           if (categoryName) {
@@ -93,8 +91,6 @@ const ProductDetailPage: React.FC = () => {
       });
 
       const products = res.data?.products || [];
-
-      console.log("producttttttcategory", products);
 
       const related = products
         .filter((p: any) => p._id !== currentId)

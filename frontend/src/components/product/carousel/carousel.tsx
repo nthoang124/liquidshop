@@ -48,7 +48,7 @@ CarouselTemplateProps<T>) {
       }}
       onMouseEnter={autoplay ? () => plugin.current.stop() : undefined}
       onMouseLeave={autoplay ? () => plugin.current.play() : undefined}
-      className={cn("w-full relative group", className)}
+      className={cn("w-full relative", className)}
     >
       <CarouselContent className="-ml-2 md:-ml-4">
         {data.map((item, index) => (

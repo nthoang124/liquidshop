@@ -29,6 +29,9 @@ import logo from "../../assets/icons/TL-Logo.png";
 import { useAuth } from "@/context/CustomerAuthContext";
 import { useCart } from "@/context/CartContext";
 
+import CategoryDesktop from "../product/filter/categoryDesktop";
+import CategoryMobile from "../product/filter/categoryMobile";
+
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
@@ -150,6 +153,8 @@ const Header: React.FC = () => {
               <span className="text-[10px]">Trang chủ</span>
             </Link>
 
+            <CategoryMobile />
+
             <Link
               to="/contact"
               className="flex flex-col items-center gap-1 flex-1"
@@ -182,10 +187,12 @@ const Header: React.FC = () => {
 
         {/* --- DESKTOP LAYOUT --- */}
         <div className="hidden md:block px-4 sm:px-6 lg:px-10 py-3">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between justify-center gap-3">
             <Link to="/" className="flex items-center gap-2">
               <Logo />
             </Link>
+
+            <CategoryDesktop />
 
             {/* Desktop Search */}
             <div className="flex-1 max-w-xl mx-6 relative">
