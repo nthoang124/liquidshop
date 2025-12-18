@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import {
   Popover,
@@ -17,9 +18,10 @@ import { formatVND } from "@/utils/admin/formatMoney";
 // --- 1. COMPONENT LỌC GIÁ (SLIDER) ---
 const PriceFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [range, setRange] = useState([0, 50000000]); // Mặc định 0 - 50 triệu
+  const [range, setRange] = useState([0, 50000000]);
   const [isOpen, setIsOpen] = useState(false);
 
+  // Đồng bộ state với URL mỗi khi mở Popover hoặc URL thay đổi
   useEffect(() => {
     const gte = Number(searchParams.get("price[gte]")) || 0;
     const lte = Number(searchParams.get("price[lte]")) || 50000000;
@@ -30,7 +32,7 @@ const PriceFilter = () => {
     setSearchParams((prev) => {
       prev.set("price[gte]", range[0].toString());
       prev.set("price[lte]", range[1].toString());
-      prev.set("page", "1"); // Reset về trang 1 khi lọc
+      prev.set("page", "1"); // Reset về trang 1 khi lọc mới
       return prev;
     });
     setIsOpen(false);
@@ -46,6 +48,14 @@ const PriceFilter = () => {
     setIsOpen(false);
   };
 
+  // Hàm xử lý khi người dùng nhập số trực tiếp vào ô Input
+  const handleInputChange = (index: number, value: string) => {
+    const numValue = Number(value.replace(/\D/g, "")); // Loại bỏ ký tự không phải số
+    const newRange = [...range];
+    newRange[index] = numValue;
+    setRange(newRange);
+  };
+
   const isActive =
     searchParams.has("price[gte]") || searchParams.has("price[lte]");
 
@@ -59,37 +69,70 @@ const PriceFilter = () => {
             isActive && "border-red-600 text-red-600 bg-red-50"
           )}
         >
-          Giá {isActive ? `(${formatVND(range[0])} - ...)` : ""}{" "}
+          Giá{" "}
+          {isActive
+            ? `(${formatVND(range[0])}đ - ${formatVND(range[1])}đ)`
+            : ""}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4" align="start">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm font-medium">
-            <span>{formatVND(range[0])}</span>
-            <span>{formatVND(range[1])}</span>
+        <div className="space-y-6">
+          <p className="text-sm font-semibold text-gray-700">
+            Chọn khoảng giá (đ)
+          </p>
+
+          {/* Ô NHẬP SỐ CỤ THỂ */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Input
+                type="text"
+                value={formatVND(range[0])}
+                onChange={(e) => handleInputChange(0, e.target.value)}
+                className="h-9 px-2 text-sm text-center"
+              />
+              <span className="absolute -top-5 left-0 text-[10px] text-gray-400 uppercase">
+                Từ
+              </span>
+            </div>
+            <span className="text-gray-400">—</span>
+            <div className="relative">
+              <Input
+                type="text"
+                value={formatVND(range[1])}
+                onChange={(e) => handleInputChange(1, e.target.value)}
+                className="h-9 px-2 text-sm text-center"
+              />
+              <span className="absolute -top-5 left-0 text-[10px] text-gray-400 uppercase">
+                Đến
+              </span>
+            </div>
           </div>
+
+          {/* SLIDER */}
           <Slider
             value={range}
             min={0}
-            max={100000000} // Max 100 triệu
+            max={200000000} // Giới hạn kéo tối đa 100 triệu
             step={500000}
             onValueChange={setRange}
-            className="my-4"
+            className="my-6"
           />
-          <div className="flex justify-between gap-2">
+
+          {/* NÚT ĐIỀU KHIỂN */}
+          <div className="flex justify-between gap-3 pt-2">
             <Button
               variant="outline"
               size="sm"
               onClick={handleClear}
-              className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+              className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
             >
               Bỏ chọn
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold"
             >
               Xem kết quả
             </Button>
@@ -173,8 +216,8 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-3" align="start">
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto">
+        <div className="space-y-3 ">
+          <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto cursor-pointer">
             {options.map((opt) => (
               <div key={opt.value} className="flex items-center space-x-2">
                 <Checkbox
@@ -196,14 +239,14 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
               variant="outline"
               size="sm"
               onClick={handleClear}
-              className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+              className="w-1/2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
             >
               Bỏ chọn
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+              className="w-1/2 bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
             >
               Xem kết quả
             </Button>
@@ -257,10 +300,10 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
       {/* 2. Giá (Slider) */}
       <PriceFilter />
 
-      {/* 3. Hãng (Hiện tại rỗng theo yêu cầu) */}
+      {/* 3. Hãng (Hiện tại rỗng) */}
       <AttributeFilter label="Hãng" paramKey="brand" options={[]} />
 
-      {/* 4. Filter Động theo Specifications */}
+      {/* 4. Filter Specifications */}
       {dynamicFilters.map((filter, index) => (
         <AttributeFilter
           key={index}
@@ -270,7 +313,7 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
         />
       ))}
 
-      {/* Nút Xóa bộ lọc */}
+      {/* Xóa bộ lọc */}
       {Array.from(searchParams.keys()).some(
         (k) => k !== "category" && k !== "page" && k !== "sort"
       ) && (
