@@ -55,7 +55,6 @@ export const FILTER_CONFIG: Record<string, IFilterGroup[]> = {
   default: [],
 };
 
-// --- [NEW] Helper Function ---
 /**
  * Lấy danh sách bộ lọc dựa trên tên danh mục.
  * Ví dụ: "Laptop Gaming" sẽ khớp với key "Laptop" trong config.

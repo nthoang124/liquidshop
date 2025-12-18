@@ -31,6 +31,7 @@ import { useCart } from "@/context/CartContext";
 
 import CategoryDesktop from "../product/filter/categoryDesktop";
 import CategoryMobile from "../product/filter/categoryMobile";
+import SearchBar from "../product/searchBar";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -122,13 +123,8 @@ const Header: React.FC = () => {
             </Link>
 
             {/* Input Search Mobile */}
-            <div className="relative flex-1">
-              <Input
-                placeholder="Tìm kiếm..."
-                className="bg-white text-black pr-8 h-9 rounded-lg focus-visible:ring-red-500"
-              />
-              <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
+
+            <SearchBar placeholder="Tìm kiếm..." />
 
             <Link to="/cart" className="relative group">
               <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
@@ -195,13 +191,7 @@ const Header: React.FC = () => {
             <CategoryDesktop />
 
             {/* Desktop Search */}
-            <div className="flex-1 max-w-xl mx-6 relative">
-              <Input
-                placeholder="Bạn cần tìm gì?"
-                className="bg-white text-black h-10 rounded-md pr-10 focus-visible:ring-2 focus-visible:ring-red-500"
-              />
-              <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-            </div>
+            <SearchBar />
 
             <div className="flex items-center gap-6">
               <nav className="flex items-center gap-8">
