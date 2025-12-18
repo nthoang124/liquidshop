@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Menu, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { type ICategory } from "@/types/category";
 import { Link } from "react-router-dom";
 
 import getCategoryIcon from "@/utils/mapIcon";
+import { getFiltersForCategory } from "@/types/filter";
 
 interface ICategoryWithChildren extends ICategory {
   children: ICategory[];
@@ -16,164 +17,139 @@ interface ICategoryWithChildren extends ICategory {
 const CategoryDropdownContent: React.FC = () => {
   const [categories, setCategories] = useState<ICategoryWithChildren[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategoryIndex, setActiveCategoryIndex] = useState<number>(0);
+  const [activeIdx, setActiveIdx] = useState<number>(0);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCats = async () => {
       try {
         const res = await categoryService.getAllCategories();
         if (res.success && res.data) {
-          const allCats = res.data;
-
-          // Lọc danh mục Cha
-          const parents = allCats.filter((c) => !c.parentCategory);
-
-          // Gán con vào cha dựa trên _id
-          const hierarchy = parents.map((parent) => ({
-            ...parent,
-            children: allCats.filter(
-              (child) =>
-                child.parentCategory && child.parentCategory._id === parent._id
-            ),
+          const parents = res.data.filter((c) => !c.parentCategory);
+          const hierarchy = parents.map((p) => ({
+            ...p,
+            children: res.data.filter((c) => c.parentCategory?._id === p._id),
           }));
-
           setCategories(hierarchy);
         }
-      } catch (error) {
-        console.error("Failed to load categories", error);
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchCategories();
+    fetchCats();
   }, []);
 
-  if (loading) {
+  const activeCat = categories[activeIdx];
+  const activeFilters = useMemo(
+    () => (activeCat ? getFiltersForCategory(activeCat.name) : []),
+    [activeCat]
+  );
+
+  if (loading)
     return (
-      <div className="w-[850px] h-[450px] bg-white shadow-xl rounded-md p-6 flex gap-4">
-        <div className="w-64 space-y-2">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} className="h-10 w-full" />
-          ))}
-        </div>
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-8 w-1/3 mb-4" />
-          <div className="grid grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Skeleton key={i} className="h-4 w-full" />
-            ))}
-          </div>
-        </div>
+      <div className="w-[900px] h-[500px] bg-white p-6">
+        <Skeleton className="h-full w-full" />
       </div>
     );
-  }
-
-  const activeCategory = categories[activeCategoryIndex];
 
   return (
-    <div className="bg-white text-black shadow-xl w-[850px] border border-gray-200 flex rounded-md overflow-hidden animate-in fade-in zoom-in-95 duration-200 h-[450px]">
-      {/* DANH SÁCH CHA */}
-      <div className="w-72 bg-gray-50 border-r border-gray-200 py-2 overflow-y-auto">
+    <div className="bg-white text-black shadow-xl w-3xl border border-gray-200 flex rounded-md overflow-hidden h-[500px] animate-in fade-in zoom-in-95">
+      {/* DANH MỤC CHA */}
+      <div className="w-64 bg-gray-50 border-r border-gray-200 py-2 overflow-y-auto">
         {categories.map((cat, i) => (
           <div
             key={cat._id}
+            onMouseEnter={() => setActiveIdx(i)}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors text-sm font-medium group",
-              activeCategoryIndex === i
+              "flex items-center gap-3 px-4 py-3 cursor-pointer text-sm font-medium transition-all",
+              activeIdx === i
                 ? "bg-white text-red-600 border-l-4 border-red-600 shadow-sm"
-                : "text-gray-600 hover:bg-gray-100 hover:text-black border-l-4 border-transparent"
+                : "text-gray-600 border-l-4 border-transparent"
             )}
-            onMouseEnter={() => setActiveCategoryIndex(i)}
           >
-            <div
-              className={cn(
-                "w-6 h-6 flex items-center justify-center transition-colors",
-                activeCategoryIndex === i
-                  ? "text-red-600"
-                  : "text-gray-400 group-hover:text-black"
-              )}
+            <span
+              className={activeIdx === i ? "text-red-600" : "text-gray-400"}
             >
               {getCategoryIcon(cat.name)}
-            </div>
-
+            </span>
             <span className="flex-1 truncate">{cat.name}</span>
-            {cat.children.length > 0 && (
-              <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-red-500" />
-            )}
+            <ChevronRight className="w-4 h-4 opacity-30" />
           </div>
         ))}
       </div>
 
-      {/* DANH SÁCH CON */}
-      <div className="flex-1 p-6 bg-white overflow-y-auto">
-        {activeCategory ? (
-          <div>
-            <div className="flex items-center gap-2 mb-6 border-b pb-2 border-gray-100">
-              <h3 className="text-lg font-bold text-gray-800 uppercase tracking-wide">
-                {activeCategory.name}
+      {/* CON */}
+      <div className="flex-1 p-3 bg-white overflow-y-auto">
+        <Link
+          to={`/category/${activeCat?._id}`}
+          className="text-xs text-blue-600 hover:text-red-600 font-medium underline"
+        >
+          Xem tất cả {activeCat?.name}
+        </Link>
+        <div className="grid grid-cols-3">
+          {activeCat?.children.length > 0 && (
+            <div className="col-span-3 mb-2">
+              <h3 className="font-bold text-gray-800 uppercase text-xs mb-3 border-b pb-1">
+                Danh mục con
               </h3>
-              <Link
-                to={`/category/${activeCategory._id}`}
-                className="text-xs text-blue-500 hover:underline ml-auto"
-              >
-                Xem tất cả
-              </Link>
-            </div>
-
-            {activeCategory.children.length > 0 ? (
-              <div className="grid grid-cols-3 gap-y-4 gap-x-6">
-                {activeCategory.children.map((child) => (
+              <div className="grid grid-cols-3 gap-2">
+                {activeCat.children.map((child) => (
                   <Link
                     key={child._id}
                     to={`/category/${
-                      activeCategory._id
+                      activeCat._id
                     }?category=${encodeURIComponent(child.name)}`}
-                    // Lưu ý: Link này tùy thuộc vào logic filter của bạn.
-                    // Nếu bạn lọc theo sub-cat, có thể cần param khác.
-                    // Ở đây tôi giả sử lọc theo tên con trong trang cha.
-                    className="flex items-center gap-2 hover:text-red-600 transition-colors text-sm text-gray-600 group/item"
+                    className="text-sm text-gray-600 hover:text-red-600 transition-colors"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover/item:bg-red-500 transition-colors"></span>
                     {child.name}
                   </Link>
                 ))}
               </div>
-            ) : (
-              <p className="text-gray-400 text-sm italic">
-                Đang cập nhật danh mục con...
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            Chọn một danh mục để xem chi tiết
-          </div>
-        )}
+            </div>
+          )}
+          {activeFilters.map((group, idx) => (
+            <div key={idx} className="space-y-2">
+              <h3 className="font-bold text-xs text-red-600 uppercase">
+                {group.label}
+              </h3>
+              <ul className="space-y-1">
+                {group.options.map((opt, i) => (
+                  <li key={i}>
+                    <Link
+                      to={`/category/${activeCat?._id}?${
+                        group.key
+                      }=${encodeURIComponent(opt.value)}`}
+                      className="text-sm text-gray-500 hover:text-red-600 block transition-all hover:translate-x-1"
+                    >
+                      {opt.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-// --- Component Chính ---
 const CategoryDesktop: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div
       className="relative group z-50"
-      onMouseEnter={() => setIsDropdownOpen(true)}
-      onMouseLeave={() => setIsDropdownOpen(false)}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
     >
       <Button
         variant="outline"
-        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-black hover:border-white font-medium ml-3 flex gap-2 cursor-pointer"
+        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-black gap-2 cursor-pointer"
       >
-        <Menu className="h-4 w-4" />
-        Danh mục
+        <Menu className="h-4 w-4" /> Danh mục
       </Button>
-
-      {isDropdownOpen && (
+      {isOpen && (
         <div className="absolute left-0 top-full pt-2">
           <CategoryDropdownContent />
         </div>
@@ -181,5 +157,4 @@ const CategoryDesktop: React.FC = () => {
     </div>
   );
 };
-
 export default CategoryDesktop;

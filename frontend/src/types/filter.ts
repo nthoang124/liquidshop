@@ -54,3 +54,20 @@ export const FILTER_CONFIG: Record<string, IFilterGroup[]> = {
   ],
   default: [],
 };
+
+// --- [NEW] Helper Function ---
+/**
+ * Lấy danh sách bộ lọc dựa trên tên danh mục.
+ * Ví dụ: "Laptop Gaming" sẽ khớp với key "Laptop" trong config.
+ */
+export const getFiltersForCategory = (categoryName: string): IFilterGroup[] => {
+  if (!categoryName) return [];
+
+  const configKey = Object.keys(FILTER_CONFIG).find(
+    (key) =>
+      categoryName.toLowerCase().includes(key.toLowerCase()) &&
+      key !== "default"
+  );
+
+  return configKey ? FILTER_CONFIG[configKey] : FILTER_CONFIG["default"] || [];
+};
