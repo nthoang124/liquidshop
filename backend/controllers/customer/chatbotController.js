@@ -62,8 +62,8 @@ JSON Output:
 {
   "intent": "search_product" | "check_order",
   "query": {
-    "keyword": string, // Important: Extract the core keywords related to the name, category, brand
-    "price_max": number
+    "keyword": string, // Important: Extract core keywords related to name, category, brand
+    "price_max": number // Only fill in when the user mentions price
   },
 }
 `;
