@@ -62,7 +62,7 @@ JSON Output:
 {
   "intent": "search_product" | "check_order",
   "query": {
-    "keyword": string, // Quan trọng: Trích xuất từ khóa cốt lõi (VD: "máy dell", "tai nghe ko dây")
+    "keyword": string, // Important: Extract the core keywords related to the name, category, brand
     "price_max": number
   },
 }
