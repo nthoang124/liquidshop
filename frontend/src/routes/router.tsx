@@ -11,40 +11,38 @@ import HomePage from "@/pages/home/HomePage";
 const CustomerLoginPage = React.lazy(
   () => import("@/pages/customer/auth/LoginPage")
 );
-
 const CustomerRegisterPage = React.lazy(
   () => import("@/pages/customer/auth/RegisterPage")
 );
-
 const CustomerForgotPasswordPage = React.lazy(
   () => import("@/pages/customer/auth/ForgotPasswordPage")
 );
-
 const CustomerResetPasswordPage = React.lazy(
   () => import("@/pages/customer/auth/ResetPasswordPage")
 );
-
 const CustomerProfilePage = React.lazy(
   () => import("@/pages/customer/Profile/Profile")
 );
-
 const CustomerCartPage = React.lazy(() => import("@/pages/cart/CartPage"));
-
-//PRODUCT
+// PRODUCT
 
 const CategoryDetailPage = React.lazy(
   () => import("@/pages/product/CategoryDetailPage")
 );
-
 const ProductDetailPage = React.lazy(
   () => import("@/pages/product/ProductDetailPage")
 );
-
-const OrderLookupPage = React.lazy(
-  () => import("@/pages/order/orderLookupPage")
+const CheckoutPage = React.lazy(() => import("@/pages/order/CheckoutPage"));
+const OrderDetailPage = React.lazy(
+  () => import("@/pages/order/OrderDetailPage")
 );
-
+const OrderSuccessPage = React.lazy(
+  () => import("@/pages/order/OrderSuccessPage")
+);
+const OrderErrorPage = React.lazy(() => import("@/pages/order/OrderErrorPage"));
 const SearchPage = React.lazy(() => import("@/pages/product/SearchPage"));
+
+// ADMIN
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
@@ -77,8 +75,12 @@ const router = createBrowserRouter([
         element: <ProtectedRouteCustomer />,
         children: [
           { path: "users/me", element: <CustomerProfilePage /> },
-          { path: "order/lookup", element: <OrderLookupPage /> },
           { path: "cart", element: <CustomerCartPage /> },
+          { path: "checkout", element: <CheckoutPage /> },
+          { path: "/orders/:code", element: <OrderDetailPage /> },
+          { path: "/order-success", element: <OrderSuccessPage /> },
+          { path: "/order-failed", element: <OrderErrorPage /> },
+          { path: "/order-error", element: <OrderErrorPage /> },
         ],
       },
       {

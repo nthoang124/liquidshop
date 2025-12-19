@@ -204,7 +204,7 @@ const Header: React.FC = () => {
                 </a>
 
                 <Link
-                  to="/order/lookup"
+                  to="/users/me#orders-history"
                   className="flex items-center group transition-colors duration-200 text-white"
                 >
                   <FileText className="h-5 w-5 mb-1 mr-2 group-hover:text-red-500 transition-colors" />

@@ -3,7 +3,7 @@ export interface IOrder {
 
   orderCode: string;
 
-  userId: string
+  userId: string;
 
   customerInfo: {
     fullName: string;
@@ -56,4 +56,19 @@ export interface IOrderListResponse {
   page: number;
   totalPages: number;
   data: IOrder[];
+}
+
+// Thêm interface cho Payload tạo đơn hàng
+export interface ICreateOrderPayload {
+  paymentMethod: "COD" | "BankTransfer" | "OnlineGateway";
+  paymentProvider?: "VNPAY" | "Momo";
+  voucherCode?: string;
+  notes?: string;
+}
+
+// Interface cho response trả về khi tạo đơn thành công
+export interface ICreateOrderResponse {
+  message: string;
+  order: IOrder;
+  paymentUrl?: string | null;
 }

@@ -267,7 +267,7 @@ const ProductDetailPage: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
                   <Button
                     onClick={handleAddToCart}
-                    disabled={isAddingToCart}
+                    disabled={isAddingToCart || product.stockQuantity <= 0}
                     className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white shadow-lg cursor-pointer"
                   >
                     <span className="flex items-center gap-2 text-lg font-bold uppercase">
