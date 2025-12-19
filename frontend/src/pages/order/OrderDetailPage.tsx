@@ -76,6 +76,26 @@ const OrderDetailPage: React.FC = () => {
     }
   };
 
+  const handleCancelOrder = async () => {
+    if (!order) return;
+
+    // Xác nhận đơn giản bằng trình duyệt (hoặc dùng Modal của UI library nếu có)
+    const isConfirm = window.confirm(
+      "Bạn có chắc chắn muốn hủy đơn hàng này không?"
+    );
+    if (!isConfirm) return;
+
+    try {
+      await orderService.cancelOrder(order.orderCode);
+      toast.success("Đã hủy đơn hàng thành công");
+
+      // Reload lại data để cập nhật trạng thái mới
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Không thể hủy đơn hàng");
+    }
+  };
+
   if (loading)
     return (
       <div className="h-screen flex items-center justify-center">
@@ -162,22 +182,33 @@ const OrderDetailPage: React.FC = () => {
               Ngày đặt: {new Date(order.createdAt).toLocaleString("vi-VN")}
             </p>
           </div>
-          {/* Show Pay Button if Pending Payment */}
-          {order.paymentStatus === "pending" &&
-            order.orderStatus !== "cancelled" &&
-            order.paymentMethod !== "COD" && (
+          <div className="flex gap-3">
+            {/* Show Pay Button if Pending Payment */}
+            {order.paymentStatus === "pending" &&
+              order.orderStatus !== "cancelled" &&
+              order.paymentMethod !== "COD" && (
+                <Button
+                  onClick={handleRepayment}
+                  disabled={processingPayment}
+                  className="bg-red-600 hover:bg-red-700 animate-pulse"
+                >
+                  {processingPayment ? (
+                    <Loader2 className="animate-spin w-4 h-4" />
+                  ) : (
+                    "Thanh toán ngay"
+                  )}
+                </Button>
+              )}
+            {order.orderStatus === "pending_confirmation" && (
               <Button
-                onClick={handleRepayment}
-                disabled={processingPayment}
-                className="bg-red-600 hover:bg-red-700 animate-pulse"
+                variant="outline"
+                className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                onClick={handleCancelOrder}
               >
-                {processingPayment ? (
-                  <Loader2 className="animate-spin w-4 h-4" />
-                ) : (
-                  "Thanh toán ngay"
-                )}
+                <XCircle className="w-4 h-4 mr-2" /> Hủy đơn hàng
               </Button>
             )}
+          </div>
         </div>
 
         {renderStatus()}

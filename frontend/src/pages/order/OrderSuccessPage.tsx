@@ -105,7 +105,7 @@ const OrderSuccessPage: React.FC = () => {
         <div className="flex flex-col gap-3">
           <Button
             className="w-full bg-slate-900 hover:bg-slate-800 h-11"
-            onClick={() => navigate(`/profile/orders/${order.orderCode}`)}
+            onClick={() => navigate(`/orders/${order.orderCode}`)}
           >
             Xem chi tiết đơn hàng <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
