@@ -7,6 +7,7 @@ import { User, ShoppingBag, Loader2, Key } from "lucide-react";
 import { useAuth } from "@/context/CustomerAuthContext";
 import AddressManager from "./AddressManager";
 import PasswordChanger from "./PasswordChanger";
+import MyOrders from "./MyOrders";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +56,9 @@ export type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
   const { user, updateUser, changePassword } = useAuth();
-  const [activeTab, setActiveTab] = useState<"profile" | "password">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "password" | "orders">(
+    "profile"
+  );
   const [loading, setLoading] = useState(false);
 
   const [selectedAddrIndex, setSelectedAddrIndex] = useState<string>("0");
@@ -171,7 +174,12 @@ export default function ProfilePage() {
 
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    className={`w-full justify-start gap-3 ${
+                      activeTab === "orders"
+                        ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
+                        : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                    onClick={() => setActiveTab("orders")}
                   >
                     <ShoppingBag className="w-4 h-4" /> Đơn mua
                   </Button>
@@ -305,6 +313,8 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
             )}
+
+            {activeTab === "orders" && <MyOrders />}
 
             {/* TAB: PASSWORD */}
             {activeTab === "password" && (
