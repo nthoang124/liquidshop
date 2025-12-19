@@ -1,5 +1,6 @@
 const Order = require('../models/orderModel');
 const Payment = require('../models/paymentModel');
+const Product = require('../models/productModel')
 const crypto = require('crypto');
 const { sendEmail } = require('../utils/sendMail')
 
@@ -53,6 +54,14 @@ const vnpay_return = async (req, res) => {
       }
 
       await sendMailPaidSuccess(savedOrder)
+
+      // Cập nhật số lượng hàng trong kho
+      for (const item of savedOrder.items) {
+        await Product.findByIdAndUpdate(item.productId, {
+          $inc: { stockQuantity: -item.quantity, soldCount: item.quantity }
+        });
+      }
+
       return res.redirect(`${process.env.CLIENT_URL}/order-success?code=${orderCode}`);
 
     } catch (error) {
@@ -136,6 +145,13 @@ const momo_return = async (req, res) => {
         }
 
         await sendMailPaidSuccess(savedOrder)
+
+        for (const item of savedOrder.items) {
+          await Product.findByIdAndUpdate(item.productId, {
+            $inc: { stockQuantity: -item.quantity, soldCount: item.quantity }
+          });
+        }
+
         return res.redirect(`${process.env.CLIENT_URL}/order-success?code=${orderId}`);
 
       } catch (error) {

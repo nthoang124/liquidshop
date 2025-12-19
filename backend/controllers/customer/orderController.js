@@ -9,7 +9,7 @@ const momoService = require('../../utils/momoService');
 const bankService = require('../../utils/bankQrService');
 
 const createOrder = async (req, res) => {
-  const { paymentMethod, paymentProvider, voucherCode, notes } = req.body;
+  const { paymentMethod, paymentProvider, voucherCode, notes, items } = req.body;
   const userId = req.user.id
 
   if (paymentMethod != "COD" && paymentMethod != "BankTransfer" && paymentMethod != "OnlineGateway") {
@@ -45,7 +45,17 @@ const createOrder = async (req, res) => {
     let subtotal = 0;
     const orderItems = [];
 
-    for (const item of cart.items) {
+    for (const item of items) {
+      const exists = cart.items.some(
+        i => i.productId.toString() === item.productId.toString()
+      );
+
+      if (!exists) {
+        return res.status(400).json({
+          message: "Product not found in cart"
+        });
+      }
+
       const product = await Product.findById(item.productId);
       if (!product) continue;
 
@@ -180,12 +190,6 @@ const createOrder = async (req, res) => {
 
     if (voucherId) {
       await Promotion.findByIdAndUpdate(voucherId, { $inc: { usedCount: 1 } });
-    }
-
-    for (const item of orderItems) {
-      await Product.findByIdAndUpdate(item.productId, {
-        $inc: { stockQuantity: -item.quantity, soldCount: item.quantity }
-      });
     }
 
     const message = `
@@ -402,4 +406,36 @@ const getOrdersUser = async (req, res) => {
   }
 }
 
-module.exports = { createOrder, getOrderByCode, getOrdersUser }
+const cancelOrder = async (req, res) => {
+  const userId = req.user.id
+  const { orderCode } = req.params
+
+  try {
+    const order = await Order.findOne({ userId, orderCode })
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found"
+      })
+    }
+
+    order.paymentStatus = "failed"
+    order.orderStatus = "cancelled"
+
+    const savedOrder = await order.save()
+
+    res.status(200).json({
+      message: "Cancel order successful",
+      order: savedOrder
+    })
+
+  }
+  catch (error) {
+    res.status(500).json({
+      message: "Cancel order error",
+      error
+    })
+  }
+}
+
+module.exports = { createOrder, getOrderByCode, getOrdersUser, cancelOrder }
