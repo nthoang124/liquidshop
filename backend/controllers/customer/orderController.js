@@ -44,16 +44,9 @@ const createOrder = async (req, res) => {
     // Loop qua các item để lấy tổng tiền
     let subtotal = 0;
     const orderItems = [];
-
-    for (const item of items) {
-      const exists = cart.items.some(
-        i => i.productId.toString() === item
-      );
-
-      if (!exists) {
-        return res.status(400).json({
-          message: "Order not found in cart"
-        });
+    for (const item of cart.items) {
+      if (!items.includes(item.productId.toString())) {
+        continue;
       }
 
       const product = await Product.findById(item.productId);
