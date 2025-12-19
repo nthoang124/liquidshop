@@ -46,7 +46,11 @@ const createOrder = async (req, res) => {
     const orderItems = [];
 
     for (const item of items) {
-      if (!cart.items.includes(item.productId.toString())) {
+      const exists = cart.items.some(
+        i => i.productId.toString() === item
+      );
+
+      if (!exists) {
         return res.status(400).json({
           message: "Order not found in cart"
         });
