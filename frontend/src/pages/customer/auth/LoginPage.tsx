@@ -7,6 +7,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAuth } from "@/context/CustomerAuthContext";
 import logo from "@/assets/icons/TL-Logo.png";
 import Footer from "@/components/common/Footer";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 const autofillFixStyle = `
   input:-webkit-autofill,
@@ -70,6 +71,7 @@ export default function LoginPage() {
   return (
     <div className="h-screen flex flex-col bg-neutral-700 font-sans">
       <style>{autofillFixStyle}</style>
+      <ScrollToTop />
       <main className="flex-grow flex items-center justify-center p-10">
         <div className="w-full max-w-md bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col gap-4 border border-gray-800">
           {/* Logo Section */}

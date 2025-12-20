@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authService } from "@/services/api/customer/auth.service";
 import Footer from "@/components/common/Footer";
 import { Eye, EyeOff } from "lucide-react";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 const schema = z
   .object({
@@ -57,6 +58,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen bg-neutral-700 flex flex-col">
+      <ScrollToTop />
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-[#151517] p-8 rounded-2xl shadow-xl text-white">
           <h2 className="text-2xl font-bold text-red-500 mb-4 text-center">

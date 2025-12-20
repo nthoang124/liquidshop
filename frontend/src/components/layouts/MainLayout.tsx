@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import ScrollToTop from "../common/ScrollToTop";
-import ChatBot from "../chatbot/chatbot";
+import ChatBot from "../chatbot/ChatBot";
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
