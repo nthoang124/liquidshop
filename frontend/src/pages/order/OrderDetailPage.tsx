@@ -149,7 +149,7 @@ const OrderDetailPage: React.FC = () => {
         {/* Navigation */}
         <Button
           variant="ghost"
-          onClick={() => navigate("/users/me")}
+          onClick={() => navigate("/users/me#orders-history")}
           className="mb-4 pl-0 hover:bg-transparent hover:text-red-600"
         >
           <ArrowLeft className="w-4 h-4 mr-2" /> Quay lại danh sách
