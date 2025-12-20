@@ -42,16 +42,28 @@ const addressSchema = z.object({
   isDefault: z.boolean().default(false),
 });
 
-const profileSchema = z.object({
-  fullName: z.string().min(2, "Tên hiển thị phải ít nhất 2 ký tự"),
-  email: z.string().email("Email không hợp lệ"),
-  phoneNumber: z
-    .string()
-    .regex(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ")
-    .optional()
-    .or(z.literal("")),
-  addresses: z.array(addressSchema).optional(),
-});
+const profileSchema = z
+  .object({
+    fullName: z.string().min(2, "Tên hiển thị phải ít nhất 2 ký tự"),
+    email: z.string().email("Email không hợp lệ"),
+    phoneNumber: z
+      .string()
+      .nonempty("Vui lòng nhập số điện thoại")
+      .regex(/^[0-9]{10,11}$/, "Số điện thoại phải có 10 hoặc 11 chữ số"),
+    addresses: z.array(addressSchema).optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.addresses && data.addresses.length > 0) {
+        return data.addresses.some((addr) => addr.isDefault === true);
+      }
+      return true;
+    },
+    {
+      message: "Vui lòng chọn một địa chỉ làm mặc định",
+      path: ["addresses"],
+    }
+  );
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 
