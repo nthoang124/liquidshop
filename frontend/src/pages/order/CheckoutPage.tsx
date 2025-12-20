@@ -205,7 +205,8 @@ const CheckoutPage: React.FC = () => {
                   <Link to="/users/me" className="hover:underline">
                     <strong>tại đây</strong>
                   </Link>{" "}
-                  để chắc chắn rằng bạn đã đặt địa chỉ mặc định!{" "}
+                  để chắc chắn rằng bạn đã đặt địa chỉ mặc định và đảm bảo rằng
+                  bạn đã cung cấp <strong>số điện thoại</strong> liên lạc!{" "}
                 </div>
               </CardContent>
             </Card>
