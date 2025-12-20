@@ -4,7 +4,6 @@ import {
   User,
   ShoppingCart,
   Home,
-  MessageSquare,
   Phone,
   FileText,
   LogOut,
@@ -86,6 +85,19 @@ const Header: React.FC = () => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
+            className="p-2 cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            asChild
+          >
+            <Link
+              to="/users/me#orders-history"
+              className="flex items-center gap-3 "
+            >
+              <FileText className="w-4 h-4 text-gray-300" />
+              <span className="text-white">Đơn hàng của tôi</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
             className="p-2 cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 focus:text-red-400"
             onClick={handleLogout}
           >
@@ -120,9 +132,7 @@ const Header: React.FC = () => {
               <Logo />
             </Link>
 
-            {/* Input Search Mobile */}
-
-            <SearchBar placeholder="Tìm kiếm..." />
+            <SearchBar />
 
             <Link to="/cart" className="relative group">
               <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
@@ -150,11 +160,11 @@ const Header: React.FC = () => {
             <CategoryMobile />
 
             <Link
-              to="/contact"
+              to="/users/me#orders-history"
               className="flex flex-col items-center gap-1 flex-1"
             >
-              <MessageSquare className="h-6 w-6" />
-              <span className="text-[10px]">Tư vấn</span>
+              <FileText className="h-6 w-6" />
+              <span className="text-[10px]">Tra cứu đơn hàng</span>
             </Link>
 
             {/* Logic Mobile User: */}
