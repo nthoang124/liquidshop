@@ -5,6 +5,11 @@ const getReviewsProduct = async (req, res) => {
 
   try {
     const reviews = await Review.find({ productId: id, status: "approved" })
+      .populate({
+        path: "userId",
+        select: "fullName email"
+      })
+      .sort({ createdAt: -1 })
 
     if (!reviews) {
       return res.status(404).json({
