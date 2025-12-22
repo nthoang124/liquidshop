@@ -2,7 +2,6 @@ import React from "react";
 import {
   Cpu,
   HardDrive,
-  Layers,
   Monitor,
   CircuitBoard,
   MousePointer2,
@@ -15,6 +14,7 @@ import {
   Lightbulb,
   Type,
   Inbox,
+  MemoryStick,
 } from "lucide-react";
 
 import { type IProduct } from "@/types/product";
@@ -50,7 +50,7 @@ export const getProductSpecsAttrs = (product: IProduct): SpecItem[] => {
         label: specs.gpu || specs.vga || "Onboard",
       });
 
-    if (specs.ram) items.push({ icon: Layers, label: specs.ram });
+    if (specs.ram) items.push({ icon: MemoryStick, label: specs.ram });
 
     if (specs.storage || specs.disk || specs.ssd)
       items.push({
@@ -76,7 +76,7 @@ export const getProductSpecsAttrs = (product: IProduct): SpecItem[] => {
     const items: SpecItem[] = [];
 
     if (specs.cpu) items.push({ icon: Cpu, label: specs.cpu });
-    if (specs.ram) items.push({ icon: Layers, label: specs.ram });
+    if (specs.ram) items.push({ icon: MemoryStick, label: specs.ram });
     if (specs.storage) items.push({ icon: HardDrive, label: specs.storage });
     if (specs.screen) items.push({ icon: Monitor, label: specs.screen });
     if (specs.gpu) items.push({ icon: CircuitBoard, label: specs.gpu });

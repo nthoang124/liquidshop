@@ -47,7 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         )}
       >
         {/* IMAGE */}
-        <div className="relative w-full aspect-square sm:aspect-[4/3] overflow-hidden rounded-md bg-white">
+        <div className="relative w-full aspect-square sm:aspect-[4/3] overflow-hidden rounded bg-white">
           <img
             src={displayImage}
             alt={product.name}
@@ -94,26 +94,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
           {/* PRICE */}
           <div>
             {product.originalPrice && product.originalPrice > product.price && (
-              <div className="flex flex-wrap items-center gap-1 text-[10px] sm:text-xs mb-0.5">
+              <div className="flex flex-wrap items-center gap-1 text-sm sm:text-sm mb-0.5">
                 <span className="text-gray-400 line-through">
                   {formatPrice(product.originalPrice)}
                 </span>
                 {product.discountPercentage &&
                   product.discountPercentage > 0 && (
-                    <span className="font-bold text-red-600 bg-red-50 border border-red-200 px-0.5 rounded text-[9px] sm:text-[10px]">
+                    <span className="font-bold text-red-600 bg-red-50 border border-red-200 px-0.5 rounded text-sm sm:text-sm">
                       -{product.discountPercentage}%
                     </span>
                   )}
               </div>
             )}
 
-            <span className="block text-sm sm:text-lg font-bold text-[#d70018]">
+            <span className="block text-lg sm:text-lg font-bold text-[#d70018]">
               {formatPrice(product.price)}
             </span>
           </div>
 
           {/* RATING */}
-          <div className="flex flex-wrap items-center gap-2 text-[10px] sm:text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-xs text-gray-500">
             {product.averageRating > 0 && (
               <div className="flex items-center gap-0.5 bg-yellow-50 border border-yellow-200 px-1 py-0.5 rounded-sm">
                 <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-orange-500 text-orange-500" />
