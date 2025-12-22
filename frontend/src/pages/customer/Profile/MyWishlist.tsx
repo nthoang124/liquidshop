@@ -17,6 +17,8 @@ import { wishlistService } from "@/services/api/customer/wishlist.service";
 import { formatVND } from "@/utils/admin/formatMoney";
 import PaginationCustom from "@/components/common/Pagination";
 
+import ScrollToTop from "@/components/common/ScrollToTop";
+
 const MyWishlist: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,6 +72,7 @@ const MyWishlist: React.FC = () => {
 
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl min-h-[600px]">
+      <ScrollToTop />
       <CardHeader className="border-b border-neutral-800 pb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>

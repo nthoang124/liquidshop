@@ -30,6 +30,8 @@ import { type IOrder } from "@/types/order";
 import CancelOrderDialog from "@/pages/order/CancelDialog";
 import PaginationCustom from "@/components/common/Pagination";
 
+import ScrollToTop from "@/components/common/ScrollToTop";
+
 const getStatusInfo = (status: string) => {
   switch (status) {
     case "pending_confirmation":
@@ -166,6 +168,7 @@ const MyOrders: React.FC = () => {
 
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl min-h-[600px]">
+      <ScrollToTop />
       <CardHeader className="border-b border-neutral-800 pb-4 sm:pb-6 px-4 sm:px-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* HEADER TITLE */}
