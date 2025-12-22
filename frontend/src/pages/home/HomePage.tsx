@@ -4,6 +4,7 @@ import useDocumentTitle from "@/hooks/useDocumentTitle";
 import Banner from "@/components/common/Banner";
 import BottomCategory from "@/features/BottomCategory";
 import ProductListCarousel from "@/components/product/carousel/ProductListCarousel";
+import MobileProductSlide from "@/components/product/carousel/MobileSlide";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
@@ -30,12 +31,9 @@ const HomePage = () => {
       setLoading(true);
       try {
         const categoryRes = await categoryService.getAllCategories();
-
         if (categoryRes.success && categoryRes.data) {
           const allCategories = categoryRes.data;
-
           const targetNames = ["Laptop", "Điện thoại", "Bàn phím", "Chuột"];
-
           const selectedCats = allCategories.filter((cat) =>
             targetNames.some((name) =>
               cat.name.toLowerCase().includes(name.toLowerCase())
@@ -52,28 +50,23 @@ const HomePage = () => {
               }),
               brandService.getBrandsByCategory(cat._id),
             ]);
-
-            const productsData = productRes.data?.products || [];
-
             return {
               title: cat.name,
               categoryId: cat._id,
-              products: productsData || [],
+              products: productRes.data?.products || [],
               brands: brandRes.brands || [],
             };
           });
 
           const results = await Promise.all(sectionPromises);
-
           setSections(results.filter((section) => section.products.length > 0));
         }
       } catch (error) {
-        console.error("Lỗi khi tải dữ liệu trang chủ:", error);
+        console.error("Lỗi:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchHomeData();
   }, []);
 
@@ -83,12 +76,12 @@ const HomePage = () => {
 
       {loading ? (
         <div className="space-y-6">
-          {[1, 2, 3, 4].map((i) => (
+          {[1, 2, 3].map((i) => (
             <div key={i} className="bg-white p-4 rounded-md">
-              <Skeleton className="h-8 w-64 mb-4" />
+              <Skeleton className="h-8 w-40 mb-4" />
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                {[1, 2, 3, 4, 5].map((j) => (
-                  <Skeleton key={j} className="h-60 w-full" />
+                {[1, 2, 3, 4].map((j) => (
+                  <Skeleton key={j} className="h-40 w-full" />
                 ))}
               </div>
             </div>
@@ -97,13 +90,26 @@ const HomePage = () => {
       ) : (
         sections.map((section) => (
           <section key={section.categoryId} className="p-0">
-            <ProductListCarousel
-              title={section.title}
-              products={section.products}
-              viewAllLink={`/category/${section.categoryId}`}
-              autoplay={true}
-              brands={section.brands}
-            />
+            {/* DESKTOP VIEW */}
+            <div className="hidden md:block">
+              <ProductListCarousel
+                title={section.title}
+                products={section.products}
+                viewAllLink={`/category/${section.categoryId}`}
+                autoplay={true}
+                brands={section.brands}
+              />
+            </div>
+
+            {/* MOBILE VIEW */}
+            <div className="md:hidden">
+              <MobileProductSlide
+                title={section.title}
+                products={section.products}
+                brands={section.brands}
+                viewAllLink={`/category/${section.categoryId}`}
+              />
+            </div>
           </section>
         ))
       )}
