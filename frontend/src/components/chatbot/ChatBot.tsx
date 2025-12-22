@@ -21,13 +21,23 @@ const ChatBot: React.FC = () => {
 
   const { user, isLoading: isAuthLoading } = useAuth();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior });
+    }, 300);
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isOpen, isStreaming]);
+    if (isOpen && !isLoading) {
+      scrollToBottom("smooth");
+    }
+  }, [messages, isStreaming]);
+
+  useEffect(() => {
+    if (isOpen && !isLoading) {
+      scrollToBottom("auto");
+    }
+  }, [isOpen, isLoading]);
 
   useEffect(() => {
     if (isOpen && messages.length === 0 && user) {
