@@ -45,7 +45,15 @@ const SearchPage: React.FC = () => {
 
         searchParams.forEach((value, key) => {
           if (["page", "limit", "sort", "keyword"].includes(key)) return;
-          params[key] = value;
+          if (params[key]) {
+            if (Array.isArray(params[key])) {
+              params[key].push(value);
+            } else {
+              params[key] = [params[key], value];
+            }
+          } else {
+            params[key] = value;
+          }
         });
 
         const res = await productService.getProducts(params);

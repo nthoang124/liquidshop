@@ -164,10 +164,15 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const current = searchParams.get(paramKey);
-    if (current) {
-      // Giả sử URL dạng: param=A,B,C
-      setSelected(current.split(","));
+    // Dùng getAll để lấy mảng các giá trị (hỗ trợ dạng ?key=A&key=B)
+    const currentValues = searchParams.getAll(paramKey);
+
+    // Logic fallback: Nếu URL cũ vẫn dùng dấu phẩy (?key=A,B), ta vẫn hỗ trợ tách nó ra
+    // Điều này giúp tránh lỗi nếu user chia sẻ link cũ
+    if (currentValues.length === 1 && currentValues[0].includes(",")) {
+      setSelected(currentValues[0].split(","));
+    } else if (currentValues.length > 0) {
+      setSelected(currentValues);
     } else {
       setSelected([]);
     }
@@ -183,11 +188,16 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
 
   const handleApply = () => {
     setSearchParams((prev) => {
+      // 1. Xóa key hiện tại để tránh bị trùng hoặc lỗi
+      prev.delete(paramKey);
+
+      // 2. Nếu có lựa chọn, thêm từng cái vào URL (tạo ra dạng &key=val1&key=val2)
       if (selected.length > 0) {
-        prev.set(paramKey, selected.join(","));
-      } else {
-        prev.delete(paramKey);
+        selected.forEach((val) => {
+          prev.append(paramKey, val);
+        });
       }
+
       prev.set("page", "1");
       return prev;
     });
