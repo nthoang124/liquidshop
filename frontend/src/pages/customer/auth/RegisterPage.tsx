@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, CheckCircle } from "lucide-react"; // 1. Import CheckCircle
-import * as z from "zod";
+import { Eye, EyeOff, CheckCircle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import * as z from "zod";
+
 import { useAuth } from "@/context/CustomerAuthContext";
 import logo from "@/assets/icons/TL-Logo.png";
+import loginBg from "@/assets/images/auth-bg.jpg";
 import Footer from "@/components/common/Footer";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const autofillFixStyle = `
   input:-webkit-autofill,
@@ -22,10 +35,7 @@ const autofillFixStyle = `
 
 const schema = z
   .object({
-    fullName: z
-      .string()
-      .min(2, "Họ và tên phải tối thiểu 2 ký tự")
-      .nonempty("Vui lòng nhập họ và tên"),
+    fullName: z.string().min(2, "Họ và tên phải tối thiểu 2 ký tự"),
     email: z.email("Địa chỉ Email không hợp lệ"),
     password: z
       .string()
@@ -43,9 +53,9 @@ const schema = z
 type RegisterFormValues = z.infer<typeof schema>;
 
 export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  // 2. State quản lý thông báo thành công
+  useDocumentTitle("Tạo tài khoản");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { registerAuth } = useAuth();
@@ -53,7 +63,6 @@ export default function RegisterPage() {
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(schema),
-    mode: "onBlur",
     defaultValues: {
       fullName: "",
       email: "",
@@ -62,17 +71,9 @@ export default function RegisterPage() {
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = form;
-
   const onSubmit = async (values: RegisterFormValues) => {
     setLoading(true);
     setSuccessMessage(null);
-
     const result = await registerAuth({
       fullName: values.fullName,
       email: values.email,
@@ -83,221 +84,232 @@ export default function RegisterPage() {
       setSuccessMessage(
         "Đăng ký thành công! Đang chuyển đến trang đăng nhập..."
       );
-
-      setTimeout(() => {
-        navigate("/auth/login/customer");
-      }, 3000);
+      setTimeout(() => navigate("/auth/login/customer"), 3000);
     } else {
-      setError("root", {
-        type: "manual",
-        message: result.message || "Đăng ký thất bại",
-      });
+      form.setError("root", { message: result.message || "Đăng ký thất bại" });
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-700 ">
+    <div
+      className="min-h-screen flex flex-col bg-neutral-700 bg-cover bg-center bg-fixed"
+      style={{ backgroundImage: `url(${loginBg})` }}
+    >
       <style>{autofillFixStyle}</style>
       <ScrollToTop />
-      <main className="min-h-screen flex items-center justify-center p-10">
-        <div className="w-full max-w-5xl bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col lg:flex-row gap-10 border border-gray-800">
-          <div className="w-full lg:w-1/2">
-            {/* Logo Section */}
-            <div className="flex justify-center mb-4">
-              {logo ? (
+      <div className="flex-1 w-full bg-black/60 flex flex-col">
+        <main className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-10 lg:p-12">
+          <div className="w-full max-w-lg lg:max-w-5xl bg-[#151517]/90 p-6 sm:p-8 md:p-10 rounded-sm shadow-2xl backdrop-blur-md flex flex-col lg:flex-row gap-8 lg:gap-10 border border-gray-800">
+            <div className="w-full lg:w-1/2">
+              <div className="flex justify-center mb-6">
                 <img
                   src={logo}
                   alt="Logo"
-                  className="h-16 w-16 object-contain"
+                  className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
                 />
-              ) : (
-                <h1 className="text-3xl font-bold text-white">LOGO</h1>
+              </div>
+
+              <h2 className="text-xl sm:text-2xl font-bold text-center text-white mb-6 uppercase">
+                Đăng ký tài khoản
+              </h2>
+
+              {successMessage && (
+                <div className="p-3 mb-5 rounded bg-green-500/10 border border-green-500/50 text-green-500 text-sm text-center flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
+                  <CheckCircle size={18} /> {successMessage}
+                </div>
               )}
+
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
+                  {/* Full Name */}
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem className="relative">
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              placeholder=" "
+                              {...field}
+                              className="peer w-full px-4 pt-6 pb-2 text-white bg-transparent rounded border-gray-600 focus:border-red-500 h-auto"
+                            />
+                            <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base transition-all duration-200 cursor-text pointer-events-none peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-gray-200 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200">
+                              Họ và tên
+                            </label>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 text-xs ml-1" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Email */}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="relative">
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              placeholder=" "
+                              {...field}
+                              className="peer w-full px-4 pt-6 pb-2 text-white bg-transparent rounded border-gray-600 focus:border-red-500 h-auto"
+                            />
+                            <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base transition-all duration-200 cursor-text pointer-events-none peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-gray-200 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200">
+                              Email
+                            </label>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 text-xs ml-1" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Password */}
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem className="relative">
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder=" "
+                              {...field}
+                              className="peer w-full px-4 pt-6 pb-2 text-white bg-transparent rounded border-gray-600 focus:border-red-500 h-auto"
+                            />
+                            <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base transition-all duration-200 cursor-text pointer-events-none peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-gray-200 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200">
+                              Mật khẩu
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1"
+                            >
+                              {showPassword ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 text-xs ml-1" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Confirm Password */}
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="relative">
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              type="password"
+                              placeholder=" "
+                              {...field}
+                              className="peer w-full px-4 pt-6 pb-2 text-white bg-transparent rounded border-gray-600 focus:border-red-500 h-auto"
+                            />
+                            <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm sm:text-base transition-all duration-200 cursor-text pointer-events-none peer-focus:top-2 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-gray-200 peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200">
+                              Nhập lại mật khẩu
+                            </label>
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-500 text-xs ml-1" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {form.formState.errors.root && (
+                    <div className="p-3 rounded bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
+                      {form.formState.errors.root.message}
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-900/50 text-white font-bold py-6 rounded transition-all mt-4"
+                  >
+                    {loading ? "ĐANG XỬ LÝ..." : "ĐĂNG KÝ"}
+                  </Button>
+                </form>
+              </Form>
+
+              <p className="text-gray-400 text-sm text-center mt-6">
+                Đã có tài khoản?{" "}
+                <Link
+                  to="/auth/login/customer"
+                  className="text-red-500 font-bold hover:underline ml-1"
+                >
+                  Đăng nhập
+                </Link>
+              </p>
             </div>
-            <h2 className="text-2xl font-bold text-center text-red-500 mb-2">
-              Đăng ký tài khoản
-            </h2>
-
-            {successMessage && (
-              <div className="p-3 mb-4 rounded-lg bg-green-500/10 border border-green-500/50 text-green-500 text-sm text-center flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
-                <CheckCircle size={18} />
-                {successMessage}
-              </div>
-            )}
-
-            {errors.root && (
-              <div className="p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
-                {errors.root.message}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              {/* Full Name */}
-              <div className="relative">
-                <input
-                  type="text"
-                  id="fullName"
-                  placeholder=" "
-                  disabled={loading}
-                  {...register("fullName")}
-                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
-                    ${errors.fullName ? "border-red-500" : "border-gray-600"} 
-                     outline-none transition-all`}
-                />
-                <label
-                  htmlFor="fullName"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base transition-all duration-200 cursor-text
-                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
-                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-gray-200
-                    peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200"
-                >
-                  Họ và tên
-                </label>
-                {errors.fullName && (
-                  <p className="text-red-500 text-xs ml-1 mt-1">
-                    {errors.fullName.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="relative">
-                <input
-                  type="text"
-                  id="email"
-                  placeholder=" "
-                  disabled={loading}
-                  {...register("email")}
-                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
-                    ${errors.email ? "border-red-500" : "border-gray-600"} 
-                     outline-none transition-all`}
-                />
-                <label
-                  htmlFor="email"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base transition-all duration-200 cursor-text
-                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
-                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-gray-200
-                    peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200"
-                >
-                  Email
-                </label>
-                {errors.email && (
-                  <p className="text-red-500 text-xs ml-1 mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Password */}
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  placeholder=" "
-                  disabled={loading}
-                  {...register("password")}
-                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
-                    ${errors.password ? "border-red-500" : "border-gray-600"} 
-                     outline-none transition-all`}
-                />
-                <label
-                  htmlFor="password"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base transition-all duration-200 cursor-text
-                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
-                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-gray-200
-                    peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200"
-                >
-                  Mật khẩu
-                </label>
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-1"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-                {errors.password && (
-                  <p className="text-red-500 text-xs ml-1 mt-1">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Confirm Password */}
-              <div className="relative">
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  placeholder=" "
-                  disabled={loading}
-                  {...register("confirmPassword")}
-                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
-                    ${
-                      errors.confirmPassword
-                        ? "border-red-500"
-                        : "border-gray-600"
-                    } 
-                     outline-none transition-all`}
-                />
-                <label
-                  htmlFor="confirmPassword"
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base transition-all duration-200 cursor-text
-                    peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
-                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-gray-200
-                    peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200"
-                >
-                  Nhập lại mật khẩu
-                </label>
-                {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs ml-1 mt-1">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-900 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all duration-200 shadow-lg shadow-red-900/20 mt-4 cursor-pointer"
-              >
-                {loading ? "Đang xử lý..." : "Đăng ký"}
-              </button>
-            </form>
-            <p className="text-gray-400 text-sm text-center mt-6">
-              Đã có tài khoản?{" "}
-              <Link
-                to="/auth/login/customer"
-                className="text-md font-bold text-red-500 hover:underline"
-              >
-                Đăng nhập
-              </Link>
-            </p>
+            <div className="w-full lg:w-1/2 text-gray-300 border-t lg:border-t-0 lg:border-l border-gray-700/50 pt-8 lg:pt-0 lg:pl-10 flex flex-col justify-center">
+              <h2 className="text-lg font-bold mb-6 text-red-500 flex items-center gap-2">
+                <span className="w-8 h-[2px] bg-red-500"></span>
+                YÊU CẦU TÀI KHOẢN
+              </h2>
+              <ul className="space-y-6 text-sm">
+                <li className="flex gap-4">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-sm">
+                    1
+                  </div>
+                  <div>
+                    <span className="text-gray-100 font-semibold block mb-1">
+                      Họ và tên
+                    </span>
+                    <p className="text-gray-400 text-xs leading-relaxed">
+                      Sử dụng tên thật để thuận tiện cho việc nhận hàng và bảo
+                      hành, tối thiểu 2 ký tự.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-sm">
+                    2
+                  </div>
+                  <div>
+                    <span className="text-gray-100 font-semibold block mb-1">
+                      Email chính chủ
+                    </span>
+                    <p className="text-gray-400 text-xs leading-relaxed">
+                      Hệ thống sẽ gửi hóa đơn và thông báo trạng thái đơn hàng
+                      qua email này.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500 font-bold text-sm">
+                    3
+                  </div>
+                  <div>
+                    <span className="text-gray-100 font-semibold block mb-1">
+                      Mật khẩu bảo mật
+                    </span>
+                    <p className="text-gray-400 text-xs leading-relaxed">
+                      Tối thiểu 8 ký tự, bao gồm ít nhất một chữ hoa, một chữ
+                      thường và một chữ số.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            ;
           </div>
-
-          {/* Info Section */}
-          <div className="w-full lg:w-1/2 text-gray-300 border-t lg:border-t-0 lg:border-l border-gray-700 pt-6 lg:pt-0 lg:pl-10 flex flex-col ">
-            <h2 className="text-xl font-bold mb-6 text-red-500 border-b border-gray-700 pb-2 inline-block">
-              Yêu cầu tài khoản
-            </h2>
-            <ul className="space-y-4 text-sm list-disc list-inside text-gray-400">
-              <li className="marker:text-red-500">
-                <span className="text-gray-300">Họ và tên:</span> Sử dụng tên
-                thật, tối thiểu 2 ký tự.
-              </li>
-              <li className="marker:text-red-500">
-                <span className="text-gray-300">Email:</span> Phải đúng định
-                dạng.
-              </li>
-              <li className="marker:text-red-500">
-                <span className="text-gray-300">Mật khẩu:</span> 8 ký tự, có
-                hoa, thường và số.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
       <Footer />
     </div>
   );
