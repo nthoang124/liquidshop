@@ -1,12 +1,7 @@
-import { Navigate } from "react-router-dom";
-import type { ReactNode } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/CustomerAuthContext";
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function ProtectedRouteCustomer({ children }: Props) {
+export default function ProtectedRouteCustomer() {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -17,5 +12,5 @@ export default function ProtectedRouteCustomer({ children }: Props) {
     return <Navigate to="/auth/login/customer" replace />;
   }
 
-  return children;
+  return <Outlet />;
 }

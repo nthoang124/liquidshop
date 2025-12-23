@@ -6,11 +6,43 @@ import ProtectedRouteCustomer from "./ProtectedRouteCustomer";
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
-import CustomerLoginPage from "@/pages/customer/LoginPage";
-import CustomerRegisterPage from "@/pages/customer/RegisterPage";
-import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
-import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
-import CustomerProfilePage from "@/pages/customer/Profile/Profile";
+//CUSTOMER
+
+const CustomerLoginPage = React.lazy(
+  () => import("@/pages/customer/auth/LoginPage")
+);
+const CustomerRegisterPage = React.lazy(
+  () => import("@/pages/customer/auth/RegisterPage")
+);
+const CustomerForgotPasswordPage = React.lazy(
+  () => import("@/pages/customer/auth/ForgotPasswordPage")
+);
+const CustomerResetPasswordPage = React.lazy(
+  () => import("@/pages/customer/auth/ResetPasswordPage")
+);
+const CustomerProfilePage = React.lazy(
+  () => import("@/pages/customer/Profile/Profile")
+);
+const CustomerCartPage = React.lazy(() => import("@/pages/cart/CartPage"));
+// PRODUCT
+
+const CategoryDetailPage = React.lazy(
+  () => import("@/pages/product/CategoryDetailPage")
+);
+const ProductDetailPage = React.lazy(
+  () => import("@/pages/product/ProductDetailPage")
+);
+const CheckoutPage = React.lazy(() => import("@/pages/order/CheckoutPage"));
+const OrderDetailPage = React.lazy(
+  () => import("@/pages/order/OrderDetailPage")
+);
+const OrderSuccessPage = React.lazy(
+  () => import("@/pages/order/OrderSuccessPage")
+);
+const OrderErrorPage = React.lazy(() => import("@/pages/order/OrderErrorPage"));
+const SearchPage = React.lazy(() => import("@/pages/product/SearchPage"));
+
+// ADMIN
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
@@ -19,22 +51,17 @@ import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
 
-// Lazy loaded pages
-const ProductDetailPage = React.lazy(
-  () => import("@/pages/product/ProductDetail")
-);
-const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
-const OrderLookupPage = React.lazy(
-  () => import("@/pages/order/orderLookupPage")
-);
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
-const AddCategoriesPage = React.lazy(() => import("@/pages/admin/AddCategoriesPage"));
+const AddCategoriesPage = React.lazy(
+  () => import("@/pages/admin/AddCategoriesPage")
+);
 const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
 
+const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
 const router = createBrowserRouter([
   {
@@ -45,16 +72,24 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
       {
-        path: "order/lookup",
-        element: (
-          <ProtectedRouteCustomer>
-            <OrderLookupPage />
-          </ProtectedRouteCustomer>
-        ),
+        element: <ProtectedRouteCustomer />,
+        children: [
+          { path: "users/me", element: <CustomerProfilePage /> },
+          { path: "cart", element: <CustomerCartPage /> },
+          { path: "checkout", element: <CheckoutPage /> },
+          { path: "/orders/:code", element: <OrderDetailPage /> },
+          { path: "/order-success", element: <OrderSuccessPage /> },
+          { path: "/order-failed", element: <OrderErrorPage /> },
+          { path: "/order-error", element: <OrderErrorPage /> },
+        ],
       },
       {
-        path: "/users/me",
-        element: <CustomerProfilePage />,
+        path: "/category/:id",
+        element: <CategoryDetailPage />,
+      },
+      {
+        path: "products",
+        element: <SearchPage />,
       },
     ],
   },

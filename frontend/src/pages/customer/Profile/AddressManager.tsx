@@ -47,14 +47,13 @@ const AddressManager: React.FC<AddressManagerProps> = ({
   // --- HANDLERS (Đã chuyển từ Profile.tsx) ---
 
   const handleAddAddress = () => {
-    const isFirstAddress = fields.length === 0;
-
+    const isFirst = fields.length === 0;
     append({
       street: "",
       ward: "",
       district: "",
       city: "",
-      isDefault: isFirstAddress,
+      isDefault: isFirst,
     });
 
     setTimeout(() => {
@@ -122,6 +121,20 @@ const AddressManager: React.FC<AddressManagerProps> = ({
           <Plus className="w-4 h-4 mr-2" /> Thêm địa chỉ mới
         </Button>
       </div>
+
+      {/* HIỂN THỊ LỖI TỔNG (Nếu chưa có địa chỉ mặc định) */}
+      {profileForm.formState.errors.addresses?.root && (
+        <p className="text-red-500 text-sm font-medium bg-red-500/10 p-3 rounded-md border border-red-500/20">
+          {profileForm.formState.errors.addresses.root.message}
+        </p>
+      )}
+
+      {/* Trong trường hợp refine gắn lỗi vào chính field addresses */}
+      {profileForm.formState.errors.addresses?.message && (
+        <p className="text-red-500 text-sm font-medium bg-red-500/10 p-3 rounded-md border border-red-500/20">
+          {profileForm.formState.errors.addresses.message as string}
+        </p>
+      )}
 
       {fields.length > 0 ? (
         <div className="bg-[#2a2a2c]/50 p-4 rounded-lg border border-neutral-800">
@@ -272,6 +285,7 @@ const AddressManager: React.FC<AddressManagerProps> = ({
                       <FormControl>
                         <Checkbox
                           checked={field.value}
+                          disabled={fields.length === 1}
                           onCheckedChange={(checked) => {
                             field.onChange(checked);
                             handleSetDefaultAddress(checked as boolean, index);

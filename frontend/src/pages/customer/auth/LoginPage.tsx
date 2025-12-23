@@ -7,6 +7,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useAuth } from "@/context/CustomerAuthContext";
 import logo from "@/assets/icons/TL-Logo.png";
 import Footer from "@/components/common/Footer";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 const autofillFixStyle = `
   input:-webkit-autofill,
@@ -19,16 +20,17 @@ const autofillFixStyle = `
   }
 `;
 
-// SỬA: Schema chỉ validate email
 const schema = z.object({
   email: z.string().email("Vui lòng nhập đúng định dạng Email"),
   password: z.string().min(1, "Mật khẩu là bắt buộc"),
+  remember: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { login } = useAuth(); // TypeScript tự infer
   const navigate = useNavigate();
@@ -36,35 +38,31 @@ export default function LoginPage() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(schema),
     mode: "onBlur",
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", remember: false },
   });
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = form;
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
     setLoading(true);
     try {
-      // SỬA: Truyền đúng key email
       const result = await login({
         email: values.email,
         password: values.password,
+        remember: values.remember,
       });
 
       if (result.success) {
         navigate("/");
       } else {
-        setError("root", {
-          type: "manual",
-          message: result.message || "Email hoặc mật khẩu không chính xác",
-        });
+        setServerError(result.message || "Email hoặc mật khẩu không chính xác");
       }
     } catch (error) {
-      setError("root", { type: "manual", message: "Lỗi hệ thống" });
+      setServerError("Lỗi hệ thống, vui lòng thử lại sau");
     } finally {
       setLoading(false);
     }
@@ -73,6 +71,7 @@ export default function LoginPage() {
   return (
     <div className="h-screen flex flex-col bg-neutral-700 font-sans">
       <style>{autofillFixStyle}</style>
+      <ScrollToTop />
       <main className="flex-grow flex items-center justify-center p-10">
         <div className="w-full max-w-md bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col gap-4 border border-gray-800">
           {/* Logo Section */}
@@ -93,9 +92,9 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {errors.root && (
+          {serverError && (
             <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
-              {errors.root.message}
+              {serverError}
             </div>
           )}
 
@@ -171,6 +170,7 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
                 <input
                   type="checkbox"
+                  {...register("remember")}
                   className="rounded border-gray-600 bg-gray-700 text-red-600 focus:ring-red-500"
                 />
                 Ghi nhớ tôi

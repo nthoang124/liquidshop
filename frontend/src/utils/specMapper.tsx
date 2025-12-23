@@ -1,9 +1,7 @@
-// src/utils/specMapper.tsx
 import React from "react";
 import {
   Cpu,
   HardDrive,
-  Layers,
   Monitor,
   CircuitBoard,
   MousePointer2,
@@ -16,55 +14,100 @@ import {
   Lightbulb,
   Type,
   Inbox,
+  MemoryStick,
 } from "lucide-react";
-import type {
-  Product,
-  PCSpecs,
-  MouseSpecs,
-  KeyboardSpecs,
-} from "@/types/product";
+
+import { type IProduct } from "@/types/product";
 
 interface SpecItem {
   icon: React.ElementType;
   label: string;
 }
 
-export const getProductSpecsAttrs = (product: Product): SpecItem[] => {
-  const { category, specs } = product;
+export const getProductSpecsAttrs = (product: IProduct): SpecItem[] => {
+  const specs = product.specifications || {};
 
-  if (category === "pc") {
-    const s = specs as PCSpecs;
-    return [
-      { icon: Cpu, label: s.cpu },
-      { icon: CircuitBoard, label: s.vga || "Onboard" },
-      { icon: Layers, label: s.ram },
-      { icon: HardDrive, label: s.disk },
-      { icon: Monitor, label: s.mainboard },
-      { icon: Inbox, label: s.case },
-    ];
-  }
+  const categoryName =
+    typeof product.category === "object"
+      ? product.category.name.toLowerCase()
+      : String(product.category).toLowerCase();
 
-  if (category === "mouse") {
-    const s = specs as MouseSpecs;
-    const items = [
-      { icon: MousePointer2, label: s.dpi },
-      { icon: Zap, label: s.sensor },
-      { icon: Wifi, label: s.connection },
-      { icon: Scale, label: s.weight },
-    ];
-    if (s.battery) items.push({ icon: Battery, label: s.battery });
+  // --- PC ---
+  if (
+    categoryName === "pc" ||
+    categoryName === "desktop" ||
+    categoryName.includes("laptop")
+  ) {
+    const items: SpecItem[] = [];
+
+    if (specs.cpu) {
+      items.push({ icon: Cpu, label: specs.cpu });
+    }
+
+    if (specs.gpu || specs.vga)
+      items.push({
+        icon: CircuitBoard,
+        label: specs.gpu || specs.vga || "Onboard",
+      });
+
+    if (specs.ram) items.push({ icon: MemoryStick, label: specs.ram });
+
+    if (specs.storage || specs.disk || specs.ssd)
+      items.push({
+        icon: HardDrive,
+        label: specs.storage || specs.disk || specs.ssd || "",
+      });
+
+    if (specs.screen)
+      items.push({
+        icon: Monitor,
+        label: specs.screen,
+      });
+
+    if (specs.mainboard)
+      items.push({ icon: CircuitBoard, label: specs.mainboard });
+    if (specs.case) items.push({ icon: Inbox, label: specs.case });
+
     return items;
   }
 
-  if (category === "keyboard") {
-    const s = specs as KeyboardSpecs;
-    return [
-      { icon: Keyboard, label: s.switch },
-      { icon: Grid, label: s.layout },
-      { icon: Wifi, label: s.connection },
-      { icon: Type, label: s.keycap },
-      { icon: Lightbulb, label: s.led || "No LED" },
-    ];
+  // --- LAPTOP ---
+  if (categoryName === "laptop") {
+    const items: SpecItem[] = [];
+
+    if (specs.cpu) items.push({ icon: Cpu, label: specs.cpu });
+    if (specs.ram) items.push({ icon: MemoryStick, label: specs.ram });
+    if (specs.storage) items.push({ icon: HardDrive, label: specs.storage });
+    if (specs.screen) items.push({ icon: Monitor, label: specs.screen });
+    if (specs.gpu) items.push({ icon: CircuitBoard, label: specs.gpu });
+
+    return items;
+  }
+
+  // --- MOUSE ---
+  if (categoryName === "mouse" || categoryName === "chuột") {
+    const items: SpecItem[] = [];
+
+    if (specs.dpi) items.push({ icon: MousePointer2, label: specs.dpi });
+    if (specs.sensor) items.push({ icon: Zap, label: specs.sensor });
+    if (specs.connection) items.push({ icon: Wifi, label: specs.connection });
+    if (specs.weight) items.push({ icon: Scale, label: specs.weight });
+    if (specs.battery) items.push({ icon: Battery, label: specs.battery });
+
+    return items;
+  }
+
+  // --- KEYBOARD ---
+  if (categoryName === "keyboard" || categoryName === "bàn phím") {
+    const items: SpecItem[] = [];
+
+    if (specs.switch) items.push({ icon: Keyboard, label: specs.switch });
+    if (specs.layout) items.push({ icon: Grid, label: specs.layout });
+    if (specs.connection) items.push({ icon: Wifi, label: specs.connection });
+    if (specs.keycap) items.push({ icon: Type, label: specs.keycap });
+    if (specs.led) items.push({ icon: Lightbulb, label: specs.led });
+
+    return items;
   }
 
   return [];

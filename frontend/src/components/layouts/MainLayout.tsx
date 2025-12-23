@@ -5,10 +5,8 @@ import { Outlet } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
-
-interface MainLayoutProps {
-  children?: React.ReactNode;
-}
+import ScrollToTop from "../common/ScrollToTop";
+import ChatBot from "../chatbot/ChatBot";
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
@@ -20,20 +18,21 @@ const PageLoader = () => (
   </div>
 );
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
+      <ScrollToTop />
       <Header />
 
       <main className="grow bg-[#ececec] w-full">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
           <Suspense fallback={<PageLoader />}>
-            {children ?? <Outlet />}
+            <Outlet />
           </Suspense>
         </div>
       </main>
-
       <Footer />
+      <ChatBot />
       <Toaster theme="dark" position="top-center" richColors />
     </div>
   );

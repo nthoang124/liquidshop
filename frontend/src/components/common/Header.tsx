@@ -4,15 +4,13 @@ import {
   User,
   ShoppingCart,
   Home,
-  MessageSquare,
-  Search,
   Phone,
   FileText,
   LogOut,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,16 +24,17 @@ import {
 import logo from "../../assets/icons/TL-Logo.png";
 
 import { useAuth } from "@/context/CustomerAuthContext";
+import { useCart } from "@/context/CartContext";
 
-// --- TYPES ---
-interface CartBadgeProps {
-  count: number;
-  children: React.ReactNode;
-}
+import CategoryDesktop from "../product/filter/categoryDesktop";
+import CategoryMobile from "../product/filter/categoryMobile";
+import SearchBar from "../product/searchBar";
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
-  const naviagate = useNavigate();
+  const { cartCount } = useCart();
+
+  const navigate = useNavigate();
 
   const getFirstLetter = (name?: string) => {
     return name ? name.charAt(0).toUpperCase() : "@";
@@ -43,7 +42,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    naviagate("/");
+    navigate("/");
   };
 
   const UserDropdown = () => {
@@ -86,6 +85,19 @@ const Header: React.FC = () => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
+            className="p-2 cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            asChild
+          >
+            <Link
+              to="/users/me#orders-history"
+              className="flex items-center gap-3 "
+            >
+              <FileText className="w-4 h-4 text-gray-300" />
+              <span className="text-white">Đơn hàng của tôi</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
             className="p-2 cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 focus:text-red-400"
             onClick={handleLogout}
           >
@@ -110,21 +122,9 @@ const Header: React.FC = () => {
     </div>
   );
 
-  // Component hiển thị số lượng giỏ hàng (Custom Badge)
-  const CartBadge: React.FC<CartBadgeProps> = ({ count, children }) => (
-    <div className="relative inline-block">
-      {children}
-      {count > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-[#151517]">
-          {count}
-        </span>
-      )}
-    </div>
-  );
-
   return (
     <>
-      <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white md:mb-5">
+      <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white">
         {/* --- MOBILE LAYOUT --- */}
         <div className="md:hidden px-4 py-3">
           <div className="flex items-center gap-3">
@@ -132,20 +132,20 @@ const Header: React.FC = () => {
               <Logo />
             </Link>
 
-            {/* Input Search Mobile */}
-            <div className="relative flex-1">
-              <Input
-                placeholder="Tìm kiếm..."
-                className="bg-white text-black pr-8 h-9 rounded-lg focus-visible:ring-red-500"
-              />
-              <Search className="absolute right-2.5 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
+            <SearchBar />
 
-            <CartBadge count={3}>
-              <Link to="/cart">
-                <ShoppingCart className="h-6 w-6 text-white hover:text-red-500 transition-all" />
-              </Link>
-            </CartBadge>
+            <Link to="/cart" className="relative group">
+              <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
+
+              {cartCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
+                >
+                  {cartCount}
+                </Badge>
+              )}
+            </Link>
           </div>
         </div>
 
@@ -157,12 +157,14 @@ const Header: React.FC = () => {
               <span className="text-[10px]">Trang chủ</span>
             </Link>
 
+            <CategoryMobile />
+
             <Link
-              to="/contact"
+              to="/users/me#orders-history"
               className="flex flex-col items-center gap-1 flex-1"
             >
-              <MessageSquare className="h-6 w-6" />
-              <span className="text-[10px]">Tư vấn</span>
+              <FileText className="h-6 w-6" />
+              <span className="text-[10px]">Tra cứu đơn hàng</span>
             </Link>
 
             {/* Logic Mobile User: */}
@@ -189,19 +191,15 @@ const Header: React.FC = () => {
 
         {/* --- DESKTOP LAYOUT --- */}
         <div className="hidden md:block px-4 sm:px-6 lg:px-10 py-3">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between justify-center gap-3">
             <Link to="/" className="flex items-center gap-2">
               <Logo />
             </Link>
 
+            <CategoryDesktop />
+
             {/* Desktop Search */}
-            <div className="flex-1 max-w-xl mx-6 relative">
-              <Input
-                placeholder="Bạn cần tìm gì?"
-                className="bg-white text-black h-10 rounded-md pr-10 focus-visible:ring-2 focus-visible:ring-red-500"
-              />
-              <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
-            </div>
+            <SearchBar />
 
             <div className="flex items-center gap-6">
               <nav className="flex items-center gap-8">
@@ -216,7 +214,7 @@ const Header: React.FC = () => {
                 </a>
 
                 <Link
-                  to="/order/lookup"
+                  to="/users/me#orders-history"
                   className="flex items-center group transition-colors duration-200 text-white"
                 >
                   <FileText className="h-5 w-5 mb-1 mr-2 group-hover:text-red-500 transition-colors" />
@@ -226,11 +224,18 @@ const Header: React.FC = () => {
                 </Link>
               </nav>
 
-              <CartBadge count={2}>
-                <Link to="/cart">
-                  <ShoppingCart className="h-7 w-7 text-white hover:text-red-500 transition-all" />
-                </Link>
-              </CartBadge>
+              <Link to="/cart" className="relative group">
+                <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
+
+                {cartCount >= 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 px-1.5 pt-1.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </Link>
 
               {/* PHẦN LOGIN */}
               {user ? (

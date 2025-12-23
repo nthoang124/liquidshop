@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, ShoppingBag, Loader2, Key } from "lucide-react";
+import { User, ShoppingBag, Loader2, Key, Heart } from "lucide-react";
 
 import { useAuth } from "@/context/CustomerAuthContext";
 import AddressManager from "./AddressManager";
 import PasswordChanger from "./PasswordChanger";
+import MyOrders from "./MyOrders";
+import MyWishlist from "./MyWishlist";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,23 +43,72 @@ const addressSchema = z.object({
   isDefault: z.boolean().default(false),
 });
 
-const profileSchema = z.object({
-  fullName: z.string().min(2, "Tên hiển thị phải ít nhất 2 ký tự"),
-  email: z.string().email("Email không hợp lệ"),
-  phoneNumber: z
-    .string()
-    .regex(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ")
-    .optional()
-    .or(z.literal("")),
-  addresses: z.array(addressSchema).optional(),
-});
+const profileSchema = z
+  .object({
+    fullName: z.string().min(2, "Tên hiển thị phải ít nhất 2 ký tự"),
+    email: z.string().email("Email không hợp lệ"),
+    phoneNumber: z
+      .string()
+      .nonempty("Vui lòng nhập số điện thoại")
+      .regex(/^[0-9]{10,11}$/, "Số điện thoại phải có 10 hoặc 11 chữ số"),
+    addresses: z.array(addressSchema).optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.addresses && data.addresses.length > 0) {
+        return data.addresses.some((addr) => addr.isDefault === true);
+      }
+      return true;
+    },
+    {
+      message: "Vui lòng chọn một địa chỉ làm mặc định",
+      path: ["addresses"],
+    }
+  );
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { user, updateUser, changePassword } = useAuth();
-  const [activeTab, setActiveTab] = useState<"profile" | "password">("profile");
   const [loading, setLoading] = useState(false);
+
+  const isLocalUpdate = useRef(false);
+
+  const [activeTab, setActiveTab] = useState<
+    "profile" | "password" | "orders" | "wishlist"
+  >("profile");
+
+  useEffect(() => {
+    const hash = location.hash;
+
+    if (hash === "#orders-history") {
+      setActiveTab("orders");
+    } else if (hash === "#password-change") {
+      setActiveTab("password");
+    } else if (hash === "#wishlist") {
+      setActiveTab("wishlist");
+    } else {
+      setActiveTab("profile");
+    }
+  }, [location.hash]);
+
+  const handleTabChange = (
+    tab: "profile" | "orders" | "password" | "wishlist"
+  ) => {
+    setActiveTab(tab);
+
+    const hashMap = {
+      profile: "", // Về mặc định, xóa hash
+      orders: "#orders-history",
+      password: "#password-change",
+      wishlist: "#wishlist",
+    };
+
+    navigate(`/users/me${hashMap[tab]}`, { replace: true });
+  };
 
   const [selectedAddrIndex, setSelectedAddrIndex] = useState<string>("0");
 
@@ -73,6 +125,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
+      //  Nếu đang là cập nhật thủ công (vừa bấm Lưu xong), thì BỎ QUA việc reset form theo user cũ
+      if (isLocalUpdate.current) {
+        isLocalUpdate.current = false;
+        return;
+      }
+
       profileForm.reset({
         fullName: user.fullName || "",
         email: user.email || "",
@@ -101,6 +159,9 @@ export default function ProfilePage() {
   // --- HANDLERS ---
   const onProfileSubmit = async (values: ProfileFormValues) => {
     setLoading(true);
+    // Bật cờ đánh dấu: "đang update local, đừng ghi đè dữ liệu"
+    isLocalUpdate.current = true;
+
     try {
       const result = await updateUser(values);
 
@@ -108,6 +169,9 @@ export default function ProfilePage() {
         toast.success("Cập nhật thành công!", {
           description: "Hồ sơ và địa chỉ của bạn đã được lưu.",
         });
+
+        // Reset form theo giá trị MỚI NHẤT vừa gửi đi (để giao diện cập nhật ngay)
+        profileForm.reset(values);
       } else {
         toast.error("Lỗi cập nhật!", {
           description:
@@ -121,9 +185,6 @@ export default function ProfilePage() {
       });
     } finally {
       setLoading(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     }
   };
 
@@ -164,16 +225,33 @@ export default function ProfilePage() {
                         ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
                         : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                     }`}
-                    onClick={() => setActiveTab("profile")}
+                    onClick={() => handleTabChange("profile")}
                   >
                     <User className="w-4 h-4" /> Hồ sơ của tôi
                   </Button>
 
                   <Button
                     variant="ghost"
-                    className="w-full justify-start gap-3 text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    className={`w-full justify-start gap-3 ${
+                      activeTab === "orders"
+                        ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
+                        : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                    onClick={() => handleTabChange("orders")}
                   >
                     <ShoppingBag className="w-4 h-4" /> Đơn mua
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start gap-3 ${
+                      activeTab === "wishlist"
+                        ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
+                        : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                    onClick={() => handleTabChange("wishlist")}
+                  >
+                    <Heart className="w-4 h-4" /> Sản phẩm yêu thích
                   </Button>
 
                   <Button
@@ -183,7 +261,7 @@ export default function ProfilePage() {
                         ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
                         : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                     }`}
-                    onClick={() => setActiveTab("password")}
+                    onClick={() => handleTabChange("password")}
                   >
                     <Key className="w-4 h-4" /> Đổi mật khẩu
                   </Button>
@@ -306,7 +384,10 @@ export default function ProfilePage() {
               </Card>
             )}
 
-            {/* TAB: PASSWORD */}
+            {activeTab === "orders" && <MyOrders />}
+
+            {activeTab === "wishlist" && <MyWishlist />}
+
             {activeTab === "password" && (
               <PasswordChanger changePassword={changePassword} />
             )}

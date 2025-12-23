@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, CheckCircle } from "lucide-react"; // 1. Import CheckCircle
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/CustomerAuthContext";
 import logo from "@/assets/icons/TL-Logo.png";
 import Footer from "@/components/common/Footer";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 const autofillFixStyle = `
   input:-webkit-autofill,
@@ -44,6 +45,8 @@ type RegisterFormValues = z.infer<typeof schema>;
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  // 2. State quản lý thông báo thành công
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { registerAuth } = useAuth();
   const navigate = useNavigate();
@@ -68,7 +71,8 @@ export default function RegisterPage() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     setLoading(true);
-    // SỬA: Truyền đúng fullName
+    setSuccessMessage(null);
+
     const result = await registerAuth({
       fullName: values.fullName,
       email: values.email,
@@ -76,20 +80,27 @@ export default function RegisterPage() {
     });
 
     if (result.success) {
-      navigate("/auth/login/customer"); // Sửa: Điều hướng về trang login sau khi đăng ký thành công
+      setSuccessMessage(
+        "Đăng ký thành công! Đang chuyển đến trang đăng nhập..."
+      );
+
+      setTimeout(() => {
+        navigate("/auth/login/customer");
+      }, 3000);
     } else {
       setError("root", {
         type: "manual",
         message: result.message || "Đăng ký thất bại",
       });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-700 ">
       <style>{autofillFixStyle}</style>
-      <main className="flex-grow flex items-center justify-center p-10">
+      <ScrollToTop />
+      <main className="min-h-screen flex items-center justify-center p-10">
         <div className="w-full max-w-5xl bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col lg:flex-row gap-10 border border-gray-800">
           <div className="w-full lg:w-1/2">
             {/* Logo Section */}
@@ -108,6 +119,13 @@ export default function RegisterPage() {
               Đăng ký tài khoản
             </h2>
 
+            {successMessage && (
+              <div className="p-3 mb-4 rounded-lg bg-green-500/10 border border-green-500/50 text-green-500 text-sm text-center flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
+                <CheckCircle size={18} />
+                {successMessage}
+              </div>
+            )}
+
             {errors.root && (
               <div className="p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
                 {errors.root.message}
@@ -115,7 +133,7 @@ export default function RegisterPage() {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              {/* SỬA: Input Full Name */}
+              {/* Full Name */}
               <div className="relative">
                 <input
                   type="text"
@@ -194,6 +212,7 @@ export default function RegisterPage() {
                 </label>
                 <button
                   type="button"
+                  tabIndex={-1}
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors p-1"
                 >
@@ -243,7 +262,7 @@ export default function RegisterPage() {
                 disabled={loading}
                 className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-900 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all duration-200 shadow-lg shadow-red-900/20 mt-4 cursor-pointer"
               >
-                {loading ? "Đang đăng ký..." : "Đăng ký"}
+                {loading ? "Đang xử lý..." : "Đăng ký"}
               </button>
             </form>
             <p className="text-gray-400 text-sm text-center mt-6">
@@ -257,7 +276,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Info Section - Cập nhật nội dung */}
+          {/* Info Section */}
           <div className="w-full lg:w-1/2 text-gray-300 border-t lg:border-t-0 lg:border-l border-gray-700 pt-6 lg:pt-0 lg:pl-10 flex flex-col ">
             <h2 className="text-xl font-bold mb-6 text-red-500 border-b border-gray-700 pb-2 inline-block">
               Yêu cầu tài khoản

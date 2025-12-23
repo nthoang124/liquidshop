@@ -8,10 +8,8 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  // CarouselApi,
 } from "@/components/ui/carousel";
 
-// --- DEFINE GENERIC PROPS ---
 interface CarouselTemplateProps<T> {
   data: T[];
 
@@ -25,9 +23,6 @@ interface CarouselTemplateProps<T> {
   autoplayDelay?: number;
 
   showNavigation?: boolean;
-
-  // Lấy API của carousel ra ngoài nếu cần điều khiển từ cha
-  // setApi?: (api: CarouselApi) => void;
 }
 
 function CarouselTemplate<T>({
@@ -46,7 +41,6 @@ CarouselTemplateProps<T>) {
 
   return (
     <Carousel
-      // setApi={setApi}
       plugins={[plugin.current]}
       opts={{
         align: "start",
@@ -54,7 +48,7 @@ CarouselTemplateProps<T>) {
       }}
       onMouseEnter={autoplay ? () => plugin.current.stop() : undefined}
       onMouseLeave={autoplay ? () => plugin.current.play() : undefined}
-      className={cn("w-full relative group", className)}
+      className={cn("w-full relative", className)}
     >
       <CarouselContent className="-ml-2 md:-ml-4">
         {data.map((item, index) => (
@@ -69,8 +63,8 @@ CarouselTemplateProps<T>) {
 
       {showNavigation && (
         <>
-          <CarouselPrevious className="hidden bg-gray-200 border-none md:flex absolute left-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[-30%] cursor-pointer" />
-          <CarouselNext className="hidden bg-gray-200 border-none md:flex absolute right-0 translate-y-[10%] h-10 w-10 z-10 translate-x-[30%] cursor-pointer" />{" "}
+          <CarouselPrevious className="hidden bg-gray-200 border-none md:flex absolute -left-4 translate-y-[10%] h-10 w-10 z-10 translate-x-[-30%] cursor-pointer" />
+          <CarouselNext className="hidden bg-gray-200 border-none md:flex absolute -right-4 translate-y-[10%] h-10 w-10 z-10 translate-x-[30%] cursor-pointer" />{" "}
         </>
       )}
     </Carousel>

@@ -9,10 +9,11 @@ const axiosClient = axios.create({
   },
 });
 
-// Interceptor: Tự động gắn Token vào mọi request nếu có
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -21,16 +22,24 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor: Xử lý lỗi phản hồi
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    // Nếu lỗi 401 (Unauthorized), có thể logout user tại đây
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest.url.includes("/auth/login")
+    ) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
-      // window.location.href = "/customer/login"; // Tùy chọn redirect
+      sessionStorage.removeItem("accessToken");
+      sessionStorage.removeItem("user");
+
+      window.location.href = "/auth/login/customer";
     }
+
     return Promise.reject(error);
   }
 );

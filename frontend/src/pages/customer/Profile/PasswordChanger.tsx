@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import ScrollToTop from "@/components/common/ScrollToTop";
+
 const passwordSchema = z
   .object({
     oldPassword: z.string().min(1, "Vui lòng nhập mật khẩu hiện tại"),
@@ -88,6 +90,7 @@ const PasswordChanger: React.FC<PasswordChangerProps> = ({
 
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl">
+      <ScrollToTop />
       <CardHeader className="border-b border-neutral-800 pb-6">
         <CardTitle className="text-2xl font-bold text-white flex items-center gap-3">
           <Key className="w-6 h-6 text-red-500" /> Đổi mật khẩu
@@ -180,6 +183,14 @@ const PasswordChanger: React.FC<PasswordChangerProps> = ({
             </div>
           </form>
         </Form>
+        <p>
+          <span className="text-red-600 italic">
+            <strong>*Lưu ý:</strong>{" "}
+          </span>{" "}
+          <span className="text-sm">
+            Mật khẩu có tối thiểu 8 ký tự, có hoa, thường và số.
+          </span>
+        </p>
       </CardContent>
     </Card>
   );
