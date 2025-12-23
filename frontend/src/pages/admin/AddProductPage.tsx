@@ -115,7 +115,6 @@ export default function EditProductPage() {
             <p className="text-md md:text-lg text-gray-600">Thêm thông tin sản phẩm mới</p>
         </div>
 
-      {/* FORM GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-300 p-3 rounded-md">
 
         {/* Product Name */}

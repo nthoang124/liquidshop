@@ -8,6 +8,7 @@ import { EditBrandDialog } from "@/components/admin/brands/brand-dialog";
 import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
 import type { AxiosError } from "axios";
 import { BRAND_ERROR_MESSAGES } from "@/utils/admin/errorMessages";
+import PageTitle from "@/components/admin/common/PageTitle";
 
 export default function BrandsPage() {
     const [brands, setBrands] = useState<IBrand[]>([]);
@@ -105,16 +106,9 @@ export default function BrandsPage() {
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
     
-            {!isLoading && brands.length === 0 && (
-                <p className="text-gray-500 text-center text-md sm:text-lg">Chưa có dữ liệu</p>
-            )}
-    
-            {!isLoading && brands.length > 0 && (
+            {!isLoading && (
                 <div className="flex flex-col gap-3 p-4 shadow-sm bg-white">
-                    <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-                        <p className="text-2xl lg:text-3xl font-bold">Quản lí thương hiệu</p>
-                        <p className="text-md md:text-lg text-gray-600">Quản lí thương hiệu và nhà cung cấp sản phẩm</p>
-                    </div>
+                    <PageTitle title="Quản lí thương hiệu" subTitle="Quản lí thương hiệu và nhà cung cấp sản phẩm"/>
                     <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
                         <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
                             <p className="text-lg font-semibold">Tổng thương hiệu</p>

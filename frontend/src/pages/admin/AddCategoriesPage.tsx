@@ -11,6 +11,7 @@ import { AxiosError } from "axios"
 
 //maping message from backend server
 import { CATEGORY_ERROR_MESSAGES } from "@/utils/admin/errorMessages"
+import PageTitle from "@/components/admin/common/PageTitle"
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
@@ -70,10 +71,7 @@ export default function AddCategoryPage() {
 
   return (
     <div className="flex flex-col gap-5 shadow-sm p-5">
-      <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-        <p className="text-2xl lg:text-3xl font-bold">Thêm danh mục</p>
-        <p className="text-md md:text-lg text-gray-600">Tạo mới danh mục</p>
-      </div>
+      <PageTitle title="Thêm danh mục" subTitle="Tạo mới danh mục"/>
       <div className="bg-white border-gray-200 shadow-md p-4 min-h-screen">
         <div className="flex justify-center">
           <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mt-4 rounded-md px-3">

@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Crown, LayoutGrid, LucidePackage, SearchX, X } from "lucide-react"
 import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
 import { useNavigate } from "react-router-dom"
+import PageTitle from "@/components/admin/common/PageTitle"
 
 
 export default function ProductsPage() {
@@ -142,11 +143,7 @@ export default function ProductsPage() {
         <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}
       <div className="bg-white">
-        <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-          <p className="text-2xl lg:text-3xl font-bold mt-3">Quản lí sản phẩm</p>
-          <p className="text-md md:text-lg text-gray-600">Quản lí thông tin sản phẩm, kho hàng và danh mục</p>
-        </div>
-
+        <PageTitle title="Quản lí sản phẩm" subTitle="Quản lí thông tin chi tiết sản phẩm"/>
         <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-6 py-3">
           <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
               <p className="text-lg font-semibold">Sản phẩm</p>

@@ -104,8 +104,7 @@ export const columns = (
             const review_id = row.original._id;
             return (
             <Button
-                className="bg-white text-red-500 p-0 rounded-lg border border-gray-300 hover:bg-gray-200"
-                // variant="destructive"
+                className="text-red-500 p-0 rounded-lg bg-transparent hover:bg-zinc-200"
                 size="icon"
                 onClick={() => onDelete(review_id)}
             >

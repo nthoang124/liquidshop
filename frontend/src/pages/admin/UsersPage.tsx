@@ -4,6 +4,7 @@ import type { IUser } from "@/types/user";
 import type { UserQuery } from "@/services/api/admin/query";
 import { useCallback, useEffect, useState } from "react";
 import { Grid2X2 } from "lucide-react";
+import PageTitle from "@/components/admin/common/PageTitle";
 
 export default function UsersPage() {
     const [users, setUsers] = useState<IUser[]>([])
@@ -44,10 +45,7 @@ export default function UsersPage() {
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
             <div className="flex flex-col bg-white shadow-sm gap-3 p-4">
-                <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-                    <p className="text-2xl lg:text-3xl font-bold">Quản lí khách hàng</p>
-                    <p className="text-md md:text-lg text-gray-600">Quản lí thông tin khách hàng và lịch sử mua hàng</p>
-                </div>
+                <PageTitle title="Quản lí khách hàng" subTitle="Quản lí thông tin khách hàng và lịch sử mua hàng"/>
                 <div className="border border-gray-200 p-3 shadow-lg rounded-lg">
                     <p className="flex flex-row gap-2 items-center font-bold text-lg">
                         <Grid2X2 size={24} color="#3f6cf3"/>
