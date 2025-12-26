@@ -24,10 +24,10 @@ export function PaymentStatusSelect({ value, onChange }: Props) {
         <SelectValue placeholder="Trạng thái thanh toán" />
       </SelectTrigger>
 
-      <SelectContent>
+      <SelectContent className="text-sm md:text-base">
         <SelectItem value="all">Thanh toán</SelectItem>
         {PAYMENT_STATUS.map((s) => (
-          <SelectItem key={s.value} value={s.value}>
+          <SelectItem  key={s.value} value={s.value}>
             {s.label}
           </SelectItem>
         ))}

@@ -8,7 +8,7 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "avatarUrl",
     header: () => (
-      <span className="text-sm md:text-base">
+      <span className="text-sm md:text-base font-semibold">
         Avatar
       </span>
     ),
@@ -24,7 +24,7 @@ export const columns: ColumnDef<IUser>[] = [
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-sm md:text-base font-bold hover:bg-blue-200"
+        className="text-sm md:text-base font-semibold hover:bg-blue-200"
       >
         Họ tên
         <ArrowUpDown />
@@ -46,7 +46,7 @@ export const columns: ColumnDef<IUser>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-sm md:text-base font-bold hover:bg-blue-200"
+          className="text-sm md:text-base font-semibold hover:bg-blue-200"
         >
           Email
           <ArrowUpDown />
@@ -58,7 +58,7 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "phoneNumber",
    header: () => (
-      <span className="text-sm md:text-base">
+      <span className="text-sm md:text-base font-semibold">
         Điện thoại
       </span>
     ),
@@ -67,7 +67,7 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "role",
     header: () => (
-      <span className="text-sm md:text-base">
+      <span className="text-sm md:text-base font-semibold">
         Vai trò
       </span>
     ),
@@ -75,7 +75,7 @@ export const columns: ColumnDef<IUser>[] = [
       const role = row.getValue("role");
       return (
       <div className={
-        `w-20 px-1 py-1 rounded-xl text-[0.8rem] text-white text-center ` + 
+        `w-20 px-1 py-1 rounded-md text-[0.8rem] text-white text-center ` + 
         (role === "admin" ? "bg-red-500" : "bg-green-500" )
         }>
           {row.getValue("role")}

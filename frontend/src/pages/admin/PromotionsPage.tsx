@@ -1,8 +1,10 @@
 import PageTitle from "@/components/admin/common/PageTitle";
 import { PromotionsTable } from "@/components/admin/promotions/promotions-table";
+import { Button } from "@/components/ui/button";
 import promotionApi from "@/services/api/admin/promotionApi";
 import type { PromotionQuery } from "@/services/api/admin/query";
 import type { IPromotion } from "@/types/promotion";
+import { Grid2X2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +15,7 @@ export default function PromotionsPage() {
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [status, setStatus] = useState("all");
   const navigate = useNavigate();
+  const limit = 8;
 
   const handleDetailOpen = (promotion: IPromotion) => {
     navigate(`/admin/promotions/${promotion._id}`);
@@ -21,15 +24,17 @@ export default function PromotionsPage() {
   const handleDelete = (id: string) => {
 
   }
-
-  const limit = 8;
   
   const loadPromotions = async () => {
     try {
         const query: PromotionQuery = {
-            page,
-            limit,
+          page,
+          limit,
         }
+
+        if(status === "active") query.isActive = true;
+        if(status === "inActive") query.isActive = false;
+
         const res = await promotionApi.getAll(query);
         setTotalPages(res.data.pages);
         setPromotions(res.data.data);
@@ -41,32 +46,49 @@ export default function PromotionsPage() {
 
   useEffect(() => {
     try {
-        const fetchData = async () => {
-            loadPromotions();
-        }
-        fetchData();
+      const fetchData = async () => {
+          loadPromotions();
+      }
+      fetchData();
     }catch(error) {
         console.log(error);
     }
-  }, [page]);
+  }, [page, status]);
 
   return (
-    <div className="p-2 bg-white md:bg-transparent">
-      <PageTitle
-        title="Quản lí mã giảm giá"
-        subTitle="Quản lí các loại mã giảm giá, khuyến mãi"
-      />
-      <div className="bg-white mt-10 p-0 sm:p-2 md:p-3">
-        <PromotionsTable
-            promotions={promotions}
-            page={page}
-            totalPages={totalPages}
-            setPage={setPage}
-            handleDetailOpen={handleDetailOpen}
-            status={status}
-            setStatus={setStatus}
-            onDelete={handleDelete}
+    <div className="p-0 md:p-4 md:bg-transparent">
+      <div className="bg-white p-2 md:p-3">
+        <PageTitle
+          title="Quản lí mã giảm giá"
+          subTitle="Quản lí các loại mã giảm giá, khuyến mãi"
         />
+        <div className="border border-gray-200 p-3 shadow-lg rounded-lg mt-10">
+          <div className="flex flex-col gap-3 sm:flex-row items-start sm:justify-between sm:items-center">
+            <p className="flex flex-row gap-2 items-center font-bold">
+              <Grid2X2 size={24} color="#3f6cf3"/>
+              Tổng mã giảm giá: {totalPromotions}
+            </p>
+
+            <Button
+              onClick={() => navigate('/admin/promotions/add')}
+              className="bg-blue-500 text-white hover:bg-blue-600 text-sm font-semibold max-w-35 w-full"
+            >
+              <Plus size={20}/>
+              Thêm mã giảm
+            </Button>
+          </div>
+          
+          <PromotionsTable
+              promotions={promotions}
+              page={page}
+              totalPages={totalPages}
+              setPage={setPage}
+              handleDetailOpen={handleDetailOpen}
+              status={status}
+              setStatus={setStatus}
+              onDelete={handleDelete}
+          />
+        </div>
       </div>
     </div>
   )

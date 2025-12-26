@@ -102,13 +102,13 @@ export const columns = (
                 | "rejected";
             return (
                <span
-                    className={`text-sm px-2 py-1 rounded-xl text-white w-fit
+                    className={`text-sm px-2 py-1 rounded-md border w-fit
                         ${
                         status === "approved"
-                            ? "bg-green-500"
+                            ? "bg-lime-50 text-lime-600 border-lime-300"
                             : status === "pending"
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
+                            ? "bg-amber-50 text-amber-600 border-amber-300"
+                            : "bg-red-100 text-red-600 border-red-300"
                         }
                     `}
                     >

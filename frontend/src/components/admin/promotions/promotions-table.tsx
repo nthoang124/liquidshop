@@ -52,9 +52,9 @@ export function PromotionsTable({
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-md border bg-white">
+      <div className="overflow-hidden bg-white">
         <Table>
-          <TableHeader className="bg-blue-100">
+          <TableHeader className="bg-slate-50 h-15">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
@@ -68,12 +68,10 @@ export function PromotionsTable({
 
           <TableBody>
             {promotions.length > 0 ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-100"
-                  }`}
+                  className="text-md sm:text-base"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

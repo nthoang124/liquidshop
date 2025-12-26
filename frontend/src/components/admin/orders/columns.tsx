@@ -6,7 +6,7 @@ import type { IOrder } from "@/types/order"
 import { formatVND } from "@/utils/admin/formatMoney";
 import { formatDate } from "@/utils/formatDate";
 import { formatOrderStatus } from "@/utils/admin/orderStatusUtils";
-
+import { getPaymentStatusLabel } from "@/utils/admin/mapPaymentStatus";
 
 export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder>[] => [
   {
@@ -88,13 +88,14 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
       </span>
     ),
     cell: ({ row }) => { 
-      const paymentStatus = row.getValue("paymentStatus");
+      const paymentStatus = row.getValue("paymentStatus") as "paid" | "pending" | "failed";
+      const label = getPaymentStatusLabel(paymentStatus)
       return (
       <div className={
-        `w-20 px-1 py-1 rounded-xl text-[0.75rem] md:text-sm text-white text-center ` + 
+        `w-fit px-1 py-1 rounded-xl text-[0.85rem] text-white text-center ` + 
         (paymentStatus === "paid" ? "bg-green-500" : paymentStatus === "pending" ? "bg-yellow-500" : "bg-red-500" )
         }>
-          {row.getValue("paymentStatus")}
+          {label}
       </div> 
       );
     }
@@ -110,7 +111,7 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
         const dateStr = row.getValue("createdAt") as string
         const dateFormat = formatDate(dateStr);
         return (
-            <div className="text-sm md:text-[0.95rem]">{dateFormat}</div> 
+            <div className="text-sm text-muted-foreground">{dateFormat}</div> 
         )
     }
   },

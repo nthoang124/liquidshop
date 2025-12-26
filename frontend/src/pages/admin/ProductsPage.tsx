@@ -139,7 +139,7 @@ export default function ProductsPage() {
   }, [selectedBrand, selectedCategory, selectedStatus, page, search])
 
   return (
-    <div className="space-y-4 p-0 md:p-3 bg-white md:bg-transparent">
+    <div className="space-y-4 p-0 md:p-4 bg-white md:bg-transparent">
       {isLoading && (
         <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}

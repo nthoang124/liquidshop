@@ -102,7 +102,7 @@ export default function EditProductPage() {
 
 
   return (
-    <div className="p-2 md:p-3 space-y-6 bg-white md:bg-transparent">
+    <div className="p-2 md:p-4 space-y-6 bg-white md:bg-transparent">
         <div className="flex flex-col bg-white mt-0 gap-3 border-b border-gray-300 p-3">
             <Button 
                 className="bg-white border border-gray-300 w-22 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"

@@ -98,13 +98,13 @@ export default function BrandsPage() {
     })
 
   return (
-    <div className="p-2 md:p-3 bg-white md:bg-transparent">
+    <div className="p-0 md:p-4 bg-white md:bg-transparent">
             {isLoading && (
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
     
             {!isLoading && (
-                <div className="flex flex-col gap-3 p-0 md:p-3 bg-white">
+                <div className="flex flex-col gap-3 p-3 bg-white">
                     <PageTitle title="Quản lí thương hiệu" subTitle="Quản lí thương hiệu và nhà cung cấp sản phẩm"/>
                     <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-0 md:px-3 py-3">
                         <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">

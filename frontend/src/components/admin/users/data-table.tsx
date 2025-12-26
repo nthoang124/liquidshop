@@ -55,13 +55,13 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-md border bg-white">
+      <div className="overflow-hidden rounded-xs bg-white">
         <Table>
-          <TableHeader className="bg-blue-100">
+          <TableHeader className="bg-blue-50 h-16">
             {table.getHeaderGroups().map((group) => (
               <TableRow key={group.id} className="hover:bg-transparent">
                 {group.headers.map((header) => (
-                  <TableHead key={header.id} className="text-md sm:text-lg font-bold">
+                  <TableHead key={header.id} className="text-md sm:text-lg font-semibold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -75,7 +75,7 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
                 <TableRow
                   key={row.id}
                   className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-100"
+                    index % 2 === 0 ? "bg-white" : "bg-slate-50"
                   }`}
                 >
                   {row.getVisibleCells().map((cell) => (

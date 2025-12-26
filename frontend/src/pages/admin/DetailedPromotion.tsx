@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { IPromotion, IPromotionUpdate } from "@/types/promotion";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import promotionApi from "@/services/api/admin/promotionApi";
 import PageTitle from "@/components/admin/common/PageTitle";
-import { Eye, PenSquare } from "lucide-react";
+import { ChevronLeft, Eye, PenSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Calendar24 } from "@/components/admin/promotions/calendar";
 import { SelectContent, SelectItem, Select, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,6 +24,8 @@ export default function DetailedPromotion() {
   const [startTime, setStartTime] = useState<string>("");
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [endTime, setEndTime] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const loadPromotion = async () => {
     try {
@@ -89,10 +91,8 @@ export default function DetailedPromotion() {
         startDate: st,
         endDate: ed
       };
-      console.log("check payload: ", payload);
 
-      const res = await promotionApi.update(id, payload);
-      console.log("check update: ", res.data);
+      await promotionApi.update(id, payload);
 
       loadPromotion();
 
@@ -106,16 +106,6 @@ export default function DetailedPromotion() {
     setForm(promotion);
     setIsEdit(false);
   };
-
-  const handleChangeStartDate = (date?: Date) => {
-    setStartDate(date);
-    setForm(prev => ({ ...prev, startDate: date }));
-  };
-
-  const handleChangeEndDate = (date?: Date) => {
-    setEndDate(date);
-    setForm(prev => ({ ...prev, endDate: date }));
-  };
     
   if (!promotion) {
     return <div>Không tìm thấy mã giảm giá</div>;
@@ -128,27 +118,35 @@ export default function DetailedPromotion() {
         subTitle="Kiểm tra và cập nhật thông tin mã giảm giá"
       />
       {/* HEADER */}
-      <div className="flex items-center justify-end gap-">
+      <div className="flex items-center justify-between gap-1">
 
-          {!isEdit ? (
-            <Button 
-                className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
-                variant="outline" onClick={() => setIsEdit(true)}>
-              <PenSquare/>
-              Chỉnh sửa
-            </Button>
-          ) : (
-            <Button 
-                className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
-                variant="outline" 
-                onClick={() => {
-                  handleCancel()
-                }}
-              >
-              <Eye/>
-              Xem
-            </Button>
-          )}
+        <Button
+          className="bg-zinc-50 text-black border border-gray-300 hover:bg-zinc-100 text-sm w-full max-w-24"
+          onClick={() => navigate(-1)}
+        >
+          <ChevronLeft/>
+          Quay lại
+        </Button>
+
+        {!isEdit ? (
+          <Button 
+              className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+              variant="outline" onClick={() => setIsEdit(true)}>
+            <PenSquare/>
+            Chỉnh sửa
+          </Button>
+        ) : (
+          <Button 
+              className="bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
+              variant="outline" 
+              onClick={() => {
+                handleCancel()
+              }}
+            >
+            <Eye/>
+            Xem
+          </Button>
+        )}
       </div>
 
       <Card>

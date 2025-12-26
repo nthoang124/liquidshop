@@ -76,13 +76,13 @@ export function OrdersTable({
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-md border bg-white">
+      <div className="overflow-hidden rounded-sm bg-white">
         <Table>
-          <TableHeader className="bg-blue-100">
+          <TableHeader className="bg-slate-50 h-16">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-md sm:text-lg font-bold">
+                  <TableHead key={header.id} className="text-sm sm:text-base font-bold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -96,7 +96,7 @@ export function OrdersTable({
                 <TableRow
                   key={row.id}
                   className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-100"
+                    index % 2 === 0 ? "bg-white" : "bg-white"
                   }`}
                 >
                   {row.getVisibleCells().map((cell) => (

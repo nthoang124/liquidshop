@@ -81,13 +81,13 @@ export default function CategoriesPage() {
     },[]);
     
   return (
-    <div className="p-2 bg-white md:bg-transparent">
+    <div className="p-0 md:p-4 bg-white md:bg-transparent">
         {isLoading && (
             <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
 
         {!isLoading && (
-            <div className="flex flex-col gap-3 p-0 md:p-3 shadow-sm bg-white h-screen">
+            <div className="flex flex-col gap-3 p-3 shadow-sm bg-white min-h-screen">
                 <PageTitle title="Quản lí danh mục" subTitle="Tổ chức và phân loại sản phẩm theo danh mục"/>
                 <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-2 md:px-5 py-3">
                     <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
@@ -114,14 +114,14 @@ export default function CategoriesPage() {
                         </div>
                     </div>
                 </div>
-                <div className="border border-gray-200 flex flex-col gap-4 rounded-md px-2 md:px-4 py-4 h-screen">
+                <div className="border border-gray-200 flex flex-col gap-4 rounded-md px-2 md:px-4 py-4">
                     <div className="flex flex-row items-center justify-start gap-2">
                         <Grid2X2 size={22} color="#146bdb" />
                         <p className="text-lg font-bold">Danh sách danh mục</p>
                     </div>
-                    <div className="flex-wrap gap-3 flex items-center" >
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2" >
                         {categories.map((c) =>(
-                            <div key={c._id} className="basis-40 shrink-0">
+                            <div key={c._id} className="aspect-square">
                                 <CategoryCard
                                     category={c}
                                     handleEdit={handleEdit}

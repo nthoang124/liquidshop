@@ -74,9 +74,9 @@ export const columns = (
             const isActive = row.getValue("isActive") as boolean;
             return (
                 <div 
-                    className={`text-sm rounded-lg px-2 py-1 w-fit text-white
+                    className={`text-sm rounded-md px-2 py-1 w-fit border 
                         ${
-                            isActive ? "bg-green-500" : "bg-yellow-500"
+                            isActive ? "bg-lime-50 border-lime-300 text-lime-600" : "bg-amber-50 text-amber-600 border-amber-300"
                         }    
                     `}
                 >
