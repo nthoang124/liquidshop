@@ -61,7 +61,7 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
       <DialogContent className="w-full max-w-100 sm:max-w-130 md:max-w-150">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? `Sửa thương hiệu: ${brand?.name}` : "Thêm thương hiệu mới"}
+            {isEdit ? `${brand?.name}` : "Thêm thương hiệu mới"}
           </DialogTitle>
           <DialogDescription className="sr-only">
             Brand form
@@ -103,8 +103,11 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
           <Button variant="outline" onClick={() => setOpen(false)}>
             Hủy
           </Button>
-          <Button onClick={handleSave}>
-            {isEdit ? "Lưu thay đổi" : "Thêm mới"}
+          <Button 
+            className="bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={handleSave}
+          >
+            {isEdit ? "Cập nhật" : "Thêm mới"}
           </Button>
         </DialogFooter>
       </DialogContent>

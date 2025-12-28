@@ -4,7 +4,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
-import { ChevronsRight, ChevronsLeft, SearchX } from "lucide-react"
+import { SearchX } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -16,6 +16,7 @@ import {
 import type { IUser } from "@/types/user"
 import { columns } from "./columns"
 import { useNavigate } from "react-router-dom"
+import Pagination from "../common/Pagination"
 
 
 interface DataTableProps {
@@ -40,10 +41,6 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const prevPage = () => page > 1 && setPage(page - 1);
-  const nextPage = () => page < totalPages && setPage(page + 1);
-
-
   return (
     <div className="w-full">
 
@@ -53,18 +50,18 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
           placeholder="Tìm kiếm theo email và tên khách hàng"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm bg-white text-md"
+          className="max-w-sm bg-white text-sm"
         />
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-md border bg-white">
-        <Table>
-          <TableHeader className="bg-blue-100">
+      <div className="overflow-hidden rounded-xs bg-white">
+        <Table className="border-0">
+          <TableHeader className="bg-[#F7FAFC] h-16">
             {table.getHeaderGroups().map((group) => (
-              <TableRow key={group.id} className="hover:bg-transparent">
+              <TableRow key={group.id} className="hover:bg-transparent border-0">
                 {group.headers.map((header) => (
-                  <TableHead key={header.id} className="text-md sm:text-lg font-bold">
+                  <TableHead key={header.id} className="text-md sm:text-lg font-semibold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -74,15 +71,13 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
 
           <TableBody>
             {users.length > 0 ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-100"
-                  }`}
+                  className={`text-md sm:text-base`}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="border-0">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -108,33 +103,11 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
       </div>
 
       {/* PAGINATION */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm" onClick={prevPage}>
-          <ChevronsLeft size={28} strokeWidth={2.25} />
-        </Button>
-
-        <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, i) => {
-            const num = i + 1;
-            return (
-              <button
-                key={num}
-                onClick={() => setPage(num)}
-                className={`px-3 py-1 rounded border cursor-pointer ${
-                  page === num ? "bg-blue-600 text-white" : "bg-white"
-                }`}
-              >
-                {num}
-              </button>
-            );
-          })}
-        </div>
-
-        <Button variant="outline" size="sm" onClick={nextPage}>
-          <ChevronsRight size={28} strokeWidth={2.25} />
-        </Button>
-      </div>
-
+      <Pagination
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

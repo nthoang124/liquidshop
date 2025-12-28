@@ -78,20 +78,20 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="text-md">
+              <DropdownMenuItem className="text-base">
                 <BadgeCheck />
                 Tài khoản
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-md">
+              <DropdownMenuItem className="text-base">
                 <Bell />
                 Thông báo
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-              <Link to={"/admin/login"} className="">
-                <DropdownMenuItem className="text-red-500 font-bold text-md  hover:text-red-600">
+              <Link to={"/admin/login"}>
+                <DropdownMenuItem className="text-red-500 font-bold text-md">
                     <LogOut color="red"/>
-                    Đăng xuất
+                    <span>Đăng xuất</span>  
                 </DropdownMenuItem>
               </Link>
           </DropdownMenuContent>

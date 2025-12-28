@@ -11,6 +11,7 @@ import { AxiosError } from "axios"
 
 //maping message from backend server
 import { CATEGORY_ERROR_MESSAGES } from "@/utils/admin/errorMessages"
+import PageTitle from "@/components/admin/common/PageTitle"
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
@@ -69,21 +70,18 @@ export default function AddCategoryPage() {
   },[]);
 
   return (
-    <div className="flex flex-col gap-5 shadow-sm p-5">
-      <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-        <p className="text-2xl lg:text-3xl font-bold">Thêm danh mục</p>
-        <p className="text-md md:text-lg text-gray-600">Tạo mới danh mục</p>
-      </div>
-      <div className="bg-white border-gray-200 shadow-md p-4 min-h-screen">
+    <div className="flex flex-col gap-5 shadow-sm p-0 md:p-4 bg-white md:bg-transparent">
+      <PageTitle title="Thêm danh mục" subTitle="Tạo mới danh mục"/>
+      <div className="bg-white border-gray-200 shadow-md p-2 md:p-4 min-h-screen">
         <div className="flex justify-center">
           <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mt-4 rounded-md px-3">
             <CardHeader>
-              <CardTitle className="text-xl md:text-2xl">Danh mục</CardTitle>
+              <CardTitle className="text-xl">Danh mục</CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-4">
               <div>
-                <Label className="text-md md:text-lg">Tên Danh mục</Label>
+                <Label className="text-sm md:text-base">Tên Danh mục</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0" 
@@ -91,7 +89,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div>
-                <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
+                <Label className="text-sm md:text-base">Ảnh hiển thị</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0"  
@@ -99,7 +97,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div>
-                <Label className="text-md md:text-lg">Mô tả</Label>
+                <Label className="text-sm md:text-base">Mô tả</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0" 
@@ -107,7 +105,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div className="space-y-1">
-                <Label className="text-md md:text-lg">Danh mục cha</Label>
+                <Label className="text-sm md:text-base">Danh mục cha</Label>
                 <CategoryCombobox
                   open={comboboxOpen}
                   categories={categories}
@@ -132,7 +130,11 @@ export default function AddCategoryPage() {
             </CardContent>
 
             <CardFooter className="justify-end gap-2">
-              <Button className="text-lg font-bold bg-blue-500 hover:bg-blue-600" onClick={handleSubmit}>Thêm mới</Button>
+              <Button 
+                className="bg-[#3385F0] text-white hover:bg-[#2B71CC] font-semibold" 
+                onClick={handleSubmit}>
+                Thêm mới
+              </Button>
             </CardFooter>
           </Card>
         </div>

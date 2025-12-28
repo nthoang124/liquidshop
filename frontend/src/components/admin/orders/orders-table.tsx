@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronsRight, ChevronsLeft, SearchX } from "lucide-react"
+import { SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +16,7 @@ import { columns } from "./columns"
 import type { IOrder } from "@/types/order"
 import { PaymentStatusSelect } from "./PaymentStatusSelect"
 import { OrderStatusSelect } from "./OrderStatusSelect"
+import Pagination from "../common/Pagination"
 
 
 interface DataTableProps {
@@ -49,19 +50,17 @@ export function OrdersTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const prevPage = () => page > 1 && setPage(page - 1);
-  const nextPage = () => page < totalPages && setPage(page + 1);
-
   return (
     <div className="w-full">
       
       {/* FILTER BAR */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-4">
+
         <Input
           placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, sdt"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm bg-white text-md"
+          className="max-w-md w-full bg-white text-sm"
         />
 
         <div className="flex flex-row gap-1">
@@ -77,13 +76,13 @@ export function OrdersTable({
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-md border bg-white">
+      <div className="overflow-hidden rounded-sm bg-white">
         <Table>
-          <TableHeader className="bg-blue-100">
+          <TableHeader className="bg-slate-50 h-16">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-md sm:text-lg font-bold">
+                  <TableHead key={header.id} className="text-sm sm:text-base font-bold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
@@ -97,7 +96,7 @@ export function OrdersTable({
                 <TableRow
                   key={row.id}
                   className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-100"
+                    index % 2 === 0 ? "bg-white" : "bg-white"
                   }`}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -133,34 +132,7 @@ export function OrdersTable({
 
         </Table>
       </div>
-
-      {/* PAGINATION */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm" onClick={prevPage}>
-          <ChevronsLeft size={28} strokeWidth={2.25} />
-        </Button>
-
-        <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, i) => {
-            const num = i + 1;
-            return (
-              <button
-                key={num}
-                onClick={() => setPage(num)}
-                className={`px-3 py-1 rounded border ${
-                  page === num ? "bg-blue-600 text-white" : "bg-white"
-                }`}
-              >
-                {num}
-              </button>
-            );
-          })}
-        </div>
-
-        <Button variant="outline" size="sm" onClick={nextPage}>
-          <ChevronsRight size={28} strokeWidth={2.25} />
-        </Button>
-      </div>
+      <Pagination page={page} setPage={setPage} totalPages={totalPages}/>
     </div>
   );
 }

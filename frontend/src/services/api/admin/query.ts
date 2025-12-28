@@ -62,3 +62,9 @@ export interface IReviewQuery {
   limit?: number;
   search?: string;
 }
+
+export interface PromotionQuery {
+  page?: number;
+  limit?: number;
+  isActive?: boolean;
+}

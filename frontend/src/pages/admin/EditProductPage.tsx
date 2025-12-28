@@ -136,7 +136,7 @@ export default function EditProductPage() {
   if (loading) return <p className="text-center text-gray-500">Đang tải dữ liệu...</p>;
 
   return (
-    <div className="p-6 space-y-6 bg-white border rounded-lg">
+    <div className="p-2 md:p-4 space-y-6 bg-white border rounded-lg">
         <div className="flex flex-col bg-white mt-0 px-1 gap-3 border-b border-gray-300 pb-3 pt-3">
             <Button 
                 className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
@@ -155,37 +155,37 @@ export default function EditProductPage() {
         {/* Product Name */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Tên sản phẩm</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          <Input className="text-[0.85rem] md:text-sm" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
 
         {/* SKU */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">SKU</label>
-          <Input value={sku} onChange={(e) => setSku(e.target.value)} />
+          <Input className="text-[0.85rem]" value={sku} onChange={(e) => setSku(e.target.value)} />
         </div>
 
         {/* Price */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Giá bán</label>
-          <Input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+          <Input className="text-[0.85rem]" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
         </div>
 
         {/* Original Price */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Giá gốc</label>
-          <Input type="number" value={originalPrice} onChange={(e) => setOriginalPrice(Number(e.target.value))} />
+          <Input className="text-[0.85rem]" type="number" value={originalPrice} onChange={(e) => setOriginalPrice(Number(e.target.value))} />
         </div>
 
         {/* Stock */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Tồn kho</label>
-          <Input type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
+          <Input className="text-[0.85rem]" type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
         </div>
 
         {/* {detail infor} */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Thông tin chi tiết</label>
-          <Input type="text" value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
+          <Input className="text-[0.85rem]" type="text" value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
         </div>
         
         {/* {specs infor} */}
@@ -210,7 +210,7 @@ export default function EditProductPage() {
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Danh mục</label>
           <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger>
+            <SelectTrigger> 
               <SelectValue placeholder="Danh mục" />
             </SelectTrigger>
             <SelectContent>

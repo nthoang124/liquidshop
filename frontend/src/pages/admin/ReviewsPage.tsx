@@ -1,4 +1,5 @@
 import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
+import PageTitle from "@/components/admin/common/PageTitle";
 import ReviewDetailDialog from "@/components/admin/reviews/ReviewDetailDialog";
 import { ReviewsTable } from "@/components/admin/reviews/reviews-table";
 import type { IReviewQuery } from "@/services/api/admin/query";
@@ -145,17 +146,17 @@ export default function ReviewsPage() {
         }
     }, [page, status, rating, search]);
     return (
-        <div className="p-5">
-            {isLoading && (
+        <div className="p-0 md:p-3 bg-white md:bg-transparent">
+            {isLoading && ( 
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
-            <div className="flex flex-col bg-white shadow-sm gap-3 p-4">
-                <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-                    <p className="text-2xl lg:text-3xl font-bold">Quản lí đánh giá và bình luận</p>
-                    <p className="text-md md:text-lg text-gray-600">Theo dõi và xử lí các đánh giá và bình luận về sản phẩm</p>
-                </div>
-                <div className="border border-gray-200 p-3 shadow-lg rounded-lg">
-                    <p className="flex flex-row gap-2 items-center font-bold text-lg">
+            <div className="flex flex-col bg-white gap-3 p-2 md:p-3">
+                <PageTitle 
+                    title="Quản lí đánh giá và bình luận" 
+                    subTitle="Theo dõi và xử lí các đánh giá và bình luận về sản phẩm"
+                />
+                <div className="border border-gray-200 p-3 shadow-lg rounded-lg mt-10">
+                    <p className="flex flex-row gap-2 items-center font-bold text-base">
                         <Grid2X2 size={24} color="#3f6cf3"/>
                         Tổng Đánh giá: {totalReviews}
                     </p>

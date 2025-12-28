@@ -23,10 +23,10 @@ export default function UpdateRoleAlert ({role, open, setOpen, onConfirm} : Upda
                 <AlertDialogHeader>
                 <AlertDialogTitle className="text-lg md:text-xl">
                     {role === "customer" && (
-                        <p className="text-md md:text-lg font-bold text-black">Xác nhận nâng cấp tài khoản lên Admin</p>
+                        <p className="text-sm md:text-base font-bold text-black">Xác nhận nâng cấp tài khoản lên Admin</p>
                     )}
                     {role === "admin" && (
-                        <p className="text-lg font-bold text-black">Xác nhận chuyển tài khoản thành người dùng</p>
+                        <p className="text-sm md:text-base font-bold text-black">Xác nhận chuyển tài khoản thành người dùng</p>
                     )}
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-md md:text-lg hidden">
@@ -35,10 +35,10 @@ export default function UpdateRoleAlert ({role, open, setOpen, onConfirm} : Upda
                 </AlertDialogHeader>
 
                 <AlertDialogFooter>
-                <AlertDialogCancel className="text-md md:text-xl">Hủy</AlertDialogCancel>
+                <AlertDialogCancel className="text-sm">Hủy</AlertDialogCancel>
 
                 <AlertDialogAction
-                    className="bg-red-500 hover:bg-red-600 text-md md:text-xl"
+                    className="bg-red-500 hover:bg-red-600 text-sm"
                     onClick={onConfirm}
                 >
                     OK

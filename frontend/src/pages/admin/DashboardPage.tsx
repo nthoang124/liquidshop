@@ -1,14 +1,12 @@
+import PageTitle from "@/components/admin/common/PageTitle";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatVND } from "@/utils/admin/formatMoney";
 import { DollarSign, ShoppingCart, Tag, UserRound } from "lucide-react";
 
 export default function DashboardPage() {
     return (
-        <div className="p-3 bg-white space-y-4">
-            <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-              <p className="text-2xl lg:text-3xl font-bold">Dashboard</p>
-              <p className="text-md md:text-lg text-gray-600">Tổng quan về hoạt động kinh doanh và chỉ số quan trọng</p>
-            </div>
+        <div className="p-2 md:p-4 bg-white space-y-4">
+            <PageTitle title="Quản lí doanh thu" subTitle="Tổng quan về hoạt động kinh doanh và chỉ số quan trọng"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 px-3">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2">

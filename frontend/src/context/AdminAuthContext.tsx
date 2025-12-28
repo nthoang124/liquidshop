@@ -26,7 +26,7 @@ export function AdminAuthProvider({children} : {children: React.ReactNode}) {
 
         if(!token || !userData) return;
 
-         const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = JSON.parse(atob(token.split(".")[1]));
         if (Date.now() >= payload.exp * 1000) {
             return logout();
         }

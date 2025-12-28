@@ -6,100 +6,55 @@ import {
 import { SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Table, TableBody, TableCell,
   TableHead, TableHeader, TableRow
 } from "@/components/ui/table"
 
 import { columns } from "./columns"
-import type { IReview } from "@/types/review"
-import { EnumSelect } from "./EnumSelect"
+import type { IPromotion } from "@/types/promotion"
+import PromotionStatusSelect from "./PromotionStatusSelect"
 import Pagination from "../common/Pagination"
 
-
 interface DataTableProps {
-  reviews: IReview[];
+  promotions: IPromotion[];
   page: number;
   totalPages: number;
   setPage: (page: number) => void;
-
-  search: string;
-  setSearch: (search: string) => void;
-
-  handleDetailOpen: (review: IReview) => void;
-
+  handleDetailOpen: (promotion: IPromotion) => void;
   status: string;
-  rating: number | null;
   setStatus: (value: string) => void;
-  setRating: (value: number | null) => void;
   onDelete: (id: string) => void;
 }
 
-
-export function ReviewsTable({
-  reviews, page, totalPages, setPage,
-  search, setSearch,
+export function PromotionsTable({
+  promotions, page, totalPages, setPage,
   handleDetailOpen,
-  status, rating, setStatus, setRating,
+  status, setStatus,
   onDelete,
 }: DataTableProps) {
 
   const table = useReactTable({
-    data: reviews,
+    data: promotions,
     columns: columns(handleDetailOpen, onDelete),
     getCoreRowModel: getCoreRowModel(),
   });
-
-  const RATING_OPTIONS = [
-    { value: "all", label: "Đánh giá" },
-    { value: "5", label: "5⭐" },
-    { value: "4", label: "4⭐" },
-    { value: "3", label: "3⭐" },
-    { value: "2", label: "2⭐" },
-    { value: "1", label: "1⭐" },
-  ] as const
-
-  const STATUS_OPTIONS = [
-    { value: "all", label: "Trạng thái" },
-    { value: "pending", label: "Xem xét" },
-    { value: "approved", label: "Đã duyệt" },
-    { value: "rejected", label: "Từ chối" },
-  ]
 
   return (
     <div className="w-full">
       
       {/* FILTER BAR */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-4">
-        <Input
-          placeholder="Tìm kiếm theo tên sản phẩm, tên khách hàng"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm bg-white text-md"
+      <div className="flex items-center justify-end py-3">
+        <PromotionStatusSelect
+          value={status}
+          onChange={(val) => setStatus(val)}
         />
-        <div className="flex flex-row gap-1">
-            <EnumSelect
-                value={rating === null ? "all" : rating.toString()}
-                options={RATING_OPTIONS}
-                placeholder="Đánh giá"
-                onChange={(val) =>
-                    setRating(val === "all" ? null : Number(val))
-                }
-            />
-            <EnumSelect
-                value={status}
-                options={STATUS_OPTIONS}
-                placeholder="Trạng thái"
-                onChange={(val) => setStatus(val)}
-            />
-        </div>
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-xs bg-white">
+      <div className="overflow-hidden bg-white">
         <Table>
-          <TableHeader className="bg-slate-50 h-16">
+          <TableHeader className="bg-[#F7FAFC] h-15">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
@@ -112,7 +67,7 @@ export function ReviewsTable({
           </TableHeader>
 
           <TableBody>
-            {reviews.length > 0 ? (
+            {promotions.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -136,9 +91,7 @@ export function ReviewsTable({
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setSearch("");
                         setStatus("all");
-                        setRating(null);
                       }}
                     >
                       Xoá bộ lọc

@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +19,7 @@ function format(segment: string) {
 
 export default function AutoBreadcrumb() {
   const { pathname } = useLocation();
+  const {id} = useParams();
 
   const parts = pathname.split("/").filter(Boolean);
   const segments = parts.slice(1); // bỏ admin 
@@ -33,14 +34,14 @@ export default function AutoBreadcrumb() {
             <BreadcrumbItem key={idx}>
               {!isLast ? (
                 <>
-                  <BreadcrumbPage className="text-md sm:text-lg">
-                    {format(seg)}
+                  <BreadcrumbPage className="text-sm lg:text-base">
+                    {format(seg) === id ? "Detail" : format(seg)}
                   </BreadcrumbPage>
 
                   <BreadcrumbSeparator />
                 </>
               ) : (
-                <BreadcrumbPage className="text-md sm:text-lg">{format(seg)}</BreadcrumbPage>
+                <BreadcrumbPage className="text-sm lg:text-base">{format(seg) === id ? "detail" : format(seg)}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
           );

@@ -18,12 +18,16 @@ export const columns = (
 ): ColumnDef<IReview>[] => [
     {
         accessorKey: "productId",
-        header: "Sản phẩm",
+        header: () => (
+            <span className="text-sm md:text-base">
+                Sản phẩm
+            </span>
+        ),
         cell: ({ row }) => {
             const product = row.original.productId;
             return (
                 <div className="flex flex-col whitespace-normal max-w-[300px]">
-                    <span className="font-medium block">{product.name}</span>
+                    <span className="font-medium block text-sm md:text-[0.95rem]">{product.name}</span>
                     <img className="w-17 h-15" src={product?.images?.[0]} alt="product image" />
                 </div>
             )
@@ -31,19 +35,28 @@ export const columns = (
     },
     {
         accessorKey: "userId",
-        header: "Khách hàng",
+        header: () => (
+            <span className="text-sm md:text-base">
+                Khách hàng
+            </span>
+        ),
         cell: ({ row }) => {
             const user = row.original.userId;
             return (
                 <div className="flex flex-col">
-                    <span className="font-medium">{user.fullName}</span>
+                    <span className="font-medium text-[0.875rem] md:text-[1rem]">{user.fullName}</span>
+                    <span className="text-[0.85rem] md:text-sm text-blue-400">{user.email}</span>
                 </div>
             )
         }
     },
     {
         accessorKey: "comment",
-        header: "Bình luận",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Bình luận
+            </span>
+        ),
         cell: ({ row }) => {
             const review = row.original;
             return (
@@ -56,8 +69,8 @@ export const columns = (
                             block
                             wrap-break-word 
                             line-clamp-3
-                            font-bold
                             text-black
+                            text-sm
                             hover:underline
                             cursor-pointer"
                     >
@@ -69,12 +82,20 @@ export const columns = (
     },
     {
         accessorKey: "rating",
-        header: "Đánh giá",
-        cell: ({ row }) => (<div className="flex flex-row gap-1 font-bold">{row.getValue("rating")} <Star fill="yellow" color="#deed0c"/> </div>)
+         header: () => (
+            <span className="text-sm md:text-base">
+                Đánh giá
+            </span>
+        ),
+        cell: ({ row }) => (<div className="flex flex-row gap-1 font-semibold text-base">{row.getValue("rating")} <Star fill="yellow" color="#edf028"/> </div>)
     },
     {
         accessorKey: "status",
-        header: "Trạng thái",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Trạng thái
+            </span>
+        ),
         cell: ({ row }) => { 
             const status = row.getValue("status") as 
                 | "pending"
@@ -82,13 +103,13 @@ export const columns = (
                 | "rejected";
             return (
                <span
-                    className={`px-2 py-1 rounded text-white font-semibold
+                    className={`text-[0.8rem] md:text[0.85rem] font-semibold px-2 py-1 rounded-md border w-fit
                         ${
                         status === "approved"
-                            ? "bg-green-500"
+                            ? "bg-lime-50 text-lime-600 border-lime-300"
                             : status === "pending"
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
+                            ? "bg-amber-50 text-amber-600 border-amber-300"
+                            : "bg-red-100 text-red-600 border-red-300"
                         }
                     `}
                     >
@@ -99,13 +120,16 @@ export const columns = (
     },
     {
         id: "actions",
-        header: "xóa",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Xóa
+            </span>
+        ),
         cell: ({ row }) => {
             const review_id = row.original._id;
             return (
             <Button
-                className="bg-white text-red-500 p-0 rounded-lg border border-gray-300 hover:bg-gray-200"
-                // variant="destructive"
+                className="text-red-500 p-0 rounded-lg bg-transparent hover:bg-zinc-200"
                 size="icon"
                 onClick={() => onDelete(review_id)}
             >

@@ -57,8 +57,8 @@ export function NavMain({
                       isActive={isParentActive}
                     >
                       <div className="flex items-center justify-between gap-2">
-                          {item.icon && <item.icon className="!h-6 !w-6"/>}
-                          <span className="text-md data-[active=true]:text-blue-400">{item.title}</span>
+                          {item.icon && <item.icon className="!h-5.5 !w-5.5" strokeWidth={1.75}/>}
+                          <span className="text-[0.95rem] data-[active=true]:text-blue-400">{item.title}</span>
                           <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </div>
                     </SidebarMenuButton>
@@ -74,9 +74,11 @@ export function NavMain({
                               isActive={isSubActive}
                               className="group data-[active=true]:bg-blue-100
                                   data-[active=true]:text-blue-500
-                                  data-[active=true]:font-bold"
+                                  data-[active=true]:font-bold
+                                  data-[active=true]:border
+                                  data-[active=true]:border-blue-400"
                               >
-                              <Link to={subItem.url} className="text-base md:text-lg text-black ml-2">
+                              <Link to={subItem.url} className="text-[0.95rem] text-black ml-2">
                                 {subItem.title}
                               </Link>
                             </SidebarMenuSubButton>
@@ -98,14 +100,15 @@ export function NavMain({
                 isActive={isActive}
                 className="data-[active=true]:bg-blue-100
                           data-[active=true]:border-l-4
-                          data-[active=true]:border-blue-600
+                          data-[active=true]:border-blue-400
                           data-[active=true]:text-blue-500
-                          data-[active=true]:font-bold"
+                          data-[active=true]:font-bold
+                          data-[active=true]:border"
 
               >
                 <Link to={item.url} className="flex items-center gap-2">
-                  {item.icon && <item.icon className="!h-6 !w-6"/>}
-                  <span className="text-md data-[active=true]:text-blue-400">{item.title}</span>
+                  {item.icon && <item.icon className="!h-5.5 !w-5.5" strokeWidth={1.75}/>}
+                  <span className="text-[0.95rem] data-[active=true]:text-blue-400">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

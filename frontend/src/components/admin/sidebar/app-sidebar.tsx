@@ -45,7 +45,7 @@ const data = {
       url: "/admin/products",
       items: [
         {
-          title: "danh sách",
+          title: "Danh sách",
           url: "/admin/products/list"
         },
         {

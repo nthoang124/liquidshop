@@ -56,8 +56,7 @@ export default function AdminLoginPage() {
 
   return (
     <div 
-      className="w-full min-h-screen bg-center bg-cover flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4"
-      style={{backgroundImage: `url(${bg})`}}
+      className="w-full min-h-screen bg-center flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4"
       >
       <form 
         onSubmit={(e) => {
@@ -66,13 +65,13 @@ export default function AdminLoginPage() {
         }}
         className="w-full min-h-screen flex items-center justify-center"
       >
-      <Card className="w-full max-w-md shadow-md border border-gray-200">
+      <Card className="w-full max-w-110 shadow-md border border-gray-200">
         <CardHeader className="space-y-3 text-center">
           <div className="flex justify-center">
             <img src={logoShop} alt="logoshop" className="w-30 h-28"/>
           </div>
           <CardTitle className="text-2xl md:text-3xl font-bold">Welcome back</CardTitle>
-          <CardDescription className="text-md md:text-base">Đăng nhập để quản lý hệ thống</CardDescription>
+          <CardDescription className="text-sm md:text-base">Đăng nhập để quản lý hệ thống</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">

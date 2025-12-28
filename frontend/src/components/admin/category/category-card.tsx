@@ -11,30 +11,32 @@ export default function CategoryCard({ category, handleEdit, onAskDelete}: Categ
 
   return (
     <div
-      className="bg-white rounded-xl shadow-sm border hover:shadow-md transition cursor-pointer"
+      className="bg-white h-full rounded-lg shadow-sm border flex flex-col transition overflow-hidden"
     >
-      <img
-        src={category.imageUrl || "https://placehold.co/200x200?text=No+Image"}
-        alt={category.name}
-        className="w-full h-36 object-cover rounded-t-xl"
-      />
+      <div className="h-[55%]">
+        <img
+          src={category.imageUrl || "https://placehold.co/200x200?text=No+Image"}
+          alt={category.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      <div className="p-2 flex flex-1 flex-row justify-between gap-1 items-center">
+        <h3 className="font-medium flex text-sm text-center line-clamp-1">{category.name}</h3>
 
-      <div className="p-4 flex justify-between items-center">
-        <h3 className="font-semibold text-lg lg:text-xl">{category.name}</h3>
-
-        <div className="flex gap-2">
+        <div className="flex">
           <button 
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="p-1 rounded-full hover:bg-gray-100"
             onClick={() => handleEdit(category)}
           >
-            <Edit size={20} />
+            <Edit size={16} />
           </button>
 
           <button 
-            className="p-2 rounded-full hover:bg-red-100 text-red-500"
+            className="p-1 rounded-full hover:bg-red-100 text-red-500"
             onClick={() => onAskDelete(category)}
           >
-            <Trash size={20}/>
+            <Trash size={16}/>
           </button>
 
         </div>

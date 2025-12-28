@@ -33,7 +33,7 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full max-w-70 justify-between text-md md:text-lg "
+          className="w-full max-w-70 justify-between text-sm md:text-base"
         >
           {value
             ? categories.find((c) => c._id === value)?.name
@@ -52,7 +52,7 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
                         setParentCategory(null)
                         setOpen(false)
                     }}
-                    className="text-md text-gray-500 italic"
+                    className="text-sm md:text-base text-gray-500 italic"
                     >
                         Không có
                     <Check className={cn("ml-auto", value === "" ? "opacity-100" : "opacity-0")} />

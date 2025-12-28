@@ -124,10 +124,11 @@ export default function ReviewDetailDialog({
 
         {/* Admin reply */}
           <div>
-            <p className="text-muted-foreground text-sm mb-1">
+            <p className="text-muted-foreground text-[0.85rem] md:text-sm mb-1">
                 Phản hồi admin
             </p>
             <Textarea
+                className="text-[0.85rem] md:text-sm"
                 placeholder="Nhập phản hồi của admin..."
                 value={replyReview}
                 onChange={(e) => setReplyReview(e.target.value)}

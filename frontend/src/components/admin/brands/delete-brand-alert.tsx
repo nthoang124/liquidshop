@@ -21,17 +21,17 @@ export function DeleteBrandAlert({ open, setOpen, brandName, onConfirm }: Delete
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="w-[90%] p-6 max-w-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-lg md:text-xl">Bạn có chắc muốn xóa {brandName}?</AlertDialogTitle>
-          <AlertDialogDescription className="text-md md:text-lg">
+          <AlertDialogTitle className="text-base md:text-lg">Bạn có chắc muốn xóa {brandName}?</AlertDialogTitle>
+          <AlertDialogDescription className="text-[0.95rem]">
             Hành động này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-md md:text-xl">Hủy</AlertDialogCancel>
+          <AlertDialogCancel className="text-sm md:text-base">Hủy</AlertDialogCancel>
 
           <AlertDialogAction
-            className="bg-red-500 hover:bg-red-600 text-md md:text-xl"
+            className="bg-red-500 hover:bg-red-600 text-sm md:base"
             onClick={onConfirm}
           >
             Xóa

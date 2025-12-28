@@ -47,37 +47,37 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="w-full max-w-100 sm:max-w-130 md:max-w-150">
+            <DialogContent className="w-full max-w-90 sm:max-w-120 md:max-w-145">
                 <DialogHeader>
                     <DialogDescription className="sr-only">
                         edit category
                     </DialogDescription>
-                    <DialogTitle>{name}</DialogTitle>
+                    <DialogTitle className="text-lg">{name}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Tên loại</Label>
+                        <Label className="text-sm md:text-base">Tên loại</Label>
                         <Input 
-                            className="text-md md:text-lg" 
+                            className="text-sm md:text-base" 
                             value={name} 
                             onChange={(e) => setName(e.target.value)} 
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
+                        <Label className="text-sm md:text-base">Ảnh hiển thị</Label>
                         <Input 
-                            className="text-md md:text-lg"
+                            className="text-sm md:text-base"
                             value={imageUrl}
                             onChange={(e) => setImageUrl(e.target.value)} 
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Mô tả</Label>
+                        <Label className="text-sm md:text-base">Mô tả</Label>
                         <Input 
-                            className="text-md md:text-lg"
+                            className="text-sm md:text-base"
                             value={description} 
                             onChange={(e) => setDescription(e.target.value)}
                         />
@@ -88,7 +88,12 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
                 <Button variant="outline" onClick={() => setOpen(false)}>
                     Hủy
                 </Button>
-                <Button onClick={() => handleSave()} className="">Lưu thay đổi</Button>
+                <Button 
+                    onClick={() => handleSave()} 
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                    Cập nhật
+                </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

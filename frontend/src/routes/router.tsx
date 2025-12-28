@@ -51,6 +51,8 @@ import UserDetailPage from "@/pages/admin/UserDetailPage";
 import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
+import DetailedPromotion from "@/pages/admin/DetailedPromotion";
+import AddPromotionPage from "@/pages/admin/AddPromotionPage";
 
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
@@ -61,6 +63,7 @@ const AddCategoriesPage = React.lazy(
   () => import("@/pages/admin/AddCategoriesPage")
 );
 const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
+const PromotionPage = React.lazy(() => import("@/pages/admin/PromotionsPage"));
 
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
@@ -132,14 +135,17 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: "users", element: <UsersPage /> },
       { path: "products/list", element: <ProductsPage /> },
-      { path: "products/add-new", element: <AddProductPage /> },
-      { path: "categories/list", element: <CategoriesPage /> },
-      { path: "categories/add-new", element: <AddCategoriesPage /> },
-      { path: "brands", element: <BrandsPage /> },
-      { path: "users/:id", element: <UserDetailPage /> },
-      { path: "product/edit/:id", element: <EditProductPage /> },
-      { path: "orders", element: <OrdersPage /> },
-      { path: "reviews", element: <ReviewsPage /> },
+      { path: "products/add-new", element: <AddProductPage/> },
+      { path: "categories/list", element: <CategoriesPage/>},
+      { path: "categories/add-new", element: <AddCategoriesPage/>},
+      { path: "brands", element: <BrandsPage/>},
+      { path: "users/:id", element: <UserDetailPage/>},
+      { path: "product/edit/:id", element: <EditProductPage/>},
+      { path: "orders", element:<OrdersPage/>},
+      { path: "reviews", element: <ReviewsPage/>},
+      { path: "promotions", element: <PromotionPage/>},
+      { path: "promotions/:id", element: <DetailedPromotion/>},
+      { path: "promotions/add", element: <AddPromotionPage/>}
     ],
   },
   {

@@ -26,7 +26,7 @@ export function OrderStatusSelect({ value, onChange }: Props) {
         <SelectValue placeholder="Trạng thái đơn hàng" />
       </SelectTrigger>
 
-      <SelectContent>
+      <SelectContent className="text-sm md:text-base">
         <SelectItem value="all">Trạng thái đơn</SelectItem>
         {ORDER_STATUS.map((s) => (
           <SelectItem key={s.value} value={s.value}>

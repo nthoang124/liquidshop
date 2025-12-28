@@ -36,7 +36,7 @@ export default function OrderDetailDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="text-lg font-bold">
             Chi tiết đơn hàng #{order.orderCode}
           </DialogTitle>
           <DialogDescription>
@@ -47,7 +47,7 @@ export default function OrderDetailDialog({
         <ScrollArea className="max-h-[70vh] pr-4">
           {/* --- Order status --- */}
           <div className="flex items-center gap-3 mb-4">
-            <span className="font-medium">Trạng thái đơn hàng:</span>
+            <span className="font-medium text-sm">Trạng thái đơn hàng:</span>
             <Badge
               className={`${getOrderStatusStyle(order.orderStatus)} px-3 py-1`}
             >
@@ -57,19 +57,23 @@ export default function OrderDetailDialog({
 
           {/* --- Customer Info --- */}
           <div className="border rounded-lg p-4 mb-4">
-            <h3 className="text-lg font-semibold mb-2">Thông tin khách hàng</h3>
+            <h3 className="text-sm md:text-base font-semibold mb-2">Thông tin khách hàng</h3>
 
-            <p><span className="font-medium">Họ tên:</span> {order.customerInfo.fullName}</p>
-            <p><span className="font-medium">Email:</span> {order.customerInfo.email}</p>
-            <p><span className="font-medium">Số điện thoại:</span> {order.customerInfo.phoneNumber}</p>
+            <p className="text-sm md:text-base"><span className="font-medium">Họ tên:</span> {order.customerInfo.fullName}</p>
+            <p className="text-sm md:text-base"><span className="font-medium">Email:</span> {order.customerInfo.email}</p>
+            <p className="text-sm md:text-base"><span className="font-medium">Số điện thoại:</span> {order.customerInfo.phoneNumber}</p>
 
             <p className="mt-2 font-medium">Địa chỉ giao hàng:</p>
-            {/* <p className="text-sm">
-              {order.customerInfo.shippingAddress.street},{" "}
-              {order.customerInfo.shippingAddress.ward},{" "}
-              {order.customerInfo.shippingAddress.district},{" "}
-              {order.customerInfo.shippingAddress.city}
-            </p> */}
+
+            {order.customerInfo.shippingAddress && (
+              <p className="text-sm">
+                {order.customerInfo.shippingAddress.street},{" "}
+                {order.customerInfo.shippingAddress.ward},{" "}
+                {order.customerInfo.shippingAddress.district},{" "}
+                {order.customerInfo.shippingAddress.city}
+              </p>  
+            )}
+            
           </div>
 
           {/* --- Items List --- */}
@@ -157,10 +161,6 @@ export default function OrderDetailDialog({
             Ngày đặt: {formatDate(order.createdAt)}
           </p>
         </ScrollArea>
-
-        <DialogFooter>
-          <Button onClick={() => setOpen(false)}>Đóng</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
