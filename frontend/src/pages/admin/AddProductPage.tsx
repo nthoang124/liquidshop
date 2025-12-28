@@ -249,7 +249,7 @@ export default function EditProductPage() {
         <Button 
           disabled={saving} 
           onClick={handleSave}
-          className="bg-blue-500 font-bold text-base text-white hover:bg-blue-600"
+          className="bg-[#3385F0] text-white hover:bg-[#2B71CC] font-semibold"
         >
           {saving ? "Đang lưu..." : "Thêm"}
         </Button>

@@ -24,7 +24,7 @@ interface Calendar24Props {
 
 export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isStart} : Calendar24Props) {
   const [open, setOpen] = React.useState(false)
-  // const [date, setDate] = React.useState<Date | undefined>(undefined)
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
@@ -51,6 +51,8 @@ export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isSt
               mode="single"
               selected={date}
               captionLayout="dropdown"
+              startMonth={new Date(currentYear - 10, 0)}
+              endMonth={new Date(currentYear + 20, 11)}
               onSelect={(d) => {
                 onChangeDate(d)
                 setOpen(false)

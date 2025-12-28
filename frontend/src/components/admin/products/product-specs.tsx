@@ -40,13 +40,13 @@ function SpecificationsInput({
       {Object.entries(specs).map(([key, value], idx) => (
         <div key={idx} className="flex gap-3 items-center">
           <Input
-            className="flex-1"
+            className="flex-1 text-[0.85rem] md:text-sm"
             placeholder="Thuộc tính (vd: CPU)"
             value={key}
             onChange={(e) => handleChange(key, "key", e.target.value)}
           />
           <Input
-            className="flex-1"
+            className="flex-1 text-[0.85rem] md:text-sm"
             placeholder="Giá trị (vd: Intel Core i7)"
             value={value}
             onChange={(e) => handleChange(key, "value", e.target.value)}

@@ -27,7 +27,7 @@ export const columns = (
             const product = row.original.productId;
             return (
                 <div className="flex flex-col whitespace-normal max-w-[300px]">
-                    <span className="font-medium block text-sm md:text-base">{product.name}</span>
+                    <span className="font-medium block text-sm md:text-[0.95rem]">{product.name}</span>
                     <img className="w-17 h-15" src={product?.images?.[0]} alt="product image" />
                 </div>
             )
@@ -44,7 +44,8 @@ export const columns = (
             const user = row.original.userId;
             return (
                 <div className="flex flex-col">
-                    <span className="font-medium text-sm">{user.fullName}</span>
+                    <span className="font-medium text-[0.875rem] md:text-[1rem]">{user.fullName}</span>
+                    <span className="text-[0.85rem] md:text-sm text-blue-400">{user.email}</span>
                 </div>
             )
         }
@@ -86,7 +87,7 @@ export const columns = (
                 Đánh giá
             </span>
         ),
-        cell: ({ row }) => (<div className="flex flex-row gap-1 font-semibold text-base">{row.getValue("rating")} <Star fill="yellow" color="#deed0c"/> </div>)
+        cell: ({ row }) => (<div className="flex flex-row gap-1 font-semibold text-base">{row.getValue("rating")} <Star fill="yellow" color="#edf028"/> </div>)
     },
     {
         accessorKey: "status",
@@ -102,7 +103,7 @@ export const columns = (
                 | "rejected";
             return (
                <span
-                    className={`text-sm px-2 py-1 rounded-md border w-fit
+                    className={`text-[0.8rem] md:text[0.85rem] font-semibold px-2 py-1 rounded-md border w-fit
                         ${
                         status === "approved"
                             ? "bg-lime-50 text-lime-600 border-lime-300"

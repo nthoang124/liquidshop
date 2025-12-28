@@ -1,3 +1,4 @@
+import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
 import PageTitle from "@/components/admin/common/PageTitle";
 import { PromotionsTable } from "@/components/admin/promotions/promotions-table";
 import { Button } from "@/components/ui/button";
@@ -14,15 +15,30 @@ export default function PromotionsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [status, setStatus] = useState("all");
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
   const navigate = useNavigate();
-  const limit = 8;
+  const limit = 5;
 
   const handleDetailOpen = (promotion: IPromotion) => {
     navigate(`/admin/promotions/${promotion._id}`);
   } 
 
-  const handleDelete = (id: string) => {
+  const handleConfirm = async () => {
+    try {
+      const res = await promotionApi.delete(deleteId);
 
+      console.log("checl delete: ", res.data);
+      setDeleteOpen(false);
+      loadPromotions();
+    }catch(error) { 
+      console.log(error);
+    }
+  }
+
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+    setDeleteOpen(true);
   }
   
   const loadPromotions = async () => {
@@ -71,7 +87,7 @@ export default function PromotionsPage() {
 
             <Button
               onClick={() => navigate('/admin/promotions/add')}
-              className="bg-blue-500 text-white hover:bg-blue-600 text-sm font-semibold max-w-35 w-full"
+              className="bg-[#3385F0] text-white hover:bg-[#2B71CC] text-sm font-semibold max-w-35 w-full"
             >
               <Plus size={20}/>
               Thêm mã giảm
@@ -79,15 +95,22 @@ export default function PromotionsPage() {
           </div>
           
           <PromotionsTable
-              promotions={promotions}
-              page={page}
-              totalPages={totalPages}
-              setPage={setPage}
-              handleDetailOpen={handleDetailOpen}
-              status={status}
-              setStatus={setStatus}
-              onDelete={handleDelete}
+            promotions={promotions}
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+            handleDetailOpen={handleDetailOpen}
+            status={status}
+            setStatus={setStatus}
+            onDelete={handleDelete}
           />
+
+          <DeleteBrandAlert
+            open={deleteOpen}
+            setOpen={setDeleteOpen}
+            brandName=""
+            onConfirm={handleConfirm}
+          />          
         </div>
       </div>
     </div>

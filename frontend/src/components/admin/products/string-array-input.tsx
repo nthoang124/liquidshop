@@ -70,9 +70,9 @@ function TagsInput({ values, setValues } : TagsInputProps) {
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
         {values.map((tag, idx) => (
-          <div key={idx} className="px-2 py-1 bg-blue-100 rounded flex items-center gap-2">
+          <div key={idx} className="px-2 py-1 bg-[#EBF2F5] rounded flex items-center gap-2">
             <span>{tag}</span>
-            <button onClick={() => removeTag(tag)} className="text-red-500">×</button>
+            <button onClick={() => removeTag(tag)} className="text-black">×</button>
           </div>
         ))}
       </div>

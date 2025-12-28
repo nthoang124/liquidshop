@@ -130,7 +130,11 @@ export default function AddCategoryPage() {
             </CardContent>
 
             <CardFooter className="justify-end gap-2">
-              <Button className="text-lg font-bold bg-blue-500 hover:bg-blue-600" onClick={handleSubmit}>Thêm mới</Button>
+              <Button 
+                className="bg-[#3385F0] text-white hover:bg-[#2B71CC] font-semibold" 
+                onClick={handleSubmit}>
+                Thêm mới
+              </Button>
             </CardFooter>
           </Card>
         </div>

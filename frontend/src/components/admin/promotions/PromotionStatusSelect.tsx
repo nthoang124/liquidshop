@@ -15,7 +15,7 @@ export default function PromotionStatusSelect({value, onChange} : Props) {
 
   return (
     <Select value={value} onValueChange={onChange}>
-        <SelectTrigger>
+        <SelectTrigger className="bg-transparent ">
             <SelectValue placeholder="Trạng thái"/>
         </SelectTrigger>
         <SelectContent>

@@ -132,7 +132,7 @@ export default function BrandsPage() {
                                <p className="font-bold text-base">Danh sách thương hiệu</p>
                             </div>
                             <Button 
-                                className="w-full max-w-25 bg-blue-500 font-bold text-md md:text-lg hover:bg-blue-600"
+                                className="w-full max-w-25 bg-[#3385F0] text-white hover:bg-[#2B71CC] font-bold text-md md:text-lg"
                                 onClick={() => setOpenAdd(true)}
                                 >
                                 <Plus size={32} color="#fcf7f7" strokeWidth={3} />

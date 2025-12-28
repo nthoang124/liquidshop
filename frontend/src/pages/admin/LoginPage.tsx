@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
         }}
         className="w-full min-h-screen flex items-center justify-center"
       >
-      <Card className="w-full max-w-sm shadow-md border border-gray-200">
+      <Card className="w-full max-w-110 shadow-md border border-gray-200">
         <CardHeader className="space-y-3 text-center">
           <div className="flex justify-center">
             <img src={logoShop} alt="logoshop" className="w-30 h-28"/>

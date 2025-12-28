@@ -56,10 +56,10 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
 
       {/* TABLE */}
       <div className="overflow-hidden rounded-xs bg-white">
-        <Table>
-          <TableHeader className="bg-blue-50 h-16">
+        <Table className="border-0">
+          <TableHeader className="bg-[#F7FAFC] h-16">
             {table.getHeaderGroups().map((group) => (
-              <TableRow key={group.id} className="hover:bg-transparent">
+              <TableRow key={group.id} className="hover:bg-transparent border-0">
                 {group.headers.map((header) => (
                   <TableHead key={header.id} className="text-md sm:text-lg font-semibold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -71,15 +71,13 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
 
           <TableBody>
             {users.length > 0 ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className={`text-md sm:text-base ${
-                    index % 2 === 0 ? "bg-white" : "bg-slate-50"
-                  }`}
+                  className={`text-md sm:text-base`}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="border-0">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

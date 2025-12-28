@@ -13,6 +13,14 @@ const promotionApi = {
 
     update(id: string, data: IPromotionUpdate) {
         return axiosClient.put<{success: boolean; data: IPromotion }>(`admin/promotion/${id}`, data);
+    },
+
+    create(data: IPromotionUpdate) {
+        return axiosClient.post<{success: boolean; data: IPromotion}>('admin/promotion/createPromotion', data);
+    },
+
+    delete(id: string) {
+        return axiosClient.delete<{success:boolean; message: string}>(`admin/promotion/${id}`);
     }
 }
 

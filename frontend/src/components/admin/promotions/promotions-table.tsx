@@ -54,7 +54,7 @@ export function PromotionsTable({
       {/* TABLE */}
       <div className="overflow-hidden bg-white">
         <Table>
-          <TableHeader className="bg-slate-50 h-15">
+          <TableHeader className="bg-[#F7FAFC] h-15">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (

@@ -23,10 +23,10 @@ export const columns = (
                 <div className="flex flex-col whitespace-normal max-w-[250px]">
                     <span 
                         onClick={() => onOpenDetail(row.original)}
-                        className="font-semibold text-sm md:text-base hover:underline cursor-pointer">
+                        className="font-semibold text-sm md:text-[0.95rem] hover:underline cursor-pointer">
                         {code}
                     </span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-[0.9rem] text-muted-foreground">
                     {description}
                     </span>
                 </div>
@@ -74,7 +74,7 @@ export const columns = (
             const isActive = row.getValue("isActive") as boolean;
             return (
                 <div 
-                    className={`text-sm rounded-md px-2 py-1 w-fit border 
+                    className={`text-[0.8rem] rounded-md px-2 py-1 w-fit border 
                         ${
                             isActive ? "bg-lime-50 border-lime-300 text-lime-600" : "bg-amber-50 text-amber-600 border-amber-300"
                         }    
@@ -83,7 +83,7 @@ export const columns = (
                     {isActive ? "Hoạt động" : "Không hoạt động"}
                 </div>
             )
-        }
+        }   
     },
     {
         id: "actions",
