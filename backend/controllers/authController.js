@@ -127,7 +127,8 @@ const loginAdmin = async (req, res) => {
 
     res.json({
       message: "Login successful",
-      token: token
+      token: token,
+      data: user,
     })
 
   }
