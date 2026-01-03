@@ -1,4 +1,4 @@
-const Order = require("../../models/OrderModel");
+const Order = require("../../models/orderModel");
 const User = require("../../models/userModel");
 const Product = require("../../models/productModel");
 const mongoose = require("mongoose");
@@ -80,7 +80,7 @@ class DashboardController {
         totalProducts,
         revenueThisYear,
         revenueThisMonth,
-        revenueLastMonth
+        revenueLastMonth,
       ] = await Promise.all([
         User.countDocuments(),
         Product.countDocuments(),
