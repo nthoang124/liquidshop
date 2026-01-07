@@ -47,11 +47,11 @@ const MainLayout: React.FC = () => {
 
       <SideBanner
         position="left"
-        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-t11-sticky-banner.jpg"
+        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-sticky-t1-26.png"
       />
       <SideBanner
         position="right"
-        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-t11-sticky-banner.jpg"
+        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-gaming-sticky-t1-26.png"
       />
 
       <main

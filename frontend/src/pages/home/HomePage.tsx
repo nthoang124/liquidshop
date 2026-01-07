@@ -20,7 +20,6 @@ const HomePage = () => {
 
   const RenderSection = ({ data }: { data: IHomeSection | null }) => {
     if (!data || data.products.length === 0) return null;
-    console.log(data);
     return (
       <section className="p-0 mt-4">
         <div className="md:hidden">

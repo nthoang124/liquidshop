@@ -4,32 +4,32 @@ const mainBanners = [
   {
     id: 1,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-thu-cu-doi-moi-t10-slider.jpeg",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-build-pc-sub-banner-t1-26.png",
   },
   {
     id: 2,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-builld-pc-sub-banner-t12.png",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-ban-phim-sub-banner-t1-26.png",
   },
   {
     id: 3,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-ban-phim-co-sub-banner-t12.png",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-gaming-sub-banner-t1-26.png",
   },
   {
     id: 4,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-gaming-sub-banner-t12.png",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-van-phong-sub-banner-t1-26.png",
   },
   {
     id: 5,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-van-phong-sub-banner-t12.png",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-i5-sub-banner-t1-26.png",
   },
   {
     id: 6,
     image:
-      "https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-i5-sub-banner-t12.png",
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-man-hinh-sub-banner-t1-26.png",
   },
 ];
 
