@@ -1,8 +1,8 @@
-const Groq = require('groq-sdk');
-const Product = require('../../models/productModel');
-const Order = require('../../models/orderModel');
-const ChatSession = require('../../models/chatSessionModel');
-const Fuse = require('fuse.js');
+const Groq = require("groq-sdk");
+const Product = require("../../models/productModel");
+const Order = require("../../models/orderModel");
+const ChatSession = require("../../models/chatSessionModel");
+const Fuse = require("fuse.js");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -15,32 +15,39 @@ async function updateSearchIndex() {
   const now = Date.now();
   if (now - lastUpdated > 300000 || !searchEngine) {
     try {
-      const products = await Product.find({ status: 'active' })
-        .populate('brand', 'name')
-        .populate('category', 'name')
-        .select('name price slug description brand category image sku');
+      const products = await Product.find({ status: "active" })
+        .populate("brand", "name")
+        .populate("category", "name")
+        .select(
+          "name price slug description brand category image sku specifications tags"
+        );
 
       // Chuẩn hóa dữ liệu để search ngon hơn
-      cachedProducts = products.map(p => ({
+      cachedProducts = products.map((p) => ({
         _id: p._id,
         name: p.name,
         price: p.price,
         // Tạo một trường text tổng hợp để search cho chuẩn
-        searchText: `${p.name} ${p.brand?.name || ''} ${p.category?.name || ''} ${p.description || ''}`,
-        raw: p
+        searchText: `${p.name} ${p.brand?.name || ""} ${
+          p.category?.name || ""
+        } ${p.description || ""} ${JSON.stringify(p.specifications || "")}
+        ${p.tags}`,
+        raw: p,
       }));
 
       // Cấu hình Fuse.js
       const options = {
         includeScore: true,
-        keys: ['searchText'], // Tìm trong trường text tổng hợp
+        keys: ["searchText"], // Tìm trong trường text tổng hợp
         threshold: 0.4, // Độ chấp nhận sai số
-        ignoreLocation: true
+        ignoreLocation: true,
       };
 
       searchEngine = new Fuse(cachedProducts, options);
       lastUpdated = now;
-      console.log(`Search Engine Updated! Loaded ${cachedProducts.length} products.`);
+      console.log(
+        `Search Engine Updated! Loaded ${cachedProducts.length} products.`
+      );
     } catch (e) {
       console.error("Update Search Index Error:", e);
     }
@@ -48,7 +55,6 @@ async function updateSearchIndex() {
 }
 
 updateSearchIndex();
-
 
 const ROUTER_PROMPT = `
 Role: Intent Classifier.
@@ -79,11 +85,11 @@ Rules:
 
 const chatWithAI = async (req, res) => {
   const { message } = req.body;
-  const userId = req.user.id
+  const userId = req.user.id;
 
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
 
   try {
     await updateSearchIndex();
@@ -97,9 +103,9 @@ const chatWithAI = async (req, res) => {
     }
 
     // Lấy lịch sử chat cho AI nhớ
-    const historyContext = session.messages.slice(-4).map(msg => ({
-      role: msg.sender === 'user' ? 'user' : 'assistant',
-      content: msg.message
+    const historyContext = session.messages.slice(-4).map((msg) => ({
+      role: msg.sender === "user" ? "user" : "assistant",
+      content: msg.message,
     }));
 
     // Gọi AI cùi để lọc dữ liệu cho nhanh
@@ -107,16 +113,16 @@ const chatWithAI = async (req, res) => {
       messages: [
         { role: "system", content: ROUTER_PROMPT },
         ...historyContext,
-        { role: "user", content: message }
+        { role: "user", content: message },
       ],
       model: "llama-3.1-8b-instant",
       temperature: 0,
-      response_format: { type: "json_object" }
+      response_format: { type: "json_object" },
     });
 
-    const { intent, query } = JSON.parse(routerCompletion.choices[0].message.content);
-
-    console.log(JSON.stringify(query))
+    const { intent, query } = JSON.parse(
+      routerCompletion.choices[0].message.content
+    );
 
     // Query db dựa trên res đã lọc từ AI cùi
     let dbContext = "Không có dữ liệu database.";
@@ -127,30 +133,34 @@ const chatWithAI = async (req, res) => {
 
       if (query?.keyword) {
         const fuseResults = searchEngine.search(query.keyword);
-        results = fuseResults.map(r => r.item);
+        results = fuseResults.map((r) => r.item);
       } else {
         results = cachedProducts;
       }
 
       if (query?.price_max) {
-        results = results.filter(p => p.price <= query.price_max);
+        results = results.filter((p) => p.price <= query.price_max);
       }
 
       const products = results.slice(0, 5);
 
       if (products.length > 0) {
+        dbContext =
+          `Tìm thấy ${products.length} sản phẩm:\n` +
+          products.map((p) => `- ${p.name} (Giá: ${p.price})`).join("\n");
 
-        dbContext = `Tìm thấy ${products.length} sản phẩm:\n` +
-          products.map(p => `- ${p.name} (Giá: ${p.price})`).join("\n");
-
-        const ids = products.map(p => p._id);
-        foundDataPayload = `[PRODUCT_LIST_START]${JSON.stringify(ids)}[PRODUCT_LIST_END]`;
+        const ids = products.map((p) => p._id);
+        foundDataPayload = `[PRODUCT_LIST_START]${JSON.stringify(
+          ids
+        )}[PRODUCT_LIST_END]`;
       } else {
-        dbContext = "Đã tìm trong kho nhưng không thấy sản phẩm nào khớp yêu cầu.";
+        dbContext =
+          "Đã tìm trong kho nhưng không thấy sản phẩm nào khớp yêu cầu.";
       }
-
     } else if (intent === "check_order") {
-      const orders = await Order.find({ userId }).sort({ createdAt: -1 }).limit(1);
+      const orders = await Order.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(1);
 
       if (orders.length > 0) {
         const o = orders[0];
@@ -168,12 +178,12 @@ const chatWithAI = async (req, res) => {
         { role: "system", content: RESPONDER_SYSTEM_PROMPT },
         ...historyContext,
         { role: "system", content: `CONTEXT DATA TỪ DATABASE:\n${dbContext}` },
-        { role: "user", content: message }
+        { role: "user", content: message },
       ],
       model: "llama-3.3-70b-versatile",
       stream: true,
       temperature: 0.7,
-      max_tokens: 500
+      max_tokens: 500,
     });
 
     let fullBotResponse = "";
@@ -189,21 +199,25 @@ const chatWithAI = async (req, res) => {
 
     // Gửi foundDataPayload để Frontend render ra cái Card đẹp mắt bên dưới lời thoại
     if (foundDataPayload) {
-      res.write(`data: ${JSON.stringify({ content: "\n\n" + foundDataPayload })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ content: "\n\n" + foundDataPayload })}\n\n`
+      );
       fullBotResponse += "\n" + foundDataPayload;
     }
 
-    session.messages.push({ sender: 'user', message: message });
-    session.messages.push({ sender: 'bot', message: fullBotResponse });
+    session.messages.push({ sender: "user", message: message });
+    session.messages.push({ sender: "bot", message: fullBotResponse });
     session.updatedAt = Date.now();
     await session.save();
 
-    console.log(fullBotResponse)
     res.end();
-
   } catch (error) {
     console.error("Chatbot Error:", error);
-    res.write(`data: ${JSON.stringify({ content: "Mạng lag quá, mình chưa load được. Bạn hỏi lại nha!" })}\n\n`);
+    res.write(
+      `data: ${JSON.stringify({
+        content: "Mạng lag quá, mình chưa load được. Bạn hỏi lại nha!",
+      })}\n\n`
+    );
     res.end();
   }
 };
@@ -216,20 +230,20 @@ const getHistory = async (req, res) => {
     if (!session) {
       res.status(400).json({
         message: "Chat history empty",
-        error
+        error,
       });
     }
 
     res.status(200).json({
       message: "Get history chatbot successfull",
-      session
+      session,
     });
   } catch (error) {
     res.status(500).json({
       message: "Get history chatbot error",
-      error
+      error,
     });
   }
 };
 
-module.exports = { chatWithAI, getHistory }
+module.exports = { chatWithAI, getHistory };
