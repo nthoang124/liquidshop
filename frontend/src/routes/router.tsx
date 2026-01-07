@@ -124,36 +124,37 @@ const router = createBrowserRouter([
 
   {
     path: "/admin",
-    element: (
-      <AdminAuthProvider>
-      <ProtectedRouteAdmin>
-        <AdminLayout />
-      </ProtectedRouteAdmin>
-      </AdminAuthProvider>
-    ),
+    element: <ProtectedRouteAdmin />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: "users", element: <UsersPage /> },
-      { path: "products/list", element: <ProductsPage /> },
-      { path: "products/add-new", element: <AddProductPage/> },
-      { path: "categories", element: <CategoriesPage/>},
-      { path: "brands", element: <BrandsPage/>},
-      { path: "users/:id", element: <UserDetailPage/>},
-      { path: "product/edit/:id", element: <EditProductPage/>},
-      { path: "orders", element:<OrdersPage/>},
-      { path: "reviews", element: <ReviewsPage/>},
-      { path: "promotions", element: <PromotionPage/>},
-      { path: "promotions/:id", element: <DetailedPromotion/>},
-      { path: "promotions/add", element: <AddPromotionPage/>}
+      {
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <DashboardPage /> },
+          { path: "users", element: <UsersPage /> },
+          { path: "users/:id", element: <UserDetailPage /> },
+
+          { path: "products/list", element: <ProductsPage /> },
+          { path: "products/add-new", element: <AddProductPage /> },
+          { path: "product/edit/:id", element: <EditProductPage /> },
+
+          { path: "categories", element: <CategoriesPage /> },
+          { path: "brands", element: <BrandsPage /> },
+
+          { path: "orders", element: <OrdersPage /> },
+          { path: "reviews", element: <ReviewsPage /> },
+
+          { path: "promotions", element: <PromotionPage /> },
+          { path: "promotions/add", element: <AddPromotionPage /> },
+          { path: "promotions/:id", element: <DetailedPromotion /> },
+        ],
+      },
     ],
   },
   {
     path: "/admin/login",
     element: 
-      <AdminAuthProvider>
-        <AdminLoginPage />
-      </AdminAuthProvider>,
+        <AdminLoginPage />,
     errorElement: <ErrorPage />,
   },
 ]);

@@ -1,14 +1,10 @@
-import { Navigate } from "react-router-dom";
-import type { ReactNode } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AdminAuthContext";
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function ProtectedRouteAdmin ({ children }: Props) {
+export default function ProtectedRouteAdmin () {
 
   const {user, isLoading} = useAuth();
+
   if(isLoading) {
     return <div>Loading...</div>
   }
@@ -17,5 +13,5 @@ export default function ProtectedRouteAdmin ({ children }: Props) {
     return <Navigate to="/admin/login" replace />
   }
 
-  return children;
+  return <Outlet />;
 }

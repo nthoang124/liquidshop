@@ -42,9 +42,7 @@ export default function AdminLoginPage() {
       // Lưu token vào localStorage
       login(res.data.token, res.data.user);
 
-      console.log("user: ", res.data.user);
-
-      navigate("/admin"); 
+      navigate("/admin", { replace: true }); 
     } catch (err: unknown) {
         const error = err as AxiosError<{messaage: string}>
         const errorMessage = error.message;

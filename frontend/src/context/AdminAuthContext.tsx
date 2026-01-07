@@ -14,7 +14,6 @@ const AdminAuthContext = createContext<AuthContextType | null>(null);
 export function AdminAuthProvider({children} : {children: React.ReactNode}) {
     const [user, setUser] = useState<IUserLoginResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("admin_access_token");
@@ -31,14 +30,12 @@ export function AdminAuthProvider({children} : {children: React.ReactNode}) {
         localStorage.setItem("admin_access_token", token);
         localStorage.setItem("admin", JSON.stringify(user));
         setUser(user);
-        navigate("/admin");
     }
 
     const logout = () => {
         localStorage.removeItem("admin_access_token");
         localStorage.removeItem("admin");
         setUser(null);
-        navigate("/admin/login");
     };
 
     return (

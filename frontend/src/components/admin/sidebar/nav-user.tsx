@@ -25,7 +25,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Link } from "react-router-dom"
+import { useAuth } from "@/context/AdminAuthContext"
+import { useNavigate } from "react-router-dom"
 
 export function NavUser({
   user,
@@ -36,7 +37,14 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); 
+    navigate("/admin/login", { replace: true });
+  };
 
   return (
     <SidebarMenu>
@@ -88,12 +96,13 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-              <Link to={"/admin/login"}>
-                <DropdownMenuItem className="text-red-500 font-bold text-md">
-                    <LogOut color="red"/>
-                    <span>Đăng xuất</span>  
-                </DropdownMenuItem>
-              </Link>
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-500 font-bold text-md cursor-pointer"
+              >
+              <LogOut color="red" />
+              <span>Đăng xuất</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
