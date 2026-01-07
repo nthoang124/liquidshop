@@ -1,6 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table"
-import { Button } from "@/components/ui/button"
-import { ArrowUpDown } from "lucide-react"
 import type { IOrder } from "@/types/order"
 
 import { formatVND } from "@/utils/admin/formatMoney";
@@ -107,7 +105,7 @@ export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps)
               className="
                 h-8 w-full
                 text-xs md:text-[0.85rem]
-                rounded-md
+                rounded-sm
                 border border-slate-300
                 bg-white
                 hover:bg-slate-50

@@ -51,7 +51,7 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-14"
             >
-              <Avatar className="h-10 w-10 rounded-3xl">
+              <Avatar className="h-10 w-10 rounded-3xl group-data-[collapsible=icon]:h-8! group-data-[collapsible=icon]:w-8!">
                 <AvatarFallback className="rounded-lg
                   bg-linear-to-br from-red-500 to-black
                   text-white font-semibold
@@ -109,9 +109,9 @@ export function NavUser({
             <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={handleLogout}
-                className="text-red-500 font-bold text-md cursor-pointer"
+                className="font-medium text-md cursor-pointer"
               >
-              <LogOut color="red" />
+              <LogOut color="black"/>
               <span>Đăng xuất</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
