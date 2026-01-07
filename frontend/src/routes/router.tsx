@@ -67,18 +67,28 @@ const PromotionPage = React.lazy(() => import("@/pages/admin/PromotionsPage"));
 
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
+// LOADER
+import { homeLoader } from "@/pages/home/home.loader";
+import { categoryDetailLoader } from "@/pages/product/category.loader";
+import { searchLoader } from "@/pages/product/search.loader";
+import { myOrdersLoader } from "@/pages/customer/Profile/order.loader";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <HomePage />, loader: homeLoader },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
       {
         element: <ProtectedRouteCustomer />,
         children: [
-          { path: "users/me", element: <CustomerProfilePage /> },
+          {
+            path: "users/me",
+            element: <CustomerProfilePage />,
+            loader: myOrdersLoader,
+          },
           { path: "cart", element: <CustomerCartPage /> },
           { path: "checkout", element: <CheckoutPage /> },
           { path: "/orders/:code", element: <OrderDetailPage /> },
@@ -90,10 +100,12 @@ const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <CategoryDetailPage />,
+        loader: categoryDetailLoader,
       },
       {
         path: "products",
         element: <SearchPage />,
+        loader: searchLoader,
       },
     ],
   },
@@ -135,17 +147,17 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: "users", element: <UsersPage /> },
       { path: "products/list", element: <ProductsPage /> },
-      { path: "products/add-new", element: <AddProductPage/> },
-      { path: "categories/list", element: <CategoriesPage/>},
-      { path: "categories/add-new", element: <AddCategoriesPage/>},
-      { path: "brands", element: <BrandsPage/>},
-      { path: "users/:id", element: <UserDetailPage/>},
-      { path: "product/edit/:id", element: <EditProductPage/>},
-      { path: "orders", element:<OrdersPage/>},
-      { path: "reviews", element: <ReviewsPage/>},
-      { path: "promotions", element: <PromotionPage/>},
-      { path: "promotions/:id", element: <DetailedPromotion/>},
-      { path: "promotions/add", element: <AddPromotionPage/>}
+      { path: "products/add-new", element: <AddProductPage /> },
+      { path: "categories/list", element: <CategoriesPage /> },
+      { path: "categories/add-new", element: <AddCategoriesPage /> },
+      { path: "brands", element: <BrandsPage /> },
+      { path: "users/:id", element: <UserDetailPage /> },
+      { path: "product/edit/:id", element: <EditProductPage /> },
+      { path: "orders", element: <OrdersPage /> },
+      { path: "reviews", element: <ReviewsPage /> },
+      { path: "promotions", element: <PromotionPage /> },
+      { path: "promotions/:id", element: <DetailedPromotion /> },
+      { path: "promotions/add", element: <AddPromotionPage /> },
     ],
   },
   {
