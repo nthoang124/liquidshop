@@ -71,10 +71,10 @@ export function ChartBarMixed({chartData, chartConfig, titelChart, subTitle} : B
               content={<ChartTooltipContent hideLabel />}
             />
             <Bar 
-                dataKey="value" 
-                fill="var(--color-value)" 
-                layout="vertical" radius={5}
-                barSize={10}
+              dataKey="value" 
+              fill="var(--color-value)" 
+              layout="vertical" radius={5}
+              barSize={10}
             >
                 {chartData.map((item, index) => (
                     <Cell

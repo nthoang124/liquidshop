@@ -69,7 +69,20 @@ export default function OrdersPage() {
     }catch(error){
       console.log(error);
     }
-  },[page, search, paymentStatusSelected, orderStatusSelected])
+  },[page, paymentStatusSelected, orderStatusSelected])
+
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      loadOrders();
+    }, 500)
+
+    return () => clearTimeout(timeOut);
+  }, [search])
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, paymentStatusSelected, orderStatusSelected]);
+
   return (
      <div className="p-0 md:p-4 bg-white md:bg-transparent">
       {isLoading && (

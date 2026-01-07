@@ -13,9 +13,12 @@ export interface TopUser {
 }
 
 export interface DashboardTotals {
+  ordersLastMonth: number
+  ordersThisMonth: number
   users: number
   products: number
   revenueThisYear: number
+  revenueLastYear: number
   revenueThisMonth: number
   revenueLastMonth: number
 }
@@ -23,7 +26,7 @@ export interface DashboardTotals {
 export interface DashboardOverview {
   usersNew7Days: ChartSeries
   revenue7Days: ChartSeries
-  ordersByDayInMonth: ChartSeries
+  revenue12Months: ChartSeries
   topProducts: IProduct[]
   topNewUsers: TopUser[]
   totals: DashboardTotals

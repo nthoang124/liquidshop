@@ -136,7 +136,15 @@ export default function ProductsPage() {
     catch(error){
       console.log(error)
     }
-  }, [selectedBrand, selectedCategory, selectedStatus, page, search])
+  }, [selectedBrand, selectedCategory, selectedStatus, page])
+
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      loadProducts();
+    }, 400);
+
+    return () => clearTimeout(timeOut);
+  }, [search])
 
   return (
     <div className="space-y-4 p-0 md:p-4 bg-white md:bg-transparent">
@@ -178,7 +186,7 @@ export default function ProductsPage() {
         <Input 
           placeholder="Tìm kiếm theo tên sản phẩm"
           value={search}
-          onChange={(event) =>
+          onChange={(event) => 
             setSearch(event.target.value)
           }
           className="max-w-lg w-full text-md border-2 border-gray-400"

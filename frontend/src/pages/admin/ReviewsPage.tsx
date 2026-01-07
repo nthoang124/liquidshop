@@ -118,7 +118,7 @@ export default function ReviewsPage() {
             const params: IReviewQuery = {
                 page,
                 rating,
-                limit,
+                limit: limit,
                 search,
             }
 
@@ -144,7 +144,16 @@ export default function ReviewsPage() {
         }catch(error){
             console.log(error)
         }
-    }, [page, status, rating, search]);
+    }, [page, status, search, rating]);
+
+    useEffect(() => {
+        const timeOut = setTimeout(() => {
+            setPage(1);
+        }, 500)
+
+        return () => clearTimeout(timeOut);
+    }, [search])
+
     return (
         <div className="p-0 md:p-3 bg-white md:bg-transparent">
             {isLoading && ( 
