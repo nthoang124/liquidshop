@@ -62,20 +62,15 @@ export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps)
     accessorKey: "totalAmount",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="text-sm md:text-base font-bold hover:bg-blue-200"
-        >
+        <span className="text-sm md:text-base">
           Tổng tiền
-          <ArrowUpDown />
-        </Button>
+        </span>
       )
     },
     cell: ({ row }) => { 
         const amount = row.getValue("totalAmount") as number;
         return (
-            <span className="text-green-600 text-sm md:text-base font-bold">{formatVND(amount)}</span>
+          <span className="text-green-600 text-sm md:text-base font-bold">{formatVND(amount)}</span>
         )
     }
   },
@@ -110,8 +105,8 @@ export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps)
           >
             <SelectTrigger 
               className="
-                h-9 w-full
-                text-xs md:text-sm
+                h-8 w-full
+                text-xs md:text-[0.85rem]
                 rounded-md
                 border border-slate-300
                 bg-white
@@ -137,7 +132,7 @@ export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps)
                   className="
                     text-xs md:text-sm
                     cursor-pointer
-                    px-3 py-2
+                    px-2 py-2
                     focus:bg-blue-50
                     focus:text-blue-700
                   "

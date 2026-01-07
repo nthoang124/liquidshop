@@ -102,19 +102,19 @@ export default function EditProductPage() {
 
   return (
     <div className="p-2 md:p-4 space-y-6 bg-white md:bg-transparent">
-        <div className="flex flex-col bg-white mt-0 gap-3 border-b border-gray-300 p-3">
+        <div className="flex flex-col bg-white mt-0 gap-3 border-b px-5 border-gray-300 p-3">
             <Button 
-                className="bg-white border border-gray-300 w-22 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
-                onClick={() => handleComeBack()}
+              className="bg-white border border-gray-300 w-22 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
+              onClick={() => handleComeBack()}
             >
-                <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
-                quay về
+              <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
+              quay về
             </Button>
             <p className="text-2xl lg:text-3xl font-bold">Thêm sản phẩm</p>
             <p className="text-sm md:text-base text-gray-600">Thêm thông tin sản phẩm mới</p>
         </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white border border-gray-300 p-3 rounded-md">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white border border-gray-300 p-2 md:p-4 rounded-md">
 
         {/* Product Name */}
         <div className="flex flex-col gap-1">
@@ -187,11 +187,10 @@ export default function EditProductPage() {
        <SpecificationsInput specs={specifications} setSpecs={setSpecifications}/>
 
         {/* Status */}
-        
         <div className="flex flex-col gap-1">
           <label className="font-semibold text-[0.95rem] text-gray-800">Trạng thái</label>
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full max-w-50">
               <SelectValue placeholder="Chọn trạng thái" />
             </SelectTrigger>
             <SelectContent>
@@ -206,7 +205,7 @@ export default function EditProductPage() {
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Thương hiệu</label>
           <Select value={brand} onValueChange={setBrand}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full max-w-50">
               <SelectValue placeholder="Thương hiệu" />
             </SelectTrigger>
             <SelectContent>
@@ -225,7 +224,7 @@ export default function EditProductPage() {
 
       </div>
 
-      <div className="flex flex-col bg-white p-3 gap-6 rounded-md border border-gray-300" >
+      <div className="flex flex-col bg-white p-2 md:p-4 gap-6 rounded-md border border-gray-300" >
         {/* Description */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Mô tả</label>

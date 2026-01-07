@@ -1,6 +1,5 @@
 import type { IUserLoginResponse } from "@/types/user";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
     user: IUserLoginResponse | null;

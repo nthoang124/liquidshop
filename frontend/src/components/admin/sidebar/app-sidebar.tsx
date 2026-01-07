@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import {
   Home,
@@ -8,8 +6,6 @@ import {
   Users,
   Gift,
   FileText,
-  Image,
-  Settings,
   Layers,
   BadgeCheck,
 } from "lucide-react"
@@ -24,6 +20,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useAuth } from "@/context/AdminAuthContext"
 
 // This is sample data.
 const data = {
@@ -88,6 +85,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {user} = useAuth();
+
   return (
     <Sidebar collapsible="icon" {...props} >
       <SidebarHeader>
@@ -97,7 +96,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

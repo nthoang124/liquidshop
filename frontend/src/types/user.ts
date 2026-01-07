@@ -34,7 +34,7 @@ export interface IUserListResponse {
 }
 
 export interface IUserLoginResponse {
-  _id:  string;
+  id:  string;
   email: string;
   fullName: string;
   role: string;

@@ -2,6 +2,8 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getSortedRowModel,
+  type SortingState,
 } from "@tanstack/react-table"
 
 import { SearchX } from "lucide-react"
@@ -13,10 +15,12 @@ import {
   TableHead, TableHeader, TableRow
 } from "@/components/ui/table"
 
+
 import type { IUser } from "@/types/user"
 import { columns } from "./columns"
 import { useNavigate } from "react-router-dom"
 import Pagination from "../common/Pagination"
+import { useState } from "react"
 
 
 interface DataTableProps {
@@ -31,6 +35,7 @@ interface DataTableProps {
 
 export function DataTable({ users, page, totalPages, setPage, search, setSearch }: DataTableProps) {
   const navigate = useNavigate();
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     data: users,
@@ -38,6 +43,11 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
     meta: {
       onUserClick: (id: string) => navigate(`/admin/users/${id}`)
     },
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
   });
 

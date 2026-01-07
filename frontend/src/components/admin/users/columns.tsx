@@ -22,9 +22,6 @@ export const columns: ColumnDef<IUser>[] = [
             <AvatarImage 
               src={avatar || "/placeholder.svg"} 
               alt={fullName} 
-              // onError={(e) => {
-              //   e.currentTarget.style.display = "none";
-              // }}
             />
             <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
               {fullName

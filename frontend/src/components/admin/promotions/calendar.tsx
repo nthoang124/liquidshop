@@ -41,7 +41,7 @@ export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isSt
               variant="outline"
               id="date-picker"
               disabled={!isEdit}
-              className="w-32 text-sm justify-between font-normal"
+              className="max-w-50 w-full text-sm justify-between font-normal"
             >
               {date
                 ? date.toLocaleDateString("vi-VN")
@@ -78,7 +78,7 @@ export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isSt
           disabled={!isEdit}
           onChange={(e) => onChangeTime(e.target.value)}
           step="1"
-          className="bg-background text-sm max-w-32 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          className="bg-background text-sm max-w-50 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
       </div>
     </div>

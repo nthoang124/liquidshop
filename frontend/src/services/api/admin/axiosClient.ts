@@ -25,11 +25,15 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
-    if(error.status === 401 && error.message === "Invalid token") {
+    const status = error.response?.status;
+    const message = error.response?.data?.message;
+
+    if (status === 401 && message === "Invalid token") {
       localStorage.removeItem("admin_access_token");
       localStorage.removeItem("admin");
       window.location.href = "/admin/login";
     }
+
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error.response?.data || error);
   }

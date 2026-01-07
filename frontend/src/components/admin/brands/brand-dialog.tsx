@@ -102,7 +102,7 @@ export function BrandDialog({ open, setOpen, brand, onSave, formError, formSucce
               className="rounded-xs h-15
                 focus-visible:ring-0
                 focus:border-2
-                focus-visible:border-[#057ff1f9]"
+                focus-visible:border-[#babbbcf9]"
               placeholder="Mô tả sản phẩm..."
               value={description} 
               onChange={(e) => setDescription(e.target.value)} />
