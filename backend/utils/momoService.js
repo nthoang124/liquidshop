@@ -7,13 +7,14 @@ exports.createMomoPayment = async (order) => {
   const accessKey = process.env.MOMO_ACCESS_KEY;
   const secretKey = process.env.MOMO_SECRET_KEY;
   const endpoint = process.env.MOMO_ENDPOINT;
+  const backendUrl = process.env.BACKEND_URL;
 
   const orderId = order.orderCode;
   const requestId = orderId;
   const amount = order.totalAmount.toString();
   const orderInfo = "Thanh toan don hang " + orderId;
-  const redirectUrl = "http://localhost:3000/payment/momo_return";
-  const ipnUrl = "http://localhost:3000/payment/momo_ipn";
+  const redirectUrl = `${backendUrl}/payment/momo_return`;
+  const ipnUrl = `${backendUrl}/payment/momo_ipn`;
   // const requestType = "captureWallet";
   const requestType = "payWithATM";
   const extraData = "";
