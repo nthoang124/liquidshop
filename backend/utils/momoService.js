@@ -1,7 +1,7 @@
-import crypto from 'crypto';
-import axios from 'axios';
+const crypto = require('crypto');
+const axios = require('axios');
 
-export const createMomoPayment = async (order) => {
+exports.createMomoPayment = async (order) => {
   // Config Test Momo
   const partnerCode = process.env.MOMO_PARTNER_CODE;
   const accessKey = process.env.MOMO_ACCESS_KEY;

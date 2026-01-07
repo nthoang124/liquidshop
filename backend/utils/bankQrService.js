@@ -1,4 +1,4 @@
-export const generateVietQR = (order) => {
+exports.generateVietQR = (order) => {
   const bankId = process.env.BANK_ID
   const accountNo = process.env.ACCOUNT_NO
   const template = process.env.TEMPLATE

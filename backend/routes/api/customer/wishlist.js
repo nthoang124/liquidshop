@@ -1,9 +1,11 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import { addWithList, removeWithList, getWishList } from '../../../controllers/customer/wishlistController.js'
+
+const { addWithList, removeWithList, getWishList } = require('../../../controllers/customer/wishlistController')
 
 router.post('/:id', addWithList)
 router.delete('/:id', removeWithList)
 router.get('/', getWishList)
 
-export default router
+
+module.exports = router

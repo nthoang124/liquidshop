@@ -1,9 +1,7 @@
 // vnpayService.js
-import moment from 'moment';
-import crypto from 'crypto';
-import querystring from 'qs';
+const moment = require('moment');
 
-export const createPaymentUrl = (req, order) => {
+exports.createPaymentUrl = (req, order) => {
   process.env.TZ = 'Asia/Ho_Chi_Minh';
 
   const date = new Date();
@@ -36,7 +34,9 @@ export const createPaymentUrl = (req, order) => {
   // Sắp xếp tham số theo alphabet (Bắt buộc)
   vnp_Params = sortObject(vnp_Params);
 
+  const querystring = require('qs');
   const signData = querystring.stringify(vnp_Params, { encode: false });
+  const crypto = require("crypto");
   const hmac = crypto.createHmac("sha512", secretKey);
   const signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex");
 

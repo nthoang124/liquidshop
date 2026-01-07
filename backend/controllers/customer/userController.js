@@ -1,8 +1,8 @@
-import bcryptjs from 'bcryptjs'
+const bcryptjs = require('bcryptjs')
 
-import User from '../../models/userModel.js'
+const User = require('../../models/userModel')
 
-export const changePassword = async (req, res) => {
+const changePassword = async (req, res) => {
   try {
     const { password, new_password } = req.body
 
@@ -31,7 +31,7 @@ export const changePassword = async (req, res) => {
   }
 }
 
-export const getMyProfile = async (req, res) => {
+const getMyProfile = async (req, res) => {
   try {
     res.status(200).json(req.user)
   }
@@ -43,7 +43,7 @@ export const getMyProfile = async (req, res) => {
   }
 }
 
-export const updateMyProfile = async (req, res) => {
+const updateMyProfile = async (req, res) => {
   try {
     const userData = req.body
     await req.user.updateOne(userData)
@@ -61,3 +61,6 @@ export const updateMyProfile = async (req, res) => {
     })
   }
 }
+
+
+module.exports = { changePassword, getMyProfile, updateMyProfile }

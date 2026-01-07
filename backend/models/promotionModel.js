@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const promotionSchema = new Schema({
@@ -36,4 +36,4 @@ const promotionSchema = new Schema({
 
 const Promotion = mongoose.model('Promotion', promotionSchema);
 
-export default Promotion;
+module.exports = Promotion;

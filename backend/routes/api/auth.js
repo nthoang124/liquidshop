@@ -1,6 +1,6 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import { registerCustomer, registerAdmin, loginCustomer, loginAdmin, createResetToken, resetPassword } from "../../controllers/authController.js"
+const { registerCustomer, registerAdmin, loginCustomer, loginAdmin, createResetToken, resetPassword } = require("../../controllers/authController")
 
 router.post("/register/customer", registerCustomer)
 router.post("/login/customer", loginCustomer)
@@ -10,5 +10,4 @@ router.post("/login/admin", loginAdmin)
 
 router.post("/reset-password", createResetToken)
 router.post("/reset-password/:token", resetPassword)
-
-export default router
+module.exports = router

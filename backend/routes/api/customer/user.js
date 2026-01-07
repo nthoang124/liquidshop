@@ -1,9 +1,9 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import { changePassword, getMyProfile, updateMyProfile } from "../../../controllers/customer/userController.js"
+const { changePassword, getMyProfile, updateMyProfile } = require("../../../controllers/customer/userController")
 
 router.post("/change-password", changePassword)
 router.get("/me", getMyProfile)
 router.put("/me", updateMyProfile)
 
-export default router
+module.exports = router

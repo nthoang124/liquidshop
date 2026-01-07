@@ -1,6 +1,6 @@
-import Wishlist from "../../models/wishlistModel.js";
+const Wishlist = require("../../models/wishlistModel");
 
-export const addWithList = async (req, res) => {
+const addWithList = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
 
@@ -31,7 +31,7 @@ export const addWithList = async (req, res) => {
   }
 };
 
-export const removeWithList = async (req, res) => {
+const removeWithList = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
 
@@ -55,7 +55,7 @@ export const removeWithList = async (req, res) => {
   }
 };
 
-export const getWishList = async (req, res) => {
+const getWishList = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -76,3 +76,5 @@ export const getWishList = async (req, res) => {
     res.status(500).json({ message: "Get wish list error", error });
   }
 };
+
+module.exports = { addWithList, removeWithList, getWishList };

@@ -1,10 +1,11 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import { createOrder, getOrderByCode, getOrdersUser, cancelOrder } from '../../../controllers/customer/orderController.js'
+
+const { createOrder, getOrderByCode, getOrdersUser, cancelOrder } = require('../../../controllers/customer/orderController')
 
 router.post('/', createOrder)
 router.get('/:code', getOrderByCode)
 router.get('/', getOrdersUser)
 router.post('/:orderCode', cancelOrder)
 
-export default router
+module.exports = router

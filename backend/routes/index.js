@@ -1,32 +1,31 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-
-import authRoutes from './api/auth.js'
-import userRoutes from './api/customer/user.js'
-import categoryRoutes from './api/category.js'
-import brandRoutes from './api/brand.js'
-import categoryRoutesAdmin from './api/admin/category.js'
-import productRoutes from "./api/product.js"
-import cartRoutes from './api/customer/cart.js'
-import orderRoutes from './api/customer/order.js'
-import paymentRoutes from './api/payment.js'
-import paymentRoutesCustomer from './api/customer/payment.js'
-import promotionRoutes from './api/customer/promotion.js'
-import reviewRoutes from './api/review.js'
-import reviewRoutesCustomer from './api/customer/review.js'
-import wishlistRoutes from './api/customer/wishlist.js'
-import feedbackRoutes from './api/customer/feedback.js'
-import chatbotRoutes from './api/customer/chatbot.js'
-import { protectCustomer, protectAdmin } from '../middlewares/user.js'
-import brandRoutesAdmin from './api/admin/brand.js'
-import productRoutesAdmin from './api/admin/product.js'
-import adminRoutes from './api/admin/admin.js'
-import orderRoutesAdmin from './api/admin/order.js'
-import promotionRoutesAdmin from './api/admin/promotion.js'
-import feedbackRoutesAdmin from './api/admin/feedback.js'
-import reviewRoutesAdmin from './api/admin/review.js'
-import paymentRoutesAdmin from './api/admin/payment.js'
-import dashboard from './api/admin/dashboard.js'
+const authRoutes = require('./api/auth')
+const userRoutes = require('./api/customer/user')
+const categoryRoutes = require('./api/category')
+const brandRoutes = require('./api/brand')
+const categoryRoutesAdmin = require('./api/admin/category')
+const productRoutes = require("./api/product")
+const cartRoutes = require('./api/customer/cart')
+const orderRoutes = require('./api/customer/order')
+const paymentRoutes = require('./api/payment')
+const paymentRoutesCustomer = require('./api/customer/payment')
+const promotionRoutes = require('./api/customer/promotion')
+const reviewRoutes = require('./api/review')
+const reviewRoutesCustomer = require('./api/customer/review')
+const wishlistRoutes = require('./api/customer/wishlist')
+const feedbackRoutes = require('./api/customer/feedback')
+const chatbotRoutes = require('./api/customer/chatbot')
+const { protectCustomer, protectAdmin } = require('../middlewares/user')
+const brandRoutesAdmin = require('./api/admin/brand')
+const productRoutesAdmin = require('./api/admin/product')
+const adminRoutes = require('./api/admin/admin')
+const orderRoutesAdmin = require('./api/admin/order')
+const promotionRoutesAdmin = require('./api/admin/promotion')
+const feedbackRoutesAdmin = require('./api/admin/feedback')
+const reviewRoutesAdmin = require('./api/admin/review')
+const paymentRoutesAdmin = require('./api/admin/payment')
+const dashboard = require('./api/admin/dashboard')
 
 router.use('/auth', authRoutes);
 router.use('/users', protectCustomer, userRoutes)
@@ -53,6 +52,8 @@ router.use('/admin/promotion', protectAdmin, promotionRoutesAdmin);
 router.use('/admin/feedback', protectAdmin, feedbackRoutesAdmin);
 router.use('/admin/review', protectAdmin, reviewRoutesAdmin);
 router.use('/admin/payment', protectAdmin, paymentRoutesAdmin);
-router.use('/admin/dashboard', protectAdmin, dashboard);
+router.use('/admin/dashboard',protectAdmin,dashboard);
 
-export default router
+
+
+module.exports = router

@@ -1,8 +1,8 @@
-import Promotion from "../../models/promotionModel.js";
-import mongoose from "mongoose";
+const Promotion = require("../../models/promotionModel");
+const mongoose = require("mongoose");
 
 //create promotion
-export const createPromotion = async (req, res) => {
+const createPromotion = async (req, res) => {
   try {
     const {
       code,
@@ -41,7 +41,7 @@ export const createPromotion = async (req, res) => {
 };
 
 // Get all promotions
-export const getAllPromotions = async (req, res) => {
+const getAllPromotions = async (req, res) => {
   try {
     const { isActive, page = 1, limit = 10 } = req.query;
 
@@ -74,7 +74,7 @@ export const getAllPromotions = async (req, res) => {
   }
 };
 
-export const getPromotionById = async (req, res) => {
+const getPromotionById = async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -94,7 +94,7 @@ export const getPromotionById = async (req, res) => {
   }
 };
 
-export const updatePromotion = async (req, res) => {
+const updatePromotion = async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -121,7 +121,7 @@ export const updatePromotion = async (req, res) => {
   }
 };
 
-export const deletePromotion = async (req, res) => {
+const deletePromotion = async (req, res) => {
   try {
     const promotion = await Promotion.findByIdAndDelete(req.params.id);
     if (!promotion) {
@@ -140,4 +140,12 @@ export const deletePromotion = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+module.exports = {
+  createPromotion,
+  getAllPromotions,
+  getPromotionById,
+  updatePromotion,
+  deletePromotion
 };

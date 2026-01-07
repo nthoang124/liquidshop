@@ -1,10 +1,8 @@
-
-import Groq from 'groq-sdk';
-import Product from '../../models/productModel.js';
-import Order from '../../models/orderModel.js';
-import ChatSession from '../../models/chatSessionModel.js';
-import Fuse from 'fuse.js';
-
+const Groq = require("groq-sdk");
+const Product = require("../../models/productModel");
+const Order = require("../../models/orderModel");
+const ChatSession = require("../../models/chatSessionModel");
+const Fuse = require("fuse.js");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -56,63 +54,36 @@ async function updateSearchIndex() {
   }
 }
 
-// updateSearchIndex(); // Removed to prevent race condition before DB connect
-
-
-
-const FAQ_KNOWLEDGE_BASE = [
-  {
-    keywords: ["giao hàng", "vận chuyển", "bao lâu", "ship"],
-    answer: "Team Liquid giao hàng toàn quốc. Nội thành Hà Nội/TP.HCM nhận hàng trong 1-2 ngày, các tỉnh khác từ 3-5 ngày làm việc."
-  },
-  {
-    keywords: ["đổi trả", "hoàn tiền", "trả hàng", "bảo hành"],
-    answer: "Bạn có thể đổi trả hàng miễn phí trong vòng 7 ngày nếu có lỗi từ nhà sản xuất. Sản phẩm phải còn nguyên tem mác và chưa qua sử dụng."
-  },
-  {
-    keywords: ["thanh toán", "banking", "tiền mặt", "momo", "vnpay"],
-    answer: "Chúng mình hỗ trợ thanh toán khi nhận hàng (COD), chuyển khoản ngân hàng và các ví điện tử như Momo, GrabPay qua cổng thanh toán."
-  },
-  {
-    keywords: ["địa chỉ", "cửa hàng", "shop ở đâu", "showroom"],
-    answer: "Hiện tại Team Liquid bán hàng online chủ yếu qua website này. Văn phòng đại diện của chúng mình đặt tại Quận 1, TP.HCM."
-  }
-];
-
-
+updateSearchIndex();
 
 const ROUTER_PROMPT = `
 Role: Intent Classifier.
 Task: Analyze user query and output JSON.
 
 Intents:
-1. "search_product": Find product, ask price, or ask for recommendations.
-2. "check_order": Check order status or order details.
-3. "faq": General questions about shipping, returns, payment, or store info.
-4. "greeting": Hello, hi, goodbye, thanks.
-5. "contact_support": Request to talk to human, need urgent help.
+1. "search_product": Find product, ask price.
+2. "check_order": Check order status.
 
 JSON Output:
 {
-  "intent": "search_product" | "check_order" | "faq" | "greeting" | "contact_support",
+  "intent": "search_product" | "check_order",
   "query": {
-    "keyword": string, // Extract core keywords (product name, brand, or FAQ topic)
-    "price_max": number // For search_product only
-  }
+    "keyword": string, // Important: Extract core keywords related to name, category, brand
+    "price_max": number // Only fill in when the user mentions price
+  },
 }
 `;
 
 const RESPONDER_SYSTEM_PROMPT = `
-Role: Sales Assistant for Team Liquid (LiquidShop). Tone: Friendly, Enthusiastic, Vietnamese.
-Task: Answer based on CONTEXT and KNOWLEDGE provided.
+Role: Sales Assistant. Tone: Friendly, Vietnamese.
+Task: Answer based on CONTEXT.
 Rules:
-- Be concise but helpful.
-- For products: Just introduce them briefly. Users see cards below.
-- For FAQ: Use the KNOWLEDGE BASE provided.
-- If unsure, ask clarifying questions or suggest contacting support.
+- Don't list product details (name, price) repeatedly because user can see the cards.
+- Just give a short, catchy introduction about the products found.
+- If no products, suggest broadly.
 `;
 
-export const chatWithAI = async (req, res) => {
+const chatWithAI = async (req, res) => {
   const { message } = req.body;
   const userId = req.user.id;
 
@@ -123,21 +94,21 @@ export const chatWithAI = async (req, res) => {
   try {
     await updateSearchIndex();
 
-    let session = await ChatSession.findOne({ userId });
+    let session;
+    session = await ChatSession.findOne({ userId });
+
     if (!session) {
-      session = new ChatSession({ userId, messages: [] });
+      session = new ChatSession({ userId: userId, messages: [] });
       await session.save();
     }
 
-
-    const historyContext = session.messages.slice(-6).map(msg => ({
-      role: msg.sender === 'user' ? 'user' : 'assistant',
-      content: msg.message
-
-   
+    // Lấy lịch sử chat cho AI nhớ
+    const historyContext = session.messages.slice(-4).map((msg) => ({
+      role: msg.sender === "user" ? "user" : "assistant",
+      content: msg.message,
     }));
 
-    // Intent discovery
+    // Gọi AI cùi để lọc dữ liệu cho nhanh
     const routerCompletion = await groq.chat.completions.create({
       messages: [
         { role: "system", content: ROUTER_PROMPT },
@@ -149,17 +120,17 @@ export const chatWithAI = async (req, res) => {
       response_format: { type: "json_object" },
     });
 
+    const { intent, query } = JSON.parse(
+      routerCompletion.choices[0].message.content
+    );
 
-    const { intent, query } = JSON.parse(routerCompletion.choices[0].message.content);
-    console.log(`Intent: ${intent}, Query:`, query);
-
-    let dbContext = "Không có dữ liệu đặc biệt.";
-
-    
+    // Query db dựa trên res đã lọc từ AI cùi
+    let dbContext = "Không có dữ liệu database.";
     let foundDataPayload = null;
 
     if (intent === "search_product") {
       let results = [];
+
       if (query?.keyword) {
         const fuseResults = searchEngine.search(query.keyword);
         results = fuseResults.map((r) => r.item);
@@ -172,54 +143,52 @@ export const chatWithAI = async (req, res) => {
       }
 
       const products = results.slice(0, 5);
+
       if (products.length > 0) {
+        dbContext =
+          `Tìm thấy ${products.length} sản phẩm:\n` +
+          products.map((p) => `- ${p.name} (Giá: ${p.price})`).join("\n");
 
-        dbContext = `DANH SÁCH SẢN PHẨM KHỚP:\n` +
-          products.map(p => `- ${p.name} | SKU: ${p.sku} | Giá: ${p.price.toLocaleString()} VNĐ`).join("\n");
-
-        foundDataPayload = `[PRODUCT_LIST_START]${JSON.stringify(products.map(p => p._id))}[PRODUCT_LIST_END]`;
+        const ids = products.map((p) => p._id);
+        foundDataPayload = `[PRODUCT_LIST_START]${JSON.stringify(
+          ids
+        )}[PRODUCT_LIST_END]`;
       } else {
-        dbContext = "KHO HÀNG: Hiện không tìm thấy sản phẩm chính xác như yêu cầu. Hãy gợi ý khách xem các sản phẩm khác.";
-=======
-    
+        dbContext =
+          "Đã tìm trong kho nhưng không thấy sản phẩm nào khớp yêu cầu.";
       }
     } else if (intent === "check_order") {
-
-      const orders = await Order.find({ userId }).sort({ createdAt: -1 }).limit(1);
+      const orders = await Order.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(1);
 
       if (orders.length > 0) {
         const o = orders[0];
-        dbContext = `ĐƠN HÀNG MỚI NHẤT:\nMã: ${o.orderCode}\nTrạng thái: ${o.orderStatus}\nTổng tiền: ${o.totalAmount.toLocaleString()} VNĐ\nNgày đặt: ${new Date(o.createdAt).toLocaleDateString('vi-VN')}`;
+        dbContext = `Đơn gần nhất: ${o.orderCode}, Trạng thái: ${o.orderStatus}, Tổng: ${o.totalAmount}, Ngày: ${o.createdAt}`;
+
         foundDataPayload = `[ORDER_CODE:${o.orderCode}]`;
       } else {
-        dbContext = "HỆ THỐNG: Khách hàng chưa có đơn hàng nào.";
+        dbContext = "Khách hàng này chưa có đơn hàng nào.";
       }
-
-    } else if (intent === "faq") {
-      const faqMatch = FAQ_KNOWLEDGE_BASE.find(f =>
-        f.keywords.some(kw => query?.keyword?.toLowerCase().includes(kw))
-      );
-      dbContext = faqMatch ? `KẾT QUẢ FAQ: ${faqMatch.answer}` : "FAQ: Không tìm thấy câu trả lời cụ thể trong Knowledge Base. Hãy trả lời chung chung hoặc hướng dẫn liên hệ hỗ trợ.";
     }
 
-    // Final response generation
+    // Gọi AI xịn cho nó "chém gió" dựa trên dbContext vừa tìm được =))
     const stream = await groq.chat.completions.create({
       messages: [
         { role: "system", content: RESPONDER_SYSTEM_PROMPT },
         ...historyContext,
-
-        { role: "system", content: `DỮ LIỆU NGỮ CẢNH HỆ THỐNG:\n${dbContext}` },
-        { role: "user", content: message }
+        { role: "system", content: `CONTEXT DATA TỪ DATABASE:\n${dbContext}` },
+        { role: "user", content: message },
       ],
       model: "llama-3.3-70b-versatile",
       stream: true,
-      temperature: 0.6,
-      max_tokens: 800
-
-       
+      temperature: 0.7,
+      max_tokens: 500,
     });
 
     let fullBotResponse = "";
+
+    // Stream từng chữ của AI về Frontend
     for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || "";
       if (content) {
@@ -228,17 +197,16 @@ export const chatWithAI = async (req, res) => {
       }
     }
 
+    // Gửi foundDataPayload để Frontend render ra cái Card đẹp mắt bên dưới lời thoại
     if (foundDataPayload) {
-
-      const payloadWrapper = `\n\n${foundDataPayload}`;
-      res.write(`data: ${JSON.stringify({ content: payloadWrapper })}\n\n`);
-      fullBotResponse += payloadWrapper;
+      res.write(
+        `data: ${JSON.stringify({ content: "\n\n" + foundDataPayload })}\n\n`
+      );
+      fullBotResponse += "\n" + foundDataPayload;
     }
 
-    session.messages.push({ sender: 'user', message });
-    session.messages.push({ sender: 'bot', message: fullBotResponse });
-
-      
+    session.messages.push({ sender: "user", message: message });
+    session.messages.push({ sender: "bot", message: fullBotResponse });
     session.updatedAt = Date.now();
     await session.save();
 
@@ -254,17 +222,15 @@ export const chatWithAI = async (req, res) => {
   }
 };
 
-export const getHistory = async (req, res) => {
+const getHistory = async (req, res) => {
   const userId = req.user.id;
   try {
     const session = await ChatSession.findOne({ userId });
 
     if (!session) {
-
-      return res.status(400).json({
-        message: "Chat history empty"
-
-   
+      res.status(400).json({
+        message: "Chat history empty",
+        error,
       });
     }
 
@@ -278,6 +244,6 @@ export const getHistory = async (req, res) => {
       error,
     });
   }
-
 };
 
+module.exports = { chatWithAI, getHistory };

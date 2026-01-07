@@ -1,10 +1,11 @@
-import express from 'express';
+const express = require('express');
 
 const router = express.Router();
-import { getAllBrands, getBrandsByCategory } from "../../controllers/brandController.js";
+const { getAllBrands, getBrandsByCategory } =
+        require("../../controllers/brandController");
 
 
 router.get("/getAllBrands", getAllBrands);
 router.get("/:categoryId", getBrandsByCategory)
 
-export default router;
+module.exports = router;

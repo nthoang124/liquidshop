@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const productSchema = mongoose.Schema(
@@ -115,4 +116,4 @@ productSchema.virtual("discountPercentage").get(function () {
 
 const Product = mongoose.model("Product", productSchema);
 
-export default Product;
+module.exports = Product;

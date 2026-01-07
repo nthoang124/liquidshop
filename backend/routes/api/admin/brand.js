@@ -1,11 +1,12 @@
-import express from 'express';
+const express = require('express');
 
 const router = express.Router();
-import { createBrand, getAllBrands, updateBrand, deleteBrand } from "../../../controllers/admin/brandController.js";
+const { createBrand, getAllBrands, updateBrand, deleteBrand } = 
+        require("../../../controllers/admin/brandController");
 
 router.post("/createBrand", createBrand);
 router.get("/getAllBrands", getAllBrands);
 router.put("/:id", updateBrand);
-router.delete("/:id", deleteBrand);
+router.delete("/:id", deleteBrand); 
 
-export default router;
+module.exports = router;

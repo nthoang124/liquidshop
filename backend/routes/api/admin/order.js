@@ -1,13 +1,14 @@
-import express from "express";
+const express = require("express");
+
 const router = express.Router();
-import {
+const {
   getAllOrders,
   getOrderById,
   updateOrderStatus,
-} from "../../../controllers/admin/orderController.js";
+} = require("../../../controllers/admin/orderController");
 
 router.get("/getAllOrders", getAllOrders);
 router.get("/:id", getOrderById);
 router.put("/update/:id", updateOrderStatus);
 
-export default router;
+module.exports = router;

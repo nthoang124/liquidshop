@@ -1,10 +1,10 @@
-import Order from '../../models/orderModel.js';
-import Payment from '../../models/paymentModel.js';
-import * as vnpayService from '../../utils/vnpayService.js';
-import * as momoService from '../../utils/momoService.js';
-import * as bankService from '../../utils/bankQrService.js';
+const Order = require('../../models/orderModel');
+const Payment = require('../../models/paymentModel');
+const vnpayService = require('../../utils/vnpayService');
+const momoService = require('../../utils/momoService');
+const bankService = require('../../utils/bankQrService');
 
-export const createPayment = async (req, res) => {
+const createPayment = async (req, res) => {
   const { orderCode, paymentMethod, paymentProvider } = req.body;
   const user = req.user
 
@@ -68,3 +68,5 @@ export const createPayment = async (req, res) => {
     });
   }
 };
+
+module.exports = { createPayment }

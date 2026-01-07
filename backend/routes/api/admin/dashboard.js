@@ -1,6 +1,10 @@
-import express from "express"
-const router = express.Router();
-import dashboardController from "../../../controllers/admin/dashboardController.js";
+const express = require("express")
 
-router.get("/overview", dashboardController.overview);
-export default router;
+const router = express.Router();
+const dashboardController = require("../../../controllers/admin/dashboardController");
+
+router.get("/overview",dashboardController.overview);
+module.exports = router;
+
+
+

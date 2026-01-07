@@ -1,10 +1,10 @@
-import User from "../models/userModel.js"
-import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import crypto from 'crypto';
-import { sendEmail } from '../utils/sendMail.js'
+const User = require("../models/userModel")
+const bcryptjs = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const crypto = require('crypto');
+const { sendEmail } = require('../utils/sendMail')
 
-export const registerCustomer = async (req, res) => {
+const registerCustomer = async (req, res) => {
   try {
     const userData = req.body
     const email = userData.email
@@ -31,7 +31,7 @@ export const registerCustomer = async (req, res) => {
   }
 }
 
-export const registerAdmin = async (req, res) => {
+const registerAdmin = async (req, res) => {
   try {
     const userData = req.body
     const password = userData.password
@@ -57,7 +57,7 @@ export const registerAdmin = async (req, res) => {
   }
 }
 
-export const loginCustomer = async (req, res) => {
+const loginCustomer = async (req, res) => {
   try {
     const userData = req.body
     const email = userData.email
@@ -98,7 +98,7 @@ export const loginCustomer = async (req, res) => {
   }
 }
 
-export const loginAdmin = async (req, res) => {
+const loginAdmin = async (req, res) => {
   try {
     const userData = req.body
     const email = userData.email
@@ -125,7 +125,7 @@ export const loginAdmin = async (req, res) => {
       id: user.id,
       role: user.role
     }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn })
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn})
 
     const userResponse = {
       id: user._id,
@@ -151,7 +151,7 @@ export const loginAdmin = async (req, res) => {
   }
 }
 
-export const createResetToken = async (req, res) => {
+const createResetToken = async (req, res) => {
   try {
     const email = req.body.email
 
@@ -279,7 +279,7 @@ export const createResetToken = async (req, res) => {
   }
 }
 
-export const resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
     const token = req.params.token
     const newPassword = req.body.password
@@ -315,3 +315,6 @@ export const resetPassword = async (req, res) => {
     })
   }
 }
+
+
+module.exports = { registerCustomer, registerAdmin, loginCustomer, loginAdmin, createResetToken, resetPassword }

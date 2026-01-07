@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import Review from "../models/reviewModel.js";
-import Product from "../models/productModel.js";
+const mongoose = require("mongoose");
+const Review = require("../models/reviewModel");
+const Product = require("../models/productModel");
 
-export const updateProductRating = async (productId) => {
+const updateProductRating = async (productId) => {
   try {
     const pid = new mongoose.Types.ObjectId(productId);
 
@@ -32,3 +32,5 @@ export const updateProductRating = async (productId) => {
     console.error("Error updating product rating:", error.message);
   }
 };
+
+module.exports = { updateProductRating };

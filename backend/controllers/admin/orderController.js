@@ -1,8 +1,8 @@
-import Order from "../../models/orderModel.js";
-import mongoose from "mongoose";
+const Order = require("../../models/orderModel");
+const mongoose = require("mongoose");
 
 // Get all orders
-export const getAllOrders = async (req, res) => {
+const getAllOrders = async (req, res) => {
   try {
     const {
       page = 1,
@@ -58,7 +58,7 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-export const getOrderById = async (req, res) => {
+const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -88,7 +88,7 @@ export const getOrderById = async (req, res) => {
   }
 };
 
-export const updateOrderStatus = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { orderStatus } = req.body;
@@ -127,4 +127,9 @@ export const updateOrderStatus = async (req, res) => {
       message: error.message,
     });
   }
+};
+module.exports = {
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
 };

@@ -1,10 +1,11 @@
-import express from 'express';
+const express = require('express');
 
 const router = express.Router();
-import { getAllUsers, getUserById, updateRole } from "../../../controllers/admin/adminController.js";
+const { getAllUsers, getUserById, updateRole } = 
+        require("../../../controllers/admin/adminController");  
 
 router.get("/getAllUsers", getAllUsers);
 router.get("/:id", getUserById);
 router.put("/:id", updateRole);
 
-export default router;
+module.exports = router;

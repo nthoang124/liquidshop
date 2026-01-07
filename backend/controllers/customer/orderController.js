@@ -1,14 +1,14 @@
-import Order from '../../models/orderModel.js';
-import Cart from '../../models/cartModel.js';
-import Product from '../../models/productModel.js';
-import Promotion from '../../models/promotionModel.js';
-import Payment from '../../models/paymentModel.js';
-import { sendEmail } from '../../utils/sendMail.js'
-import * as vnpayService from '../../utils/vnpayService.js';
-import * as momoService from '../../utils/momoService.js';
-import * as bankService from '../../utils/bankQrService.js';
+const Order = require('../../models/orderModel');
+const Cart = require('../../models/cartModel');
+const Product = require('../../models/productModel');
+const Promotion = require('../../models/promotionModel');
+const Payment = require('../../models/paymentModel');
+const { sendEmail } = require('../../utils/sendMail')
+const vnpayService = require('../../utils/vnpayService');
+const momoService = require('../../utils/momoService');
+const bankService = require('../../utils/bankQrService');
 
-export const createOrder = async (req, res) => {
+const createOrder = async (req, res) => {
   const { paymentMethod, paymentProvider, voucherCode, notes, items } = req.body;
   const userId = req.user.id
 
@@ -360,7 +360,7 @@ export const createOrder = async (req, res) => {
   }
 };
 
-export const getOrderByCode = async (req, res) => {
+const getOrderByCode = async (req, res) => {
   const { code } = req.params;
   try {
     const order = await Order.findOne({ orderCode: code });
@@ -376,7 +376,7 @@ export const getOrderByCode = async (req, res) => {
       order
     });
   }
-  catch (error) {
+  catch {
     console.error(error);
     res.status(500).json({
       message: "Get order by code error",
@@ -385,7 +385,7 @@ export const getOrderByCode = async (req, res) => {
   }
 }
 
-export const getOrdersUser = async (req, res) => {
+const getOrdersUser = async (req, res) => {
   const userId = req.user.id
   try {
     const orders = await Order.find({ userId })
@@ -409,7 +409,7 @@ export const getOrdersUser = async (req, res) => {
   }
 }
 
-export const cancelOrder = async (req, res) => {
+const cancelOrder = async (req, res) => {
   const userId = req.user.id
   const { orderCode } = req.params
 
@@ -440,3 +440,5 @@ export const cancelOrder = async (req, res) => {
     })
   }
 }
+
+module.exports = { createOrder, getOrderByCode, getOrdersUser, cancelOrder }

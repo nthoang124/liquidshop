@@ -1,6 +1,6 @@
-import User from "../../models/userModel.js";
+const User = require("../../models/userModel");
 
-export const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10, search } = req.query;
     const query = {};
@@ -32,7 +32,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -54,7 +54,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const updateRole = async (req, res) => {
+const updateRole = async (req, res) => {
   try {
     const { id } = req.params;
     const { role } = req.body;
@@ -79,5 +79,12 @@ export const updateRole = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateRole,
 };
 

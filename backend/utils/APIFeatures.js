@@ -1,6 +1,3 @@
-import Brand from "../models/brandModel.js";
-import Category from "../models/categoryModel.js";
-
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -24,6 +21,8 @@ class APIFeatures {
     if (!this.queryString.keyword) return this;
 
     const keyword = this.queryString.keyword;
+    const Brand = require("../models/brandModel");
+    const Category = require("../models/categoryModel");
 
     const brands = await Brand.find({
       name: { $regex: keyword, $options: "i" },
@@ -76,6 +75,6 @@ class APIFeatures {
   }
 }
 
-export default APIFeatures;
+module.exports = APIFeatures;
 
 // Cái này t làm dùng để tái sử dụng nếu có sài phân trang hay filter,sort,search hay field các kiểu

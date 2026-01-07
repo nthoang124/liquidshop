@@ -1,11 +1,10 @@
-import Order from '../models/orderModel.js';
-import Payment from '../models/paymentModel.js';
-import Product from '../models/productModel.js'
-import crypto from 'crypto';
-import { sendEmail } from '../utils/sendMail.js'
-import querystring from 'qs';
+const Order = require('../models/orderModel');
+const Payment = require('../models/paymentModel');
+const Product = require('../models/productModel')
+const crypto = require('crypto');
+const { sendEmail } = require('../utils/sendMail')
 
-export const vnpay_return = async (req, res) => {
+const vnpay_return = async (req, res) => {
   let vnp_Params = req.query;
 
   const secureHash = vnp_Params['vnp_SecureHash'];
@@ -17,6 +16,7 @@ export const vnpay_return = async (req, res) => {
 
   const secretKey = process.env.VNP_HASH_SECRET;
 
+  const querystring = require('qs');
   const signData = querystring.stringify(vnp_Params, { encode: false });
   const hmac = crypto.createHmac("sha512", secretKey);
   const signed = hmac.update(new Buffer.from(signData, 'utf-8')).digest("hex");
@@ -91,7 +91,7 @@ function sortObject(obj) {
   return sorted;
 }
 
-export const momo_return = async (req, res) => {
+const momo_return = async (req, res) => {
   const {
     partnerCode,
     orderId,
@@ -114,6 +114,7 @@ export const momo_return = async (req, res) => {
   // Quan trọng: Phải đúng thứ tự như tài liệu Momo quy định
   const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&payType=${payType}&requestId=${requestId}&responseTime=${responseTime}&resultCode=${resultCode}&transId=${transId}`;
 
+  const crypto = require('crypto');
   const signed = crypto.createHmac('sha256', secretKey)
     .update(rawSignature)
     .digest('hex');
@@ -285,3 +286,5 @@ const sendMailPaidSuccess = async (savedOrder) => {
     html: message
   })
 }
+
+module.exports = { momo_return, vnpay_return };
