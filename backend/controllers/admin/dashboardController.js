@@ -17,6 +17,11 @@ class DashboardController {
       const startOfLastMonth = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
 
       const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+      const startOfLastYear = new Date(new Date().getFullYear() - 1, 0, 1);
+      const endOfLastYear = new Date(new Date().getFullYear(), 0, 1);
+
+      // Tính ngày bắt đầu của 12 tháng trước (từ tháng hiện tại về trước)
+      const start12MonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 11, 1);
 
       const newUsers7Days = await User.aggregate([
         {
@@ -49,19 +54,18 @@ class DashboardController {
         { $sort: { _id: 1 } }
       ]);
 
-      const ordersByDayInMonth = await Order.aggregate([
+      // Doanh thu 12 tháng gần nhất (từ tháng hiện tại về trước)
+      const revenue12Months = await Order.aggregate([
         {
           $match: {
-            createdAt: {
-              $gte: startOfMonth,
-              $lt: startOfNextMonth
-            }
+            orderStatus: "completed",
+            createdAt: { $gte: start12MonthsAgo }
           }
         },
         {
           $group: {
-            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-            count: { $sum: 1 }
+            _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+            total: { $sum: "$totalAmount" }
           }
         },
         { $sort: { _id: 1 } }
@@ -69,23 +73,35 @@ class DashboardController {
 
       const topProducts = await Product.find()
         .sort({ soldCount: -1 })
-        .limit(10)
+        .limit(10);
 
       const topNewUsers = await User.find()
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(10);
 
       const [
         totalUsers,
         totalProducts,
         revenueThisYear,
+        revenueLastYear,
         revenueThisMonth,
         revenueLastMonth,
+        ordersThisMonth,
+        ordersLastMonth
       ] = await Promise.all([
         User.countDocuments(),
         Product.countDocuments(),
         Order.aggregate([
           { $match: { orderStatus: "completed", createdAt: { $gte: startOfYear } } },
+          { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+        ]),
+        Order.aggregate([
+          { 
+            $match: { 
+              orderStatus: "completed", 
+              createdAt: { $gte: startOfLastYear, $lt: endOfLastYear } 
+            } 
+          },
           { $group: { _id: null, total: { $sum: "$totalAmount" } } }
         ]),
         Order.aggregate([
@@ -100,21 +116,32 @@ class DashboardController {
             }
           },
           { $group: { _id: null, total: { $sum: "$totalAmount" } } }
-        ])
+        ]),
+        // Tổng số đơn hàng tháng hiện tại
+        Order.countDocuments({
+          createdAt: { $gte: startOfMonth, $lt: startOfNextMonth }
+        }),
+        // Tổng số đơn hàng tháng trước
+        Order.countDocuments({
+          createdAt: { $gte: startOfLastMonth, $lt: startOfMonth }
+        })
       ]);
 
       res.json({
         usersNew7Days: formatChart(newUsers7Days),
         revenue7Days: formatChart(revenue7Days, "total"),
-        ordersByDayInMonth: formatChart(ordersByDayInMonth),
+        revenue12Months: formatChart(revenue12Months, "total"),
         topProducts,
         topNewUsers,
         totals: {
           users: totalUsers,
           products: totalProducts,
           revenueThisYear: revenueThisYear[0]?.total || 0,
+          revenueLastYear: revenueLastYear[0]?.total || 0,
           revenueThisMonth: revenueThisMonth[0]?.total || 0,
-          revenueLastMonth: revenueLastMonth[0]?.total || 0
+          revenueLastMonth: revenueLastMonth[0]?.total || 0,
+          ordersThisMonth: ordersThisMonth,
+          ordersLastMonth: ordersLastMonth
         }
       });
     } catch (err) {
