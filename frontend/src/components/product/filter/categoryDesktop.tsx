@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -6,12 +6,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { categoryService } from "@/services/api/customer/category.service";
 import { type ICategory } from "@/types/category";
 import { Link } from "react-router-dom";
-
 import getCategoryIcon from "@/utils/mapIcon";
-import { getFiltersForCategory } from "@/types/filter";
 
 interface ICategoryWithChildren extends ICategory {
-  children: ICategory[];
+  children?: ICategoryWithChildren[];
 }
 
 const CategoryDropdownContent: React.FC = () => {
@@ -23,13 +21,8 @@ const CategoryDropdownContent: React.FC = () => {
     const fetchCats = async () => {
       try {
         const res = await categoryService.getAllCategories();
-        if (res.success && res.data) {
-          const parents = res.data.filter((c) => !c.parentCategory);
-          const hierarchy = parents.map((p) => ({
-            ...p,
-            children: res.data.filter((c) => c.parentCategory?._id === p._id),
-          }));
-          setCategories(hierarchy);
+        if (res.data) {
+          setCategories(res.data as ICategoryWithChildren[]);
         }
       } catch (e) {
         console.error(e);
@@ -41,10 +34,6 @@ const CategoryDropdownContent: React.FC = () => {
   }, []);
 
   const activeCat = categories[activeIdx];
-  const activeFilters = useMemo(
-    () => (activeCat ? getFiltersForCategory(activeCat.name) : []),
-    [activeCat]
-  );
 
   if (loading)
     return (
@@ -54,15 +43,15 @@ const CategoryDropdownContent: React.FC = () => {
     );
 
   return (
-    <div className="bg-[#151517]/95 backdrop-blur-md text-white shadow-2xl w-3xl border border-zinc-800 flex rounded overflow-hidden h-[500px] animate-in fade-in zoom-in-95">
-      {/* DANH MỤC CHA */}
+    <div className="bg-[#151517]/95 backdrop-blur-md text-white shadow-2xl w-[1000px] border border-zinc-800 flex rounded overflow-hidden h-[550px] animate-in fade-in zoom-in-95">
+      {/* CỘT DANH MỤC CHA (CẤP 1) */}
       <div className="w-64 bg-black/40 border-r border-zinc-800 py-2 overflow-y-auto no-scrollbar">
         {categories.map((cat, i) => (
           <div
             key={cat._id}
             onMouseEnter={() => setActiveIdx(i)}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 cursor-pointer text-sm font-bold transition-all uppercase tracking-tight",
+              "flex items-center gap-3 px-4 py-3 cursor-pointer text-sm font-bold uppercase tracking-tight",
               activeIdx === i
                 ? "bg-zinc-800 text-red-500 border-l-4 border-red-600"
                 : "text-gray-400 border-l-4 border-transparent hover:text-gray-200"
@@ -76,7 +65,7 @@ const CategoryDropdownContent: React.FC = () => {
             <span className="flex-1 truncate">{cat.name}</span>
             <ChevronRight
               className={cn(
-                "w-4 h-4 transition-opacity",
+                "w-4 h-4",
                 activeIdx === i ? "opacity-100" : "opacity-20"
               )}
             />
@@ -84,7 +73,7 @@ const CategoryDropdownContent: React.FC = () => {
         ))}
       </div>
 
-      {/* DANH MỤC CON & BỘ LỌC */}
+      {/* NỘI DUNG CHI TIẾT (CẤP 2 & CẤP 3) */}
       <div className="flex-1 p-6 bg-transparent overflow-y-auto no-scrollbar">
         <Link
           to={`/category/${activeCat?._id}`}
@@ -93,53 +82,47 @@ const CategoryDropdownContent: React.FC = () => {
           Xem tất cả {activeCat?.name}
         </Link>
 
-        <div className="space-y-8">
-          {activeCat?.children.length > 0 && (
-            <div>
-              <h3 className="font-bold text-white uppercase text-xs mb-4 border-b border-zinc-800 pb-2 flex items-center gap-2">
-                <span className="w-1 h-3 bg-red-600 rounded-full"></span>
-                Danh mục con
-              </h3>
-              <div className="grid grid-cols-3 gap-y-3 gap-x-4">
-                {activeCat.children.map((child) => (
+        {/* LƯỚI HIỂN THỊ CÁC NHÓM DANH MỤC */}
+        <div className="grid grid-cols-3 gap-x-6 gap-y-8">
+          {activeCat?.children && activeCat.children.length > 0 ? (
+            activeCat.children.map((group) => (
+              <div key={group._id} className="space-y-3">
+                {/* TIÊU ĐỀ NHÓM (CẤP 2) - Màu đỏ như GearVN */}
+                <h3 className="font-bold text-red-600 uppercase text-[13px] tracking-wider border-b border-zinc-800/50 pb-1">
                   <Link
-                    key={child._id}
-                    to={`/category/${
-                      activeCat._id
-                    }?category=${encodeURIComponent(child.name)}`}
-                    className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                    to={`/category/${activeCat._id}?sub=${group._id}`}
+                    className="hover:underline"
                   >
-                    {child.name}
+                    {group.name}
                   </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-3 gap-8">
-            {activeFilters.map((group, idx) => (
-              <div key={idx} className="space-y-4">
-                <h3 className="font-bold text-xs text-red-600 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-1 h-3 bg-red-600 rounded-full"></span>
-                  {group.label}
                 </h3>
-                <ul className="space-y-2">
-                  {group.options.map((opt, i) => (
-                    <li key={i}>
-                      <Link
-                        to={`/category/${activeCat?._id}?${
-                          group.key
-                        }=${encodeURIComponent(opt.value)}`}
-                        className="text-sm text-gray-400 hover:text-white block transition-all hover:translate-x-1"
-                      >
-                        {opt.label}
-                      </Link>
+
+                {/* DANH SÁCH MỤC CON (CẤP 3) */}
+                <ul className="space-y-1.5">
+                  {group.children && group.children.length > 0 ? (
+                    group.children.map((item) => (
+                      <li key={item._id}>
+                        <Link
+                          to={`/category/${activeCat._id}?child=${item._id}`}
+                          className="text-[13px] text-gray-400 hover:text-white block line-clamp-1"
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-[12px] italic text-gray-600">
+                      Đang cập nhật...
                     </li>
-                  ))}
+                  )}
                 </ul>
               </div>
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="col-span-3 text-gray-500 text-sm">
+              Chưa có danh mục con
+            </div>
+          )}
         </div>
       </div>
     </div>
