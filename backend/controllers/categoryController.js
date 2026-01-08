@@ -5,21 +5,40 @@ const mongoose = require("mongoose");
 //[Get] - All Category
 const getAllCategories = async (req, res) => {
   try {
+    // Lấy toàn bộ data dạng phẳng, chỉ lấy các field cần thiết
     const categories = await Category.find()
-      .populate("parentCategory", "name")
-      .sort({ createdAt: -1 });
+      .select("name imageUrl parentCategory")
+      .lean();
+
+    const categoryMap = {};
+    const categoryTree = [];
+
+    // Tạo một bản đồ (Map) để truy xuất nhanh theo ID
+    categories.forEach((cat) => {
+      categoryMap[cat._id] = { ...cat, children: [] };
+    });
+
+    // Duyệt một lần duy nhất để xây dựng cây
+    categories.forEach((cat) => {
+      const item = categoryMap[cat._id];
+      if (cat.parentCategory) {
+        // Nếu có cha, đẩy vào mảng children của cha trong Map
+        const parent = categoryMap[cat.parentCategory];
+        if (parent) {
+          parent.children.push(item);
+        }
+      } else {
+        // Nếu không có cha, đây là gốc (Root)
+        categoryTree.push(item);
+      }
+    });
 
     res.status(200).json({
-      success: true,
-      count: categories.length,
-      data: categories,
+      message: "Categories fetched successfully",
+      data: categoryTree,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error server",
-      error: error.message,
-    });
+    res.status(500).json({ message: "Error fetching categories", error: error.message });
   }
 };
 
