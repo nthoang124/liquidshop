@@ -11,6 +11,7 @@ import { ProductFilterBar } from "@/components/product/filter/ProductFilter";
 import { ProductSort } from "@/components/product/filter/ProductSort";
 import ProductCard from "@/components/product/ProductCard";
 import PaginationCustom from "@/components/common/Pagination";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const SearchPage: React.FC = () => {
   const { productResponse } = useLoaderData() as any;
@@ -22,6 +23,8 @@ const SearchPage: React.FC = () => {
   const sortOption = searchParams.get("sort") || "-createdAt";
 
   const hasProducts = (productResponse?.data?.products?.length || 0) > 0;
+
+  useDocumentTitle(`Kết quả tìm kiếm` + (keyword ? ` "${keyword}"` : ""));
 
   return (
     <div className="py-6 min-h-screen container mx-auto px-4 bg-[#1a1a1a]">

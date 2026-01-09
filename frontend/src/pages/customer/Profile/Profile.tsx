@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
@@ -33,6 +33,8 @@ import {
 } from "@/components/ui/card";
 
 import { toast } from "sonner";
+
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 // --- SCHEMAS ---
 const addressSchema = z.object({
@@ -189,6 +191,8 @@ export default function ProfilePage() {
   };
 
   if (!user) return null;
+
+  useDocumentTitle("Hồ sơ của tôi");
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-900 text-slate-50">

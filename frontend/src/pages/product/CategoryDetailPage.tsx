@@ -11,6 +11,7 @@ import { ProductFilterBar } from "@/components/product/filter/ProductFilter";
 import { ProductSort } from "@/components/product/filter/ProductSort";
 import ProductCard from "@/components/product/ProductCard";
 import PaginationCustom from "@/components/common/Pagination";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const CategoryDetailPage: React.FC = () => {
   const { categoryDetail, productResponse } = useLoaderData() as any;
@@ -21,6 +22,8 @@ const CategoryDetailPage: React.FC = () => {
 
   if (!categoryDetail)
     return <div className="p-10 text-white">Không tìm thấy danh mục</div>;
+
+  useDocumentTitle(categoryDetail?.name || "Danh mục sản phẩm");
 
   return (
     <div className="py-4 min-h-screen container mx-auto px-4 bg-[#1a1a1a]">
