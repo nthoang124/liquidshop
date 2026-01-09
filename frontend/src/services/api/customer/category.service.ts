@@ -8,10 +8,16 @@ export const categoryService = {
     );
   },
 
-  // Lấy chi tiết
   getCategoryById: async (id: string) => {
     return axiosClient.get<any, { success: boolean; data: ICategory }>(
       `/category/${id}`
     );
+  },
+
+  getSpecsByCategoryId: async (id: string) => {
+    return axiosClient.get<
+      any,
+      { success: boolean; data: Record<string, string[]> }
+    >(`/category/specs/${id}`);
   },
 };

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
-import { ChevronDown, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
+import { ChevronDown, X, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -12,23 +12,27 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { type IBrand } from "@/types/brand";
 import { brandService } from "@/services/api/customer/brand.service";
 import { categoryService } from "@/services/api/customer/category.service";
-
-import { FILTER_CONFIG, detectCategoryFromKeyword } from "@/types/filter";
 import { formatVND } from "@/utils/admin/formatMoney";
 
-// --- 1. COMPONENT LỌC GIÁ (SLIDER) ---
+import {
+  FILTER_BLACKLIST,
+  FILTER_BLACKLIST_PATTERNS,
+} from "@/constants/filterBlackList";
+
 const PriceFilter = () => {
+  const MIN_PRICE = 0;
+  const MAX_PRICE = 100_000_000;
+  const STEP = 500_000;
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const [range, setRange] = useState([0, 50000000]);
+  const [range, setRange] = useState([MIN_PRICE, MAX_PRICE]);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Đồng bộ state với URL mỗi khi mở Popover hoặc URL thay đổi
   useEffect(() => {
     const gte = Number(searchParams.get("price[gte]")) || 0;
-    const lte = Number(searchParams.get("price[lte]")) || 50000000;
+    const lte = Number(searchParams.get("price[lte]")) || 100000000;
     setRange([gte, lte]);
   }, [searchParams, isOpen]);
 
@@ -36,7 +40,7 @@ const PriceFilter = () => {
     setSearchParams((prev) => {
       prev.set("price[gte]", range[0].toString());
       prev.set("price[lte]", range[1].toString());
-      prev.set("page", "1"); // Reset về trang 1 khi lọc mới
+      prev.set("page", "1");
       return prev;
     });
     setIsOpen(false);
@@ -51,73 +55,82 @@ const PriceFilter = () => {
         <Button
           variant="outline"
           className={cn(
-            "bg-zinc-900 border-zinc-800 text-gray-300 rounded hover:bg-transparent hover:text-gray-300",
+            "bg-zinc-900 border-zinc-800 text-gray-300 rounded text-xs h-9",
             isActive && "border-red-600 text-red-500 bg-red-600/10"
           )}
         >
-          Giá{" "}
-          {isActive
-            ? `(${formatVND(range[0])}đ - ${formatVND(range[1])}đ)`
-            : ""}{" "}
-          <ChevronDown className="ml-2 h-4 w-4" />
+          Giá {isActive && `(${formatVND(range[0])} - ${formatVND(range[1])})`}
+          <ChevronDown className="ml-2 h-3 w-3" />
         </Button>
       </PopoverTrigger>
+
       <PopoverContent
-        className="w-80 p-4 bg-[#1a1a1c] border-zinc-800 rounded shadow-2xl"
         align="start"
+        className="w-80 rounded-xl border-zinc-800 bg-[#1a1a1c] p-4"
       >
-        <div className="space-y-6">
-          <p className="text-sm font-bold text-white uppercase tracking-wider">
-            Khoảng giá (đ)
-          </p>
+        <div className="space-y-4">
+          <h4 className="text-sm font-semibold text-white">Khoảng giá</h4>
+
+          {/* INPUT */}
           <div className="flex items-center gap-2">
             <Input
-              value={formatVND(range[0])}
-              readOnly
-              className="h-9 bg-zinc-900 border-zinc-800 text-white rounded text-center text-xs"
+              type="number"
+              min={MIN_PRICE}
+              max={range[1]}
+              step={STEP}
+              value={range[0]}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setRange([Math.min(value, range[1]), range[1]]);
+              }}
+              className="h-9 bg-zinc-900 border-zinc-700 text-white text-xs"
+              placeholder="Từ"
             />
-            <span className="text-zinc-700">—</span>
+
+            <span className="text-zinc-500">–</span>
+
             <Input
-              value={formatVND(range[1])}
-              readOnly
-              className="h-9 bg-zinc-900 border-zinc-800 text-white rounded text-center text-xs"
+              type="number"
+              min={range[0]}
+              max={MAX_PRICE}
+              step={STEP}
+              value={range[1]}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setRange([range[0], Math.max(value, range[0])]);
+              }}
+              className="h-9 bg-zinc-900 border-zinc-700 text-white text-xs"
+              placeholder="Đến"
             />
           </div>
+
+          {/* SLIDER */}
           <Slider
             value={range}
-            min={0}
-            max={100000000}
-            step={1000000}
+            min={MIN_PRICE}
+            max={MAX_PRICE}
+            step={STEP}
             onValueChange={setRange}
-            className="py-4 bg-gray-700"
+            className="py-2"
           />
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="flex-1 border-zinc-800 text-gray-400 rounded"
-            >
-              Hủy
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleApply}
-              className="flex-1 bg-red-600 text-white rounded font-bold"
-            >
-              Lọc
-            </Button>
-          </div>
+
+          {/* ACTION */}
+          <Button
+            size="sm"
+            onClick={handleApply}
+            className="w-full bg-red-600 text-white hover:bg-red-700"
+          >
+            Áp dụng
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
   );
 };
 
-// --- 2. COMPONENT LỌC THUỘC TÍNH CHUNG (CHECKBOX) ---
 interface AttributeFilterProps {
   label: string;
-  paramKey: string; // Key trên URL (ví dụ: 'brand', 'specifications.ram')
+  paramKey: string;
   options: { label: string; value: string }[];
 }
 
@@ -131,32 +144,19 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Dùng getAll để lấy mảng các giá trị (hỗ trợ dạng ?key=A&key=B)
     const currentValues = searchParams.getAll(paramKey);
-
-    // Logic fallback: Nếu URL cũ vẫn dùng dấu phẩy (?key=A,B), ta vẫn hỗ trợ tách nó ra
-    // Điều này giúp tránh lỗi nếu user chia sẻ link cũ
+    // Logic fallback cho dấu phẩy
     if (currentValues.length === 1 && currentValues[0].includes(",")) {
       setSelected(currentValues[0].split(","));
-    } else if (currentValues.length > 0) {
-      setSelected(currentValues);
     } else {
-      setSelected([]);
+      setSelected(currentValues);
     }
-  }, [searchParams, paramKey, isOpen]);
+  }, [searchParams, paramKey]);
 
   const handleApply = () => {
     setSearchParams((prev) => {
-      // 1. Xóa key hiện tại để tránh bị trùng hoặc lỗi
       prev.delete(paramKey);
-
-      // 2. Nếu có lựa chọn, thêm từng cái vào URL (tạo ra dạng &key=val1&key=val2)
-      if (selected.length > 0) {
-        selected.forEach((val) => {
-          prev.append(paramKey, val);
-        });
-      }
-
+      selected.forEach((val) => prev.append(paramKey, val));
       prev.set("page", "1");
       return prev;
     });
@@ -171,63 +171,96 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
         <Button
           variant="outline"
           className={cn(
-            "bg-zinc-900 border-zinc-800 text-gray-300 rounded hover:bg-transparent hover:text-gray-300",
-            isActive && "border-red-600 text-red-500 bg-red-600/10"
+            "h-9 max-w-[200px] gap-2 px-3 text-xs rounded border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-800/50",
+            isActive && "border-red-600 bg-red-600/10 text-red-500"
           )}
         >
-          {label} {isActive ? `(${selected.length})` : ""}{" "}
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <span className="truncate">{label}</span>
+
+          {isActive && (
+            <span className="ml-auto rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-medium text-white">
+              {selected.length}
+            </span>
+          )}
+
+          <ChevronDown className="h-3.5 w-3.5 opacity-70" />
         </Button>
       </PopoverTrigger>
+
       <PopoverContent
-        className="w-64 p-3 bg-[#1a1a1c] border-zinc-800 rounded shadow-2xl"
         align="start"
+        className="w-72 rounded-xl border border-zinc-800 bg-[#1a1a1c] p-3 shadow-xl"
       >
-        <div className="space-y-4">
-          <div className="max-h-60 overflow-y-auto space-y-2 pr-1 no-scrollbar">
-            {options.map((opt: any) => (
+        {/* Header */}
+        <div className="mb-3 flex items-center justify-between">
+          <div className="text-sm font-semibold text-white">{label}</div>
+
+          {selected.length > 0 && (
+            <button
+              onClick={() => setSelected([])}
+              className="text-xs text-zinc-400 hover:text-red-500"
+            >
+              Bỏ chọn
+            </button>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className="max-h-60 space-y-1 overflow-y-auto pr-1 custom-scrollbar">
+          {options.map((opt) => {
+            const checked = selected.includes(opt.value);
+
+            return (
               <div
                 key={opt.value}
-                className="flex items-center space-x-3 p-2 rounded hover:bg-zinc-800 transition-colors"
+                onClick={() =>
+                  setSelected((prev) =>
+                    checked
+                      ? prev.filter((x) => x !== opt.value)
+                      : [...prev, opt.value]
+                  )
+                }
+                className={cn(
+                  "flex items-center gap-3 rounded px-2 py-2 cursor-pointer transition",
+                  checked ? "bg-red-600/10" : "hover:bg-zinc-800/60"
+                )}
               >
                 <Checkbox
-                  id={`${paramKey}-${opt.value}`}
-                  checked={selected.includes(opt.value)}
-                  onCheckedChange={(checked) =>
-                    setSelected((p) =>
-                      checked
-                        ? [...p, opt.value]
-                        : p.filter((x) => x !== opt.value)
-                    )
-                  }
-                  className="border-zinc-700 data-[state=checked]:bg-red-600"
+                  checked={checked}
+                  className="border-zinc-600 data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
                 />
-                <label
-                  htmlFor={`${paramKey}-${opt.value}`}
-                  className="text-sm font-medium text-gray-300 cursor-pointer w-full"
+
+                <span
+                  className={cn(
+                    "text-sm",
+                    checked ? "text-white" : "text-zinc-300"
+                  )}
                 >
                   {opt.label}
-                </label>
+                </span>
               </div>
-            ))}
-          </div>
-          <div className="flex gap-2 pt-2 border-t border-zinc-800">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelected([])}
-              className="w-1/2 border-zinc-800 text-gray-500 rounded"
-            >
-              Xóa
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleApply}
-              className="w-1/2 bg-red-600 text-white rounded font-bold"
-            >
-              Lọc
-            </Button>
-          </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-3 flex gap-2 border-t border-zinc-800 pt-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 flex-1 text-zinc-400 hover:text-white"
+            onClick={() => setIsOpen(false)}
+          >
+            Đóng
+          </Button>
+
+          <Button
+            size="sm"
+            className="h-8 flex-1 bg-red-600 text-white hover:bg-red-700"
+            onClick={handleApply}
+          >
+            Áp dụng
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
@@ -238,156 +271,160 @@ interface ProductFilterBarProps {
   categoryName?: string;
 }
 
-export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
-  categoryName = "",
-}) => {
+const formatKeyToLabel = (key: string): string => {
+  const map: Record<string, string> = {
+    cpu: "Vi xử lý",
+    ram: "RAM",
+    vga: "Card đồ họa",
+    ssd: "Ổ cứng",
+    screen: "Màn hình",
+    color: "Màu sắc",
+    keyboard_switch: "Switch",
+    dpi: "DPI",
+    loai_ket_noi: "Loại kết nối",
+    tan_so_quet: "Tần số quét",
+  };
+  if (map[key]) return map[key];
+  const text = key.replace(/_/g, " ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+export const ProductFilterBar: React.FC<ProductFilterBarProps> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [brands, setBrands] = useState<{ label: string; value: string }[]>([]);
+  const [dynamicSpecs, setDynamicSpecs] = useState<any[]>([]);
 
-  const currentKeyword = searchParams.get("keyword") || "";
-  const currentCategoryId = searchParams.get("category");
+  const { id: pathCategoryId } = useParams();
+  const currentCategoryId = pathCategoryId;
 
+  // 1. Fetch Brands
   useEffect(() => {
     const fetchBrands = async () => {
+      if (!currentCategoryId) return;
       try {
-        // TRƯỜNG HỢP 1: Có ID trên URL (Vào thẳng trang danh mục)
-        // Logic này giống hệt: brandService.getBrandsByCategory(cat._id) ở Homepage
-        if (currentCategoryId) {
-          const res = await brandService.getBrandsByCategory(currentCategoryId);
-          if (res.brands) {
-            setBrands(
-              res.brands.map((b) => ({ label: b.name, value: b.name }))
-            );
-          }
-          return;
-        }
-
-        // TRƯỜNG HỢP 2: Đang Search, chưa có ID -> Phải tìm ID
-        if (currentKeyword) {
-          const detectedName = detectCategoryFromKeyword(currentKeyword);
-
-          if (detectedName) {
-            // Bước phụ: Lấy list category về để tra ID (Giống Homepage fetch categoryRes)
-            const catRes = await categoryService.getAllCategories();
-
-            if (catRes.success && catRes.data) {
-              // Tìm Category có tên khớp với từ khóa đoán được
-              const targetCat = catRes.data.find((c) =>
-                c.name.toLowerCase().includes(detectedName.toLowerCase())
-              );
-
-              if (targetCat) {
-                // Đã tìm thấy ID -> Gọi API lấy Brand chuẩn
-                const brandRes = await brandService.getBrandsByCategory(
-                  targetCat._id
-                );
-                if (brandRes.brands) {
-                  setBrands(
-                    brandRes.brands.map((b) => ({
-                      label: b.name,
-                      value: b.name,
-                    }))
-                  );
-                  return;
-                }
-              }
-            }
-          }
-        }
-
-        // TRƯỜNG HỢP 3: Không đoán được gì cả -> Lấy tất cả Brand (Fallback)
-        const resAll = await brandService.getAllBrands();
-        if (resAll.data) {
-          // Lưu ý: getAllBrands trả về data, getBrandsByCategory trả về brands
-          // Kiểm tra kiểu dữ liệu trả về của getAllBrands trong file service của bạn
-          // Thường là resAll.data
-          const list = Array.isArray(resAll.data) ? resAll.data : [];
+        const res = await brandService.getBrandsByCategory(currentCategoryId);
+        if (res.brands) {
           setBrands(
-            list.map((b: IBrand) => ({ label: b.name, value: b.name }))
+            res.brands.map((b: any) => ({ label: b.name, value: b.name }))
           );
         }
-      } catch (error) {
-        console.error("Lỗi tải brand filter:", error);
+      } catch (e) {
+        console.error(e);
       }
     };
-
     fetchBrands();
-  }, [currentCategoryId, currentKeyword]);
+  }, [currentCategoryId]);
 
-  const dynamicFilters = useMemo(() => {
-    if (categoryName) {
-      const key = Object.keys(FILTER_CONFIG).find((k) =>
-        categoryName.toLowerCase().includes(k.toLowerCase())
-      );
-      return key ? FILTER_CONFIG[key] : FILTER_CONFIG.default;
-    }
-
-    if (currentKeyword) {
-      const detectedCat = detectCategoryFromKeyword(currentKeyword);
-      if (detectedCat) {
-        return FILTER_CONFIG[detectedCat] || FILTER_CONFIG.default;
+  // 2. Fetch Dynamic Specs
+  useEffect(() => {
+    const fetchSpecs = async () => {
+      if (!currentCategoryId) {
+        setDynamicSpecs([]);
+        return;
       }
-    }
 
-    return FILTER_CONFIG.default;
-  }, [categoryName, currentKeyword]);
+      try {
+        const res = await categoryService.getSpecsByCategoryId(
+          currentCategoryId
+        );
+
+        if (res.data) {
+          console.log("Fetched Specs:", res.data);
+          const specFilters = Object.entries(res.data)
+            .filter(([key]) => {
+              if (key.length <= 2) return false;
+
+              if (FILTER_BLACKLIST.includes(key)) return false;
+
+              if (
+                FILTER_BLACKLIST_PATTERNS.some((pattern) =>
+                  key.includes(pattern)
+                )
+              )
+                return false;
+
+              return true;
+            })
+            .map(([key, values]) => {
+              const optionsArray = Array.isArray(values)
+                ? (values as unknown as string[])
+                : [];
+
+              return {
+                label: formatKeyToLabel(key),
+                key: `specifications.${key}`,
+                options: optionsArray.map((val) => ({
+                  label: val,
+                  value: val,
+                })),
+              };
+            });
+
+          setDynamicSpecs(specFilters);
+        }
+      } catch (e) {
+        console.error("Lỗi lấy thông số:", e);
+      }
+    };
+    fetchSpecs();
+  }, [currentCategoryId]);
 
   const handleResetAll = () => {
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams();
-
-      const currentCategory = prev.get("category");
-      if (currentCategory) {
-        newParams.set("category", currentCategory);
-      }
-
-      const currentKeyword = prev.get("keyword");
-      if (currentKeyword) {
-        newParams.set("keyword", currentKeyword);
-      }
-
-      // 3. Reset về trang 1
-      newParams.set("page", "1");
-
-      return newParams;
-    });
+    const newParams = new URLSearchParams();
+    if (searchParams.get("category"))
+      newParams.set("category", searchParams.get("category")!);
+    if (searchParams.get("keyword"))
+      newParams.set("keyword", searchParams.get("keyword")!);
+    newParams.set("page", "1");
+    setSearchParams(newParams);
   };
 
-  const hasActiveFilters = Array.from(searchParams.keys()).some(
-    (key) => !["page", "sort", "limit", "category", "keyword"].includes(key)
+  const hasFilter = Array.from(searchParams.keys()).some(
+    (k) => !["page", "sort", "limit", "category", "keyword"].includes(k)
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-3 mb-6 p-3 bg-transparent border border-zinc-800 rounded">
-      <div className="flex items-center gap-2 text-xs font-bold text-white uppercase bg-zinc-800 px-3 py-2 rounded border border-zinc-700 mr-2 tracking-widest">
-        Bộ lọc
+    <div className="flex flex-wrap items-center gap-2 mb-6 p-2 bg-transparent border-b border-zinc-800/50">
+      <div className="flex items-center gap-2 text-[11px] font-bold text-zinc-400 uppercase bg-zinc-900/50 px-2 py-1.5 rounded border border-zinc-800 mr-2">
+        <Filter className="w-5 h-5"></Filter> Bộ lọc
       </div>
+
       <AttributeFilter
         label="Tình trạng"
         paramKey="status"
         options={[
-          { label: "Đang bán", value: "active" },
+          { label: "Sẵn hàng", value: "active" },
           { label: "Hết hàng", value: "out_of_stock" },
         ]}
       />
+
       <PriceFilter />
-      <AttributeFilter label="Hãng" paramKey="brand" options={brands} />
-      {dynamicFilters.map((f: any, i: number) => (
+
+      {brands.length > 0 && (
         <AttributeFilter
-          key={i}
-          label={f.label}
-          paramKey={f.key}
-          options={f.options}
+          label="Thương hiệu"
+          paramKey="brand"
+          options={brands}
+        />
+      )}
+
+      {dynamicSpecs.map((spec) => (
+        <AttributeFilter
+          key={spec.key}
+          label={spec.label}
+          paramKey={spec.key}
+          options={spec.options}
         />
       ))}
-      {hasActiveFilters && (
+
+      {hasFilter && (
         <Button
           variant="ghost"
           size="sm"
           onClick={handleResetAll}
-          className="ml-auto text-red-500 hover:bg-transparent hover:text-red-600 rounded"
+          className="ml-auto text-xs text-red-500 hover:text-red-400 hover:bg-zinc-900"
         >
-          <X className="w-4 h-4 mr-1" /> Xoá bộ lọc
+          <X className="w-3 h-3 mr-1" /> Xóa lọc
         </Button>
       )}
     </div>
