@@ -46,22 +46,22 @@ const SearchPage = React.lazy(() => import("@/pages/product/SearchPage"));
 // ADMIN
 
 import AdminLayout from "@/components/layouts/AdminLayout";
-import BrandsPage from "@/pages/admin/BrandsPage";
-import UserDetailPage from "@/pages/admin/UserDetailPage";
-import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
-import OrdersPage from "@/pages/admin/OrdersPage";
-import DetailedPromotion from "@/pages/admin/DetailedPromotion";
-import AddPromotionPage from "@/pages/admin/AddPromotionPage";
 
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
+const UserDetailPage = React.lazy(() => import("@/pages/admin/UserDetailPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
-
+const BrandsPage = React.lazy(() => import("@/pages/admin/BrandsPage"));
 const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
 const PromotionPage = React.lazy(() => import("@/pages/admin/PromotionsPage"));
+const AddPromotionPage = React.lazy(() => import("@/pages/admin/AddPromotionPage"));
+const OrdersPage = React.lazy(() => import("@/pages/admin/OrdersPage"))
+const EditProductPage = React.lazy(() => import("@/pages/admin/EditProductPage"));
+const DetailedPromotion = React.lazy(() => import("@/pages/admin/DetailedPromotionPage"));
+
 
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 

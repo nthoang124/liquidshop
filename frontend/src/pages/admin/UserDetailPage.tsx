@@ -85,21 +85,26 @@ export default function UserDetailPage() {
 
       {/* Header Section */}
       <div className="flex items-center gap-6">
-        <Avatar className="h-24 w-24 rounded-full relative overflow-hidden border-2 border-white shadow-sm transition-transform group-hover:scale-105 duration-300 flex-shrink-0">
-            <AvatarImage 
-              className="object-cover"
-              src={user.avatarUrl || "/placeholder.svg"} 
-              alt={user.fullName} 
+       <Avatar className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-white shadow-sm">
+          {user.avatarUrl && (
+            <AvatarImage
+              src={user.avatarUrl}
+              alt={user.fullName}
+              className="absolute inset-0 z-10 object-cover"
             />
-            <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
-              {user.fullName
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()}
-            </AvatarFallback>
-        </Avatar>
+          )}
 
+          <AvatarFallback
+            className="absolute inset-0 z-20 flex items-center justify-center 
+                      bg-slate-100 text-slate-500 font-bold text-xl"
+          >
+            {user.fullName
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <h1 className="text-base md:text-xl font-bold">{user.fullName}</h1>
           <p className="text-gray-600 text-sm md:text-base">{user.email}</p>

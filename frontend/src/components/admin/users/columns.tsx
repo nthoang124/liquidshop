@@ -18,19 +18,16 @@ export const columns: ColumnDef<IUser>[] = [
       const avatar = row.getValue("avatarUrl") as string || null;
       const fullName = row.getValue("fullName") as string;
       return (
-        <Avatar className="h-10 w-10 sm:h-11 sm:w-11 border-2 border-white shadow-sm transition-transform group-hover:scale-105 duration-300 flex-shrink-0">
-            <AvatarImage 
-              src={avatar || "/placeholder.svg"} 
-              alt={fullName} 
-            />
-            <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
+         <Avatar className="h-10 w-10 sm:h-11 sm:w-11 relative border-2 border-white shadow-sm transition-transform group-hover:scale-105 duration-300 flex-shrink-0">
+            <AvatarImage src={avatar || "/placeholder.svg"} alt={fullName} />
+            <AvatarFallback className="bg-slate-100 inset-0 z-20 absolute text-slate-500 font-bold text-xs items-center justify-center flex">
               {fullName
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
                 .toUpperCase()}
             </AvatarFallback>
-        </Avatar>
+          </Avatar>
       )
     },
   },

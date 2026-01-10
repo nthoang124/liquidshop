@@ -4,10 +4,17 @@ import { ArrowUpRight, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { IProduct } from "@/types/product"
 import { formatVND } from "@/utils/admin/formatMoney"
+import { Link } from "react-router-dom"
 
 interface TopProductsProps {
     products: IProduct[];
 }
+
+const PRODUCT_STATUS = {
+  active: "Đang bán",
+  inactive: "Không còn bán",
+  out_of_stock: "Hết hàng"
+} as const
 
 export function TopProducts({products} : TopProductsProps) {
   return (
@@ -16,9 +23,6 @@ export function TopProducts({products} : TopProductsProps) {
         <div className="space-y-1">
           <CardTitle className="text-xl font-bold tracking-tight flex items-center gap-2">
             Top Sản phẩm bán chạy
-            {/* <Badge variant="secondary" className="bg-emerald-50 text-emerald-600 border-emerald-100 font-bold px-2">
-              Bản tin t
-            </Badge> */}
           </CardTitle>
           <CardDescription className="text-muted-foreground/70 font-medium">
             Phân tích hiệu suất 5 sản phẩm dẫn đầu doanh thu
@@ -33,19 +37,19 @@ export function TopProducts({products} : TopProductsProps) {
         <Table>
           <TableHeader className="bg-slate-50/50">
             <TableRow className="hover:bg-transparent border-b-slate-100">
-              <TableHead className="w-[300px] pl-8 py-4 uppercase text-[10px] font-bold tracking-[0.1em] text-slate-400">
+              <TableHead className="w-[300px] pl-8 py-4 uppercase text-[0.75rem] md:text-[0.85rem] font-bold tracking-[0.1em] text-slate-400">
                 Sản phẩm
               </TableHead>
-              <TableHead className="uppercase text-[10px] font-bold tracking-[0.1em] text-slate-400">
+              <TableHead className="uppercase text-[0.75rem] md:text-[0.85rem] font-bold tracking-[0.1em] text-slate-400">
                 Số lượng
               </TableHead>
-              <TableHead className="uppercase text-[10px] font-bold tracking-[0.1em] text-slate-400">
+              <TableHead className="uppercase text-[0.75rem] md:text-[0.85rem] font-bold tracking-[0.1em] text-slate-400">
                 Doanh thu
               </TableHead>
-              <TableHead className="uppercase text-[10px] font-bold tracking-[0.1em] text-slate-400">
+              <TableHead className="uppercase text-[0.75rem] md:text-[0.85rem] font-bold tracking-[0.1em] text-slate-400">
                 Đã bán
               </TableHead>
-              <TableHead className="pr-8 text-right uppercase text-[10px] font-bold tracking-[0.1em] text-slate-400">
+              <TableHead className="pr-8 text-right uppercase text-[0.75rem] md:text-[0.85rem] font-bold tracking-[0.1em] text-slate-400">
                 Trạng thái
               </TableHead>
             </TableRow>
@@ -66,9 +70,11 @@ export function TopProducts({products} : TopProductsProps) {
                       />
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="font-bold text-slate-900 line-clamp-2 max-w-50 text-wrap leading-none group-hover:text-primary transition-colors">
-                        {product.name}
-                      </span>
+                      <Link to={`/admin/product/edit/${product._id}`}>
+                        <span className="font-bold text-slate-900 line-clamp-2 max-w-50 text-wrap leading-none group-hover:text-primary transition-colors">
+                          {product.name}
+                        </span>
+                      </Link>
                       <span className="text-xs text-slate-400 font-medium">{product.category.name}</span>
                     </div>
                   </div>
@@ -99,13 +105,13 @@ export function TopProducts({products} : TopProductsProps) {
                 <TableCell className="pr-8 text-right">
                   <span
                     className={cn(
-                      "text-[11px] font-bold px-2 py-1 rounded-md border",
-                      product.status === "active" && "bg-slate-50 text-slate-600 border-slate-100",
+                      "text-[0.8rem] md:text-[0.85rem] font-bold px-2 py-1 rounded-md border",
+                      product.status === "active" && "bg-green-50 text-green-600 border-slate-100",
                       product.status === "inactive" && "bg-amber-50 text-amber-600 border-amber-100",
                       product.status === "out_of_stock" && "bg-rose-50 text-rose-600 border-rose-100",
                     )}
                   >
-                    {product.status}
+                    {PRODUCT_STATUS[product.status]}
                   </span>
                 </TableCell>
               </TableRow>

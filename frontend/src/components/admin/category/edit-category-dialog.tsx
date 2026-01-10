@@ -64,7 +64,7 @@ export function EditCategoryDialog({open, setOpen, category, categories, onSave,
                     <DialogDescription className="sr-only">
                         edit category
                     </DialogDescription>
-                    <DialogTitle className="text-lg">{name}</DialogTitle>
+                    <DialogTitle className="text-lg">{isEddit ? category?.name : "Thêm thương hiệu mới"}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
