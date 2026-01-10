@@ -61,6 +61,8 @@ export default function EditProductPage() {
       const res = await productApi.getById(id!);
       const p: IProduct = res.data.data;
 
+      console.log(res.data.data);
+
       setName(p.name);
       setSku(p.sku);
       setDescription(p.description || "");
@@ -74,6 +76,8 @@ export default function EditProductPage() {
       setSpecifications(p.specifications);
       setDetailedInfo(p.detailedInfo);
       setTags(p.tags);
+
+      console.log(p);
     } catch (err) {
       console.log(err);
     } finally {
