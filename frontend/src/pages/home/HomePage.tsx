@@ -7,6 +7,28 @@ import ProductListCarousel from "@/components/product/carousel/ProductListCarous
 import MobileProductSlide from "@/components/product/carousel/MobileSlide";
 import type { IHomeSection } from "./home.loader";
 
+const PromotionBannerItem = ({ src }: { src: string }) => (
+  <div className="group min-w-[85%] md:min-w-0 snap-center overflow-hidden rounded-lg border border-zinc-800 shadow-md">
+    <img
+      src={src}
+      alt="Promotion"
+      className="w-full h-[120px] object-cover cursor-pointer"
+    />
+  </div>
+);
+
+const PromotionBannerRow = ({ images }: { images: string[] }) => {
+  if (!images || images.length === 0) return null;
+
+  return (
+    <div className="my-4 flex gap-2 overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 md:overflow-visible">
+      {images.map((src, index) => (
+        <PromotionBannerItem key={index} src={src} />
+      ))}
+    </div>
+  );
+};
+
 const HomePage = () => {
   useDocumentTitle("Trang Chủ");
 
@@ -20,6 +42,7 @@ const HomePage = () => {
 
   const RenderSection = ({ data }: { data: IHomeSection | null }) => {
     if (!data || data.products.length === 0) return null;
+
     return (
       <section className="p-0 mt-4">
         <div className="md:hidden">
@@ -35,23 +58,13 @@ const HomePage = () => {
             title={data.title}
             products={data.products}
             viewAllLink={`/category/${data.categoryId}`}
-            autoplay={true}
+            autoplay
             brands={data.brands}
           />
         </div>
       </section>
     );
   };
-
-  const PromotionBanner = ({ src }: { src: string }) => (
-    <div className="group overflow-hidden rounded-lg border border-zinc-800 shadow-md">
-      <img
-        src={src}
-        className="w-full h-[120px] object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105 group-hover:brightness-110"
-        alt="Promotion"
-      />
-    </div>
-  );
 
   return (
     <div className="mx-auto px-2 sm:px-4 lg:px-8 space-y-1 py-3 bg-transparent">
@@ -60,20 +73,24 @@ const HomePage = () => {
 
       <RenderSection data={pc} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-4">
-        <PromotionBanner src="https://file.hstatic.net/200000722513/file/banner_790x250_tai_nghe_6f6dcb17d3a54fcc88b3de96762d2d41.jpg" />
-        <PromotionBanner src="https://file.hstatic.net/200000722513/file/bot_promotion_banner_small_2_2ad55c2345c64fbfb87dab4957b33914.png" />
-        <PromotionBanner src="https://cdn.hstatic.net/files/200000722513/file/gearvn-man-hinh-t10-bot-promotion-big.jpg" />
-      </div>
+      <PromotionBannerRow
+        images={[
+          "https://file.hstatic.net/200000722513/file/banner_790x250_tai_nghe_6f6dcb17d3a54fcc88b3de96762d2d41.jpg",
+          "https://file.hstatic.net/200000722513/file/bot_promotion_banner_small_2_2ad55c2345c64fbfb87dab4957b33914.png",
+          "https://cdn.hstatic.net/files/200000722513/file/gearvn-man-hinh-t10-bot-promotion-big.jpg",
+        ]}
+      />
 
       <RenderSection data={keyboard} />
       <RenderSection data={mouse} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 my-4">
-        <PromotionBanner src="https://gamelade.vn/wp-content/uploads/2025/06/call-of-duty-black-ops-7-announced.webp" />
-        <PromotionBanner src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1238810/header.jpg?t=1747167586" />
-        <PromotionBanner src="https://eu.redmagic.gg/cdn/shop/files/banner-pc_2x_db79e769-d48e-4beb-8bb9-26826e2a63c8.png?v=1679906718&width=2400" />
-      </div>
+      <PromotionBannerRow
+        images={[
+          "https://gamelade.vn/wp-content/uploads/2025/06/call-of-duty-black-ops-7-announced.webp",
+          "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1238810/header.jpg?t=1747167586",
+          "https://eu.redmagic.gg/cdn/shop/files/banner-pc_2x_db79e769-d48e-4beb-8bb9-26826e2a63c8.png?v=1679906718&width=2400",
+        ]}
+      />
 
       <RenderSection data={laptop} />
       <RenderSection data={monitor} />

@@ -79,7 +79,7 @@ export default function LoginPage() {
       </div>
 
       <div className="text-center">
-        <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 uppercase tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 uppercase tracking-tight">
           Chào mừng trở lại
         </h2>
         <p className="text-gray-400 text-xs sm:text-sm">
