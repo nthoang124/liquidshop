@@ -113,7 +113,7 @@ export function OrdersTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns(handleDetailOpen).length}>
+                <TableCell colSpan={columns({onOpenDetail: handleDetailOpen, onChangeOrderStatus: onChangeOrderStatus}).length}>
                   <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
                     <SearchX className="w-12 h-12 mb-3 opacity-70" />
                     <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+database.zip
+*.log
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+~$*.docx

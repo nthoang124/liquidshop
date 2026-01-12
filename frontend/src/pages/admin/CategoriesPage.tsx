@@ -45,7 +45,7 @@ export default function CategoriesPage() {
             name: data.name,
             imageUrl: data.imageUrl,
             description: data.description,
-            ...(data.parentCategory && { parentCategory: data.parentCategory._id})
+            parentCategory: data.parentCategory ? data.parentCategory._id : null
         }
 
         createCategory(newCategory);

@@ -38,8 +38,7 @@ export default function DashboardPage() {
 
     function mapBarChartData(
         labels: string[],
-        data: number[],
-        color: string
+        data: number[]
         ): BarChartItem[] {
         return labels.map((label, index) => ({
             label,
@@ -107,24 +106,24 @@ export default function DashboardPage() {
             const res = await dashboardApi.get();
             console.log("check res: ", res.data.data);
             console.log("check res: ", res.data);
-            setTotals(res.data.totals);
-            setTopProducts(res.data.topProducts.slice(0, 5));
-            setNewUsers(res.data.topNewUsers.slice(0, 5));
+            setTotals(res.data.data.totals);
+            setTopProducts(res.data.data.topProducts.slice(0, 5));
+            setNewUsers(res.data.data.topNewUsers.slice(0, 5));
 
             const revenueMonthChartData = mapBarChartActiveData(
-                res.data.revenue12Months.labels,
-                res.data.revenue12Months.data,
+                res.data.data.revenue12Months.labels,
+                res.data.data.revenue12Months.data,
                 "var(--chart-2)"
             );
 
             const userChartData = mapBarChartData(
-                res.data.usersNew7Days.labels,
-                res.data.usersNew7Days.data,
+                res.data.data.usersNew7Days.labels,
+                res.data.data.usersNew7Days.data,
             );
 
             const weekRevenueChartData = mapLineChartData(
-                res.data.revenue7Days.labels,
-                res.data.revenue7Days.data,
+                res.data.data.revenue7Days.labels,
+                res.data.data.revenue7Days.data,
             );
 
             setRevenueMonthChart(revenueMonthChartData);

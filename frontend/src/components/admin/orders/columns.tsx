@@ -58,7 +58,7 @@ export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps)
   },
   {
     accessorKey: "totalAmount",
-    header: ({ column }) => {
+    header: () => {
       return (
         <span className="text-sm md:text-base">
           Tổng tiền

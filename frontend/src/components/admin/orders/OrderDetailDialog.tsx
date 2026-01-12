@@ -9,7 +9,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { formatDate } from "@/utils/formatDate";
 import { formatVND } from "@/utils/admin/formatMoney";
-import { Badge } from "@/components/ui/badge";
 
 import type { IOrder } from "@/types/order";
 import { PaymentStatusBadge } from "./payment-status-badge";
