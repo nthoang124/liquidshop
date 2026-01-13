@@ -13,9 +13,9 @@ createRoot(document.getElementById("root")!).render(
     <AdminAuthProvider>
       <AuthProvider>
         <CartProvider>
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-center" />
           <RouterProvider router={router} />
-        </CartProvider> 
+        </CartProvider>
       </AuthProvider>
     </AdminAuthProvider>
   </StrictMode>

@@ -72,7 +72,6 @@ const MainLayout: React.FC = () => {
       <Footer />
       <ChatBot />
       <Zalo />
-      <Toaster theme="dark" position="top-center" richColors />
     </div>
   );
 };
