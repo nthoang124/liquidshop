@@ -5,11 +5,12 @@ export interface ChartSeries {
 }
 
 export interface TopUser {
-  id: number
+  _id: number
   fullName: string
   email: string
   role: string
   createdAt?: string
+  avatarUrl?: string
 }
 
 export interface DashboardTotals {
@@ -23,16 +24,11 @@ export interface DashboardTotals {
   revenueLastMonth: number
 }
 
-export interface DashboardOverview {
+export interface IDashboardResponse {
   usersNew7Days: ChartSeries
   revenue7Days: ChartSeries
   revenue12Months: ChartSeries
   topProducts: IProduct[]
   topNewUsers: TopUser[]
   totals: DashboardTotals
-}
-
-export interface IDashboardResponse {
-  success?: boolean
-  data: DashboardOverview
 }

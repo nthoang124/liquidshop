@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Mail } from "lucide-react"
-import type { IUser } from "@/types/user"
 import { RoleBadge } from "../users/role-badege";
 import { formatDate } from "@/utils/formatDate";
 import { useNavigate } from "react-router-dom";
+import type { TopUser } from "@/types/dashboard";
 
 interface NewUserListProps {
-    users: IUser[];
+    users: TopUser[];
 }
 
 export function NewUserList({users} : NewUserListProps) {
@@ -57,7 +57,7 @@ export function NewUserList({users} : NewUserListProps) {
                 <div className="flex flex-col items-start sm:items-end gap-1">
                   <RoleBadge role={user.role} className="scale-75 sm:scale-90 origin-left sm:origin-right" />
                   <span className="text-[9px] sm:text-[10px] font-bold text-slate-300 uppercase tracking-tighter">
-                    {formatDate(user.createdAt)}
+                    {formatDate(user.createdAt || "")}
                   </span>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { type LineChartItem } from "@/components/admin/common/ChartLineLinear";
 import PageTitle from "@/components/admin/common/PageTitle";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import dashboardApi from "@/services/api/admin/dashboardApi";
-import type { DashboardTotals } from "@/types/dashboard";
+import type { DashboardTotals, TopUser } from "@/types/dashboard";
 import type { IProduct } from "@/types/product";
 import { CircleDollarSign, ShoppingCart, Tag, TrendingDown, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,7 +12,6 @@ import CountUp from "react-countup";
 import { formatVND } from "@/utils/admin/formatMoney";
 import { TopProducts } from "@/components/admin/dashboard/TopProducts";
 import { NewUserList } from "@/components/admin/dashboard/NewUsersList";
-import type { IUser } from "@/types/user";
 import { ChartBarActive } from "@/components/admin/common/ChartBar";
 
 export default function DashboardPage() {
@@ -71,7 +70,7 @@ export default function DashboardPage() {
     });
 
     const [topProducts, setTopProducts] = useState<IProduct[]>([]);
-    const [newUsers, setNewUsers] = useState<IUser[]>([]);
+    const [newUsers, setNewUsers] = useState<TopUser[]>([]);
 
     const [usersChart, setUsersChart] = useState<BarChartItem[]>([]);
     const [weekRevenueChart, setWeekRevenueChart] = useState<LineChartItem[]>([]);
@@ -104,26 +103,24 @@ export default function DashboardPage() {
     const loadData = async () => {
         try {
             const res = await dashboardApi.get();
-            console.log("check res: ", res.data.data);
-            console.log("check res: ", res.data);
-            setTotals(res.data.data.totals);
-            setTopProducts(res.data.data.topProducts.slice(0, 5));
-            setNewUsers(res.data.data.topNewUsers.slice(0, 5) as any);
+            setTotals(res.data.totals);
+            setTopProducts(res.data.topProducts.slice(0, 5));
+            setNewUsers(res.data.topNewUsers.slice(0, 5));
 
             const revenueMonthChartData = mapBarChartActiveData(
-                res.data.data.revenue12Months.labels,
-                res.data.data.revenue12Months.data,
+                res.data.revenue12Months.labels,
+                res.data.revenue12Months.data,
                 "var(--chart-2)"
             );
 
             const userChartData = mapBarChartData(
-                res.data.data.usersNew7Days.labels,
-                res.data.data.usersNew7Days.data,
+                res.data.usersNew7Days.labels,
+                res.data.usersNew7Days.data,
             );
 
             const weekRevenueChartData = mapLineChartData(
-                res.data.data.revenue7Days.labels,
-                res.data.data.revenue7Days.data,
+                res.data.revenue7Days.labels,
+                res.data.revenue7Days.data,
             );
 
             setRevenueMonthChart(revenueMonthChartData);
