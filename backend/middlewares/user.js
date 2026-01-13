@@ -66,9 +66,6 @@ const protectAdmin = async (req, res, next) => {
   }
 }
 
-  }
-}
-
 // Optional authentication - allows both authenticated and guest users
 const optionalAuth = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
