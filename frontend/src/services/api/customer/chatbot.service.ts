@@ -93,4 +93,13 @@ export const chatbotService = {
       onError(error);
     }
   },
+  resetSession: async (): Promise<boolean> => {
+    try {
+      await axiosClient.delete("/chatbot");
+      return true;
+    } catch (error) {
+      console.error("Lỗi khi reset chatbot session:", error);
+      return false;
+    }
+  },
 };

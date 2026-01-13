@@ -532,4 +532,32 @@ const getHistory = async (req, res) => {
   }
 };
 
-module.exports = { chatWithAI, getHistory };
+const resetSession = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const session = await ChatSession.findOne({ userId });
+
+    if (session) {
+      session.messages = [];
+      session.context = {
+        isConsulting: false,
+        currentStep: 0,
+        consultationData: {},
+      };
+      session.updatedAt = Date.now();
+      session.markModified("context");
+      await session.save();
+    }
+
+    res.status(200).json({ success: true, message: "Lịch sử cuộc trò chuyện đã được làm mới." });
+  } catch (error) {
+    console.error("Lỗi khi reset chatbot session:", error);
+    res.status(500).json({ success: false, message: "Không thể làm mới cuộc trò chuyện." });
+  }
+};
+
+module.exports = {
+  chatWithAI,
+  getHistory,
+  resetSession,
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, Send, X, Loader2, Bot, User } from "lucide-react";
+import { MessageSquare, Send, X, Loader2, Bot, User, RotateCcw } from "lucide-react";
 import { chatbotService } from "@/services/api/customer/chatbot.service";
 import { type IChatMessage } from "@/types/chatbot";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<IChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -66,14 +67,15 @@ const ChatBot: React.FC = () => {
   // Tạm thời chưa render để tránh lag khi load auth
   if (isAuthLoading) return null;
 
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, manualText?: string) => {
     e?.preventDefault();
-    if (!inputValue.trim() || isStreaming) return;
+    const textToSend = manualText || inputValue;
+    if (!textToSend.trim() || isStreaming) return;
 
-    const userMsg: IChatMessage = { role: "user", content: inputValue };
+    const userMsg: IChatMessage = { role: "user", content: textToSend };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInputValue("");
+    if (!manualText) setInputValue("");
     setIsStreaming(true);
 
     const botMsgPlaceholder: IChatMessage = { role: "bot", content: "" };
@@ -113,6 +115,29 @@ const ChatBot: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    if (isOpen && messages.length === 0 && !isLoading && !isStreaming && user) {
+      // Tự động kích hoạt lời chào khi mở chat lần đầu
+      handleSendMessage(undefined, "Bắt đầu tư vấn");
+    }
+  }, [isOpen, messages.length, isLoading, user]);
+
+  const handleResetChat = async () => {
+    if (messages.length === 0 || isResetting || isStreaming) return;
+
+    if (confirm("Bạn có chắc chắn muốn làm mới cuộc trò chuyện này không?")) {
+      setIsResetting(true);
+      const success = await chatbotService.resetSession();
+      if (success) {
+        setMessages([]);
+        toast.success("Cuộc trò chuyện đã được làm mới.");
+      } else {
+        toast.error("Không thể làm mới cuộc trò chuyện.");
+      }
+      setIsResetting(false);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -137,19 +162,29 @@ const ChatBot: React.FC = () => {
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-red-200" />
               <div>
-                <h3 className="font-bold text-sm">Liquid AI Assistant</h3>
+                <h3 className="font-bold text-sm">Chuyên viên tư vấn công nghệ</h3>
                 <span className="text-xs text-red-200 flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   Online
                 </span>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-red-800/50 p-1 rounded transition-colors "
-            >
-              <X className="w-6 h-6 sm:w-5 sm:h-5 cursor-pointer" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleResetChat}
+                disabled={isResetting || isStreaming || messages.length === 0}
+                className="hover:bg-red-800/50 p-1.5 rounded transition-colors disabled:opacity-50"
+                title="Làm mới cuộc trò chuyện"
+              >
+                <RotateCcw className={cn("w-5 h-5 cursor-pointer", isResetting && "animate-spin")} />
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:bg-red-800/50 p-1 rounded transition-colors"
+              >
+                <X className="w-6 h-6 sm:w-5 sm:h-5 cursor-pointer" />
+              </button>
+            </div>
           </div>
 
           {/* Message Area */}
@@ -192,8 +227,8 @@ const ChatBot: React.FC = () => {
                       {/* Bubble */}
                       <div
                         className={`p-3 text-sm rounded-2xl ${isUser
-                            ? "bg-red-600 text-white rounded-tr-none"
-                            : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none shadow-md"
+                          ? "bg-red-600 text-white rounded-tr-none"
+                          : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none shadow-md"
                           }`}
                       >
                         {isUser ? (
