@@ -21,8 +21,10 @@ import { formatVND } from "@/utils/admin/formatMoney";
 import { cartService } from "@/services/api/customer/cart.service";
 import { orderService } from "@/services/api/customer/order.service";
 import { promotionService } from "@/services/api/customer/promotion.service";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const CheckoutPage: React.FC = () => {
+  useDocumentTitle("Thanh toán");
   const navigate = useNavigate();
   const location = useLocation();
   const { updateCartCount } = useCart();

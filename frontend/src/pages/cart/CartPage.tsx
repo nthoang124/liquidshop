@@ -16,8 +16,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { formatVND } from "@/utils/admin/formatMoney";
 import { cartService } from "@/services/api/customer/cart.service";
 import { useCart } from "@/context/CartContext";
+import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 const CartPage: React.FC = () => {
+  useDocumentTitle("Giỏ hàng");
+
   const navigate = useNavigate();
   const { updateCartCount } = useCart();
   const [cart, setCart] = useState<any>(null);
@@ -28,6 +31,7 @@ const CartPage: React.FC = () => {
     try {
       const res: any = await cartService.getCart();
       if (res && res.cart) setCart(res.cart);
+      console.log("Fetched cart:", res);
     } catch (error: any) {
       if (error.response?.status === 404) setCart(null);
     } finally {
@@ -67,6 +71,7 @@ const CartPage: React.FC = () => {
   const handleUpdateQuantity = async (
     productId: string,
     curentQuantity: number,
+    stockQuantity: number,
     adjustment: number
   ) => {
     const newQuantity = curentQuantity + adjustment;
@@ -74,14 +79,37 @@ const CartPage: React.FC = () => {
       await handleRemoveItem(productId);
       return;
     }
+    if (adjustment > 0 && newQuantity > stockQuantity) {
+      toast.error(
+        `Số lượng trong kho không đủ. Chỉ còn ${stockQuantity} sản phẩm trong kho.`
+      );
+      return;
+    }
     try {
       const res: any = await cartService.updateCartItem(productId, newQuantity);
       if (res && res.cart) {
-        setCart(res.cart);
+        const updatedCart = { ...res.cart };
+        updatedCart.items = updatedCart.items.map((newItem: any) => {
+          const oldItem = cart.items.find(
+            (i: any) => i.productId === newItem.productId
+          );
+          return {
+            ...newItem,
+            image: newItem.image || oldItem?.image,
+            name: newItem.name || oldItem?.name,
+            stockQuantity: oldItem?.stockQuantity,
+          };
+        });
+
+        setCart(updatedCart);
         await updateCartCount();
       }
-    } catch (error) {
-      toast.error("Lỗi cập nhật");
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Lỗi cập nhật số lượng");
+      }
     }
   };
 
@@ -105,7 +133,6 @@ const CartPage: React.FC = () => {
         <Loader2 className="w-10 h-10 animate-spin text-red-600" />
       </div>
     );
-
   return (
     <div className="bg-transparent min-h-screen py-8">
       <div className="container mx-auto max-w-7xl px-4">
@@ -172,6 +199,7 @@ const CartPage: React.FC = () => {
                               handleUpdateQuantity(
                                 item.productId,
                                 item.quantity,
+                                item.stockQuantity || 999,
                                 -1
                               )
                             }
@@ -187,14 +215,24 @@ const CartPage: React.FC = () => {
                               handleUpdateQuantity(
                                 item.productId,
                                 item.quantity,
+                                item.stockQuantity || 999,
                                 1
                               )
                             }
-                            className="p-2 text-gray-400 hover:text-white"
+                            className={`p-2 hover:text-white ${
+                              item.quantity >= (item.stockQuantity || 999)
+                                ? "text-zinc-600 cursor-not-allowed"
+                                : "text-gray-400"
+                            }`}
                           >
                             <Plus className="w-4 h-4" />
                           </button>
                         </div>
+                        {item.stockQuantity <= 5 && (
+                          <span className="text-xs text-orange-500 ml-2">
+                            Còn {item.stockQuantity} SP
+                          </span>
+                        )}
                         <Button
                           variant="ghost"
                           onClick={() => handleRemoveItem(item.productId)}

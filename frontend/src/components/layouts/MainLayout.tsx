@@ -4,7 +4,6 @@ import Header from "../common/Header";
 import Footer from "../common/Footer";
 import { Outlet } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Toaster } from "sonner";
 import ScrollToTop from "../common/ScrollToTop";
 import ChatBot from "../chatbot/ChatBot";
 import Zalo from "../common/Zalo";
