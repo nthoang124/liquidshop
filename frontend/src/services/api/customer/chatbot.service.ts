@@ -34,6 +34,10 @@ export const chatbotService = {
         localStorage.getItem("accessToken") ||
         sessionStorage.getItem("accessToken");
 
+      // Timeout để tránh chờ quá lâu khi backend cold start
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
       const response = await fetch(`${BASE_URL}/chatbot`, {
         method: "POST",
         headers: {
@@ -41,7 +45,10 @@ export const chatbotService = {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ message }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`API Error: ${response.status}`);
