@@ -1,14 +1,15 @@
 import React, { useMemo } from "react";
 import ChatProductGrid from "./ChatProductGrid";
 import { OrderPreviewCard } from "./OrderPreviewCard";
+
+const PRODUCT_REGEX = /\[PRODUCT_LIST_START\](.*?)\[PRODUCT_LIST_END\]/s;
+const ORDER_REGEX = /\[ORDER_CODE:([a-zA-Z0-9]+)\]/;
+
 interface BotMessageProps {
   content: string;
 }
 
 const BotMessage: React.FC<BotMessageProps> = ({ content }) => {
-  const PRODUCT_REGEX = /\[PRODUCT_LIST_START\](.*?)\[PRODUCT_LIST_END\]/s;
-
-  const ORDER_REGEX = /\[ORDER_CODE:([a-zA-Z0-9]+)\]/;
 
   const parsedData = useMemo(() => {
     // 0. Loại bỏ thẻ <think> (Chain of Thought)
