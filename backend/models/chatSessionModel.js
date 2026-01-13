@@ -18,6 +18,11 @@ const chatSessionSchema = new Schema({
       default: Date.now
     }
   }],
+  context: {
+    isConsulting: { type: Boolean, default: false },
+    currentStep: { type: Number, default: 0 },
+    consultationData: { type: Object, default: {} }
+  },
   createdAt: {
     type: Date,
     default: Date.now

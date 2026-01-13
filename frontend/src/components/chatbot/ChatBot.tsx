@@ -137,7 +137,7 @@ const ChatBot: React.FC = () => {
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-red-200" />
               <div>
-                <h3 className="font-bold text-sm">Trợ lý ảo AI</h3>
+                <h3 className="font-bold text-sm">Liquid AI Assistant</h3>
                 <span className="text-xs text-red-200 flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   Online
@@ -170,20 +170,17 @@ const ChatBot: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className={`flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`flex gap-2 max-w-[85%] ${
-                        isUser ? "flex-row-reverse" : "flex-row"
-                      }`}
+                      className={`flex gap-2 max-w-[85%] ${isUser ? "flex-row-reverse" : "flex-row"
+                        }`}
                     >
                       {/* Avatar */}
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          isUser ? "bg-zinc-700" : "bg-red-900/50"
-                        }`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? "bg-zinc-700" : "bg-red-900/50"
+                          }`}
                       >
                         {isUser ? (
                           <User className="w-5 h-5 text-zinc-200" />
@@ -194,11 +191,10 @@ const ChatBot: React.FC = () => {
 
                       {/* Bubble */}
                       <div
-                        className={`p-3 text-sm rounded-2xl ${
-                          isUser
+                        className={`p-3 text-sm rounded-2xl ${isUser
                             ? "bg-red-600 text-white rounded-tr-none"
                             : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none shadow-md"
-                        }`}
+                          }`}
                       >
                         {isUser ? (
                           <span className="whitespace-pre-wrap">
