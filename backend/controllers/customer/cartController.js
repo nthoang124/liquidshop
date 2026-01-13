@@ -68,12 +68,27 @@ const getCart = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const cart = await Cart.findOne({ userId });
-    if (!cart) {
+    const cartData = await Cart.findOne({ userId }).lean();
+    if (!cartData) {
       return res.status(404).json({
         message: "Cart empty"
       });
     }
+
+    for (let item of cartData.items) {
+      const product = await Product.findById(item.productId).lean();
+      if (product) {
+        item.stockQuantity = product.stockQuantity;
+      } else {
+        item.stockQuantity = 0;
+      }
+    }
+
+    const cart = {
+      ...cartData,
+      items: cartData.items
+    };
+
     res.status(200).json({
       message: 'Get cart successful',
       cart
